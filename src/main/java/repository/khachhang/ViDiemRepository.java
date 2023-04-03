@@ -6,9 +6,8 @@ package repository.khachhang;
 
 import comon.utilities.HibernateUtil;
 import java.util.List;
-import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-import model.khachhang.KhachHang;
+import model.khachhang.ViDiem;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -17,68 +16,42 @@ import org.hibernate.query.Query;
  *
  * @author Admin
  */
-public class KhachHangRepository {
+public class ViDiemRepository {
 
-    public List<KhachHang> findAll(int position, int pageSize) {
-        List<KhachHang> listModel;
+    public List<ViDiem> findAll(int position, int pageSize) {
+        List<ViDiem> listModel;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT n FROM KhachHang n";
-            TypedQuery<KhachHang> query = session.createQuery(hql, KhachHang.class);
+            String hql = "SELECT n FROM ViDiem n ORDER BY n.giaTri";
+            TypedQuery<ViDiem> query = session.createQuery(hql, ViDiem.class);
             query.setFirstResult(position);
             query.setMaxResults(pageSize);
             listModel = query.getResultList();
         }
         return listModel;
     }
-
-    public List<KhachHang> findByName(String ten, int position, int pageSize) {
-        List<KhachHang> listModel;
+    
+    public List<ViDiem> findAll() {
+        List<ViDiem> listModel;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT n FROM KhachHang n Where n.ten LIKE: ten";
-            TypedQuery<KhachHang> query = session.createQuery(hql, KhachHang.class);
-            query.setParameter("ten", "%" + ten + "%");
-            query.setFirstResult(position);
-            query.setMaxResults(pageSize);
+            String hql = "SELECT n FROM ViDiem n ORDER BY n.giaTri";
+            TypedQuery<ViDiem> query = session.createQuery(hql, ViDiem.class);
             listModel = query.getResultList();
         }
         return listModel;
     }
 
-    public List<KhachHang> findAll() {
-        List<KhachHang> listModel;
+    public ViDiem findById(String id) {
+        ViDiem model;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT n FROM KhachHang n";
-            TypedQuery<KhachHang> query = session.createQuery(hql, KhachHang.class);
-            listModel = query.getResultList();
-        }
-        return listModel;
-    }
-
-    public KhachHang findById(String id) {
-        KhachHang model;
-        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT n FROM KhachHang n Where n.id=:id";
-            TypedQuery<KhachHang> query = session.createQuery(hql, KhachHang.class);
+            String hql = "SELECT n FROM ViDiem n Where n.id=:id";
+            TypedQuery<ViDiem> query = session.createQuery(hql, ViDiem.class);
             query.setParameter("id", id);
             model = query.getSingleResult();
         }
         return model;
     }
 
-    public String findId(String maKH) {
-        String id;
-        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT id FROM KhachHang n Where n.maKH=:maKH";
-            TypedQuery<String> query = session.createQuery(hql, String.class);
-            query.setParameter("maKH", maKH);
-            id = query.getSingleResult();
-        } catch (NoResultException e) {
-            id = null;
-        }
-        return id;
-    }
-
-    public KhachHang save(KhachHang model) {
+    public ViDiem save(ViDiem model) {
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.getTransaction();
             transaction.begin();
@@ -101,7 +74,7 @@ public class KhachHangRepository {
             Transaction transaction = session.getTransaction();
             transaction.begin();
             try {
-                String hql = "DELETE KhachHang n WHERE n.id = :id";
+                String hql = "DELETE ViDiem n WHERE n.id = :id";
                 Query query = session.createQuery(hql);
                 query.setParameter("id", id);
                 affectedRows = query.executeUpdate();
@@ -111,14 +84,25 @@ public class KhachHangRepository {
         }
         return affectedRows > 0;
     }
-
-    public long totalCount() {
+    
+    public long totalCount(){
         long total = 0;
-        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT COUNT(n.id) FROM KhachHang n";
+        try (Session session = HibernateUtil.getSessionFactory().openSession()){
+            String hql = "SELECT COUNT(n.id) FROM ViDiem n";
             TypedQuery<Long> query = session.createQuery(hql, Long.class);
             total = query.getSingleResult();
         }
         return total;
+    }
+    
+    public ViDiem findByTen(String ten) {
+        ViDiem model;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT n FROM ViDiem n Where n.ten=:ten";
+            TypedQuery<ViDiem> query = session.createQuery(hql, ViDiem.class);
+            query.setParameter("ten", ten);
+            model = query.getSingleResult();
+        }
+        return model;
     }
 }

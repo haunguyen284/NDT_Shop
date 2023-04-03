@@ -8,6 +8,7 @@ import comon.constant.ModelProperties;
 import comon.constant.khachhang.TrangThaiKhachHang;
 import comon.model.AuditModelDTO;
 import java.util.Date;
+import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import lombok.Getter;
@@ -53,8 +54,24 @@ public class KhachHangDTO extends AuditModelDTO {
     private TrangThaiKhachHang trangThaiKhachHang;
 
     private String ghiChu;
+    
+    private String convertTrangThai(){
+        String converted = "";
+        switch(this.trangThaiKhachHang){
+            case TRANG_THAI_1:
+                converted = "Khách hàng mới";
+                break;
+            case TRANG_THAI_2:
+                converted = "Đã là thành viên";
+                break;
+            case TRANG_THAI_3:
+                converted = "Đã huỷ";
+                break;
+        }
+        return converted;
+    }
 
     public Object[] toDataRow() {
-        return new Object[]{maKH, this.getTheThanhVien().getMaTTV(), ten, sdt, new Date(ngaySinh), email, diaChi, gioiTinh, ghiChu, soLanMua, trangThaiKhachHang};
+        return new Object[]{maKH, Objects.isNull(this.getTheThanhVien()) ? "Chưa có thẻ" : this.getTheThanhVien().getMaTTV(), ten, sdt, email, new Date(ngaySinh), diaChi, gioiTinh, ghiChu, soLanMua, convertTrangThai()};
     }
 }

@@ -33,9 +33,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
                       <Component id="btnThemMoi" pref="193" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
-                      <Component id="button4" pref="185" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="290" max="-2" attributes="0"/>
                       <Component id="button5" pref="185" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="69" max="-2" attributes="0"/>
                       <Component id="button6" pref="185" max="32767" attributes="0"/>
@@ -53,7 +51,6 @@
               <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnThemMoi" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="button4" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="button5" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="button6" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -167,50 +164,20 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="view.swing.table.Table" name="tbKhachHang">
+            <Component class="view.swing.table.Table" name="tbTheThanhVien">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="11" rowCount="0">
-                    <Column editable="false" title="M&#xe3; KH" type="java.lang.Object"/>
+                  <Table columnCount="6" rowCount="0">
                     <Column editable="false" title="M&#xe3; Th&#x1ebb; TV" type="java.lang.Object"/>
-                    <Column editable="false" title="H&#x1ecd; t&#xea;n" type="java.lang.Object"/>
-                    <Column editable="false" title="SDT" type="java.lang.Object"/>
-                    <Column editable="false" title="Email" type="java.lang.Object"/>
-                    <Column editable="false" title="Ng&#xe0;y sinh" type="java.lang.Object"/>
-                    <Column editable="false" title="&#x110;&#x1ecb;a ch&#x1ec9;" type="java.lang.Object"/>
-                    <Column editable="false" title="Gi&#x1edb;i t&#xed;nh" type="java.lang.Object"/>
-                    <Column editable="false" title="Ghi ch&#xfa;" type="java.lang.Object"/>
-                    <Column editable="false" title="S&#x1ed1; l&#x1ea7;n mua" type="java.lang.Object"/>
+                    <Column editable="false" title="Ng&#xe0;y ph&#xe1;t h&#xe0;nh" type="java.lang.Object"/>
+                    <Column editable="false" title="Ng&#xe0;y h&#x1ebf;t h&#x1ea1;n" type="java.lang.Object"/>
+                    <Column editable="false" title="Lo&#x1ea1;i th&#x1ebb;" type="java.lang.Object"/>
+                    <Column editable="false" title="V&#xed; &#x111;i&#x1ec3;m" type="java.lang.Object"/>
                     <Column editable="false" title="Tr&#x1ea1;ng th&#xe1;i" type="java.lang.Object"/>
                   </Table>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                   <TableColumnModel selectionModel="0">
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title/>
-                      <Editor/>
-                      <Renderer/>
-                    </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title/>
-                      <Editor/>
-                      <Renderer/>
-                    </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title/>
-                      <Editor/>
-                      <Renderer/>
-                    </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title/>
-                      <Editor/>
-                      <Renderer/>
-                    </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title/>
-                      <Editor/>
-                      <Renderer/>
-                    </Column>
                     <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                       <Title/>
                       <Editor/>
@@ -249,7 +216,7 @@
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tbKhachHangMouseClicked"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tbTheThanhVienMouseClicked"/>
               </Events>
             </Component>
           </SubComponents>
@@ -546,20 +513,6 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="view.swing.Button" name="button4">
-      <Properties>
-        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="ff" green="66" red="0" type="rgb"/>
-        </Property>
-        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="ff" green="ff" red="ff" type="rgb"/>
-        </Property>
-        <Property name="text" type="java.lang.String" value="T&#x1ea1;o th&#x1ebb; th&#xe0;nh vi&#xea;n"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="button4ActionPerformed"/>
-      </Events>
-    </Component>
     <Component class="view.swing.Button" name="button5">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">

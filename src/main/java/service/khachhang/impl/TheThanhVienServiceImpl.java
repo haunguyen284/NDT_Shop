@@ -48,7 +48,6 @@ public class TheThanhVienServiceImpl implements TheThanhVienService{
 
     @Override
     public String create(TheThanhVienDTO dTO) {
-        dTO.setId(null);
         TheThanhVien model = mapper.map(dTO, TheThanhVien.class);
         if(TheThanhVienRepository.save(model)!=null){
             return "Thêm thành công";

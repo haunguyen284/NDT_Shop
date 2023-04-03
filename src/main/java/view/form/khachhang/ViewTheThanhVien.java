@@ -18,42 +18,46 @@ import javax.swing.table.DefaultTableModel;
 import service.khachhang.KhachHangService;
 import service.khachhang.LoaiTheService;
 import service.khachhang.TheThanhVienService;
+import service.khachhang.ViDiemService;
 import service.khachhang.impl.KhachHangServiceImpl;
 import service.khachhang.impl.LoaiTheServiceImpl;
 import service.khachhang.impl.TheThanhVienServiceImpl;
+import service.khachhang.impl.ViDiemServiceImpl;
 import view.dialog.Message;
 import view.main.Main;
 
-public class ViewKhachHang extends javax.swing.JPanel {
+public class ViewTheThanhVien extends javax.swing.JPanel {
 
     private final KhachHangService khachHangService;
     private final TheThanhVienService theThanhVienService;
     private final LoaiTheService loaiTheService;
+    private final ViDiemService viDiemService;
     private int currentPage;
     private int totalPages;
     private final int pageSize;
     private long totalKhachHang;
     private final ModalKhachHang modalKhachHang;
 
-    public ViewKhachHang() {
+    public ViewTheThanhVien() {
         initComponents();
-        tbKhachHang.fixTable(jScrollPane1);
+        tbTheThanhVien.fixTable(jScrollPane1);
         setOpaque(false);
         pageSize = 5;
         currentPage = 1;
         khachHangService = new KhachHangServiceImpl();
         theThanhVienService = new TheThanhVienServiceImpl();
+        viDiemService = new ViDiemServiceImpl();
         loaiTheService = new LoaiTheServiceImpl();
         modalKhachHang = new ModalKhachHang(null, true);
         loadDataTable();
     }
 
     public void loadDataTable() {
-        List<KhachHangDTO> listDTOs = khachHangService.findAll(currentPage - 1, pageSize);
-        DefaultTableModel dtm = (DefaultTableModel) tbKhachHang.getModel();
-        tbKhachHang.setModel(dtm);
+        List<TheThanhVienDTO> listDTOs = theThanhVienService.findAll(currentPage - 1, pageSize);
+        DefaultTableModel dtm = (DefaultTableModel) tbTheThanhVien.getModel();
+        tbTheThanhVien.setModel(dtm);
         dtm.setRowCount(0);
-        for (KhachHangDTO dto : listDTOs) {
+        for (TheThanhVienDTO dto : listDTOs) {
             dtm.addRow(dto.toDataRow());
         }
         lbTotal.setText("Total: " + khachHangService.totalCount());
@@ -81,7 +85,7 @@ public class ViewKhachHang extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tbKhachHang = new view.swing.table.Table();
+        tbTheThanhVien = new view.swing.table.Table();
         btnPrevious = new javax.swing.JButton();
         btnNext = new javax.swing.JButton();
         lbPagination = new javax.swing.JLabel();
@@ -106,7 +110,6 @@ public class ViewKhachHang extends javax.swing.JPanel {
         jComboBox3 = new javax.swing.JComboBox<>();
         jSpinner3 = new javax.swing.JSpinner();
         button2 = new view.swing.Button();
-        button4 = new view.swing.Button();
         button5 = new view.swing.Button();
         button6 = new view.swing.Button();
 
@@ -121,29 +124,29 @@ public class ViewKhachHang extends javax.swing.JPanel {
         jLabel5.setText("Danh sách khách hàng");
         jLabel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
 
-        tbKhachHang.setModel(new javax.swing.table.DefaultTableModel(
+        tbTheThanhVien.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Mã KH", "Mã Thẻ TV", "Họ tên", "SDT", "Email", "Ngày sinh", "Địa chỉ", "Giới tính", "Ghi chú", "Số lần mua", "Trạng thái"
+                "Mã Thẻ TV", "Ngày phát hành", "Ngày hết hạn", "Loại thẻ", "Ví điểm", "Trạng thái"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        tbKhachHang.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        tbKhachHang.addMouseListener(new java.awt.event.MouseAdapter() {
+        tbTheThanhVien.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tbTheThanhVien.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbKhachHangMouseClicked(evt);
+                tbTheThanhVienMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tbKhachHang);
+        jScrollPane1.setViewportView(tbTheThanhVien);
 
         btnPrevious.setText("<");
         btnPrevious.addActionListener(new java.awt.event.ActionListener() {
@@ -337,15 +340,6 @@ public class ViewKhachHang extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        button4.setBackground(new java.awt.Color(0, 102, 255));
-        button4.setForeground(new java.awt.Color(255, 255, 255));
-        button4.setText("Tạo thẻ thành viên");
-        button4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                button4ActionPerformed(evt);
-            }
-        });
-
         button5.setBackground(new java.awt.Color(0, 102, 255));
         button5.setForeground(new java.awt.Color(255, 255, 255));
         button5.setText("Nhập Excel");
@@ -372,9 +366,7 @@ public class ViewKhachHang extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(51, 51, 51)
                         .addComponent(btnThemMoi, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
-                        .addGap(50, 50, 50)
-                        .addComponent(button4, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
-                        .addGap(55, 55, 55)
+                        .addGap(290, 290, 290)
                         .addComponent(button5, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
                         .addGap(69, 69, 69)
                         .addComponent(button6, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
@@ -388,7 +380,6 @@ public class ViewKhachHang extends javax.swing.JPanel {
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnThemMoi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(button4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(button5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(button6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
@@ -424,8 +415,8 @@ public class ViewKhachHang extends javax.swing.JPanel {
         });
     }//GEN-LAST:event_btnThemMoiActionPerformed
 
-    private void tbKhachHangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbKhachHangMouseClicked
-        int row = this.tbKhachHang.getSelectedRow();
+    private void tbTheThanhVienMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbTheThanhVienMouseClicked
+        int row = this.tbTheThanhVien.getSelectedRow();
         if (row < 0) {
             return;
         }
@@ -438,92 +429,31 @@ public class ViewKhachHang extends javax.swing.JPanel {
                 loadDataTable();
             }
         });
-    }//GEN-LAST:event_tbKhachHangMouseClicked
+    }//GEN-LAST:event_tbTheThanhVienMouseClicked
 
-    private KhachHangDTO getObjectsFromTable(int row) throws NumberFormatException {
-        String maKH = this.tbKhachHang.getValueAt(row, 0).toString();
-        String maTTV = this.tbKhachHang.getValueAt(row, 1).toString();
-        String ten = this.tbKhachHang.getValueAt(row, 2).toString();
-        String sdt = this.tbKhachHang.getValueAt(row, 3).toString();
-        String email = this.tbKhachHang.getValueAt(row, 4).toString();
-        String ngaySinh = this.tbKhachHang.getValueAt(row, 5).toString();
-        String diaChi = this.tbKhachHang.getValueAt(row, 6).toString();
-        String gioiTinh = this.tbKhachHang.getValueAt(row, 7).toString();
-        String ghiChu = this.tbKhachHang.getValueAt(row, 8).toString();
-        String soLanMua = this.tbKhachHang.getValueAt(row, 9).toString();
-        String trangThai = this.tbKhachHang.getValueAt(row, 10).toString();
-        KhachHangDTO dTO = new KhachHangDTO();
-        dTO.setMaKH(maKH);
-        dTO.setTheThanhVien(null);
-        dTO.setTen(ten);
-        dTO.setSdt(sdt);
-        dTO.setEmail(email);
-        dTO.setNgaySinh(DateTimeUtil.stringToDate(ngaySinh).getTime());
-        dTO.setDiaChi(diaChi);
-        dTO.setGioiTinh(gioiTinh);
-        dTO.setGhiChu(ghiChu);
-        dTO.setSoLanMua(Integer.parseInt(soLanMua));
+    private TheThanhVienDTO getObjectsFromTable(int row) throws NumberFormatException {
+        String maTTV = this.tbTheThanhVien.getValueAt(row, 0).toString();
+        String ngayPhatHanh = this.tbTheThanhVien.getValueAt(row, 1).toString();
+        String ngayHetHan = this.tbTheThanhVien.getValueAt(row, 2).toString();
+        String loaiThe = this.tbTheThanhVien.getValueAt(row, 3).toString();
+        String viDiem = this.tbTheThanhVien.getValueAt(row, 4).toString();
+        String trangThai = this.tbTheThanhVien.getValueAt(row, 5).toString();
+        TheThanhVienDTO dTO = new TheThanhVienDTO();
+        dTO.setMaTTV(maTTV);
+        dTO.setNgayPhatHanh(DateTimeUtil.stringToDate(ngayPhatHanh).getTime());
+        dTO.setNgayHetHan(DateTimeUtil.stringToDate(ngayHetHan).getTime());
+        dTO.setLoaiThe(loaiTheService.findByTen(loaiThe));
+        dTO.setViDiem(viDiemService.findById(viDiem));
         switch (trangThai) {
-            case "Khách hàng mới":
-                dTO.setTrangThaiKhachHang(TrangThaiKhachHang.TRANG_THAI_1);
+            case "Đang sử dụng":
+                dTO.setTrangThaiTheThanhVien(TrangThaiTheThanhVien.DANG_SU_DUNG);
                 break;
-            case "Đã là thành viên":
-                dTO.setTrangThaiKhachHang(TrangThaiKhachHang.TRANG_THAI_2);
-                break;
-            case "Đã huỷ":
-                dTO.setTrangThaiKhachHang(TrangThaiKhachHang.TRANG_THAI_3);
+            case "Hết hạn":
+                dTO.setTrangThaiTheThanhVien(TrangThaiTheThanhVien.HET_HAN);
                 break;
         }
         return dTO;
     }
-
-    private void button4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button4ActionPerformed
-        int row = tbKhachHang.getSelectedRow();
-        if (row < 0) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng cần tạo thẻ!");
-            return;
-        }
-        if (!tbKhachHang.getValueAt(row, 1).equals("Chưa có thẻ")) {
-            JOptionPane.showMessageDialog(this, "Khách hàng này đã có thẻ!");
-            return;
-        }
-
-//        Tạo điểm tích luỹ
-        Date ngayPhatHanh = new Date();
-        Date ngayHetHan = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(ngayPhatHanh);
-        calendar.add(Calendar.YEAR, 2);
-        ngayHetHan = calendar.getTime();
-//        Set giá trị mặc định khi khởi tạo điểm tích luỹ
-        ViDiemDTO viDiemDTO = new ViDiemDTO();
-        viDiemDTO.setTongDiem(0);
-        viDiemDTO.setDiemDaDung(0);
-        viDiemDTO.setDiemDaCong(0);
-        viDiemDTO.setTrangThaiViDiem(TrangThaiViDiem.TRANG_THAI_1);
-//        Tạo thẻ thành viên.
-        String idTheBronze = "69386c0c-1097-4f0b-90a8-3295e6d92be8";
-//        Khi tạo thẻ thành viên, thẻ thành viên sẽ được mặc định phân loại là thẻ BRONZE với giá trị thẻ là 0.
-        TheThanhVienDTO theThanhVienDTO = new TheThanhVienDTO();
-        LoaiTheDTO loaiTheDTO = loaiTheService.findById(idTheBronze);
-//        Set giá trị mặc định khi khởi tạo thẻ thành viên
-        theThanhVienDTO.setViDiem(viDiemDTO);
-        theThanhVienDTO.setNgayPhatHanh(ngayPhatHanh.getTime());
-        theThanhVienDTO.setNgayHetHan(ngayHetHan.getTime());
-//        theThanhVienDTO.setDiemTichLuy(diemTichLuyService.findByNgayHetHan(ngayHetHanDiem.getTime()));
-        theThanhVienDTO.setLoaiThe(loaiTheDTO);
-        theThanhVienDTO.setTrangThaiTheThanhVien(TrangThaiTheThanhVien.DANG_SU_DUNG);
-        JOptionPane.showMessageDialog(this, theThanhVienService.create(theThanhVienDTO));
-//        Cập nhật thẻ thành viên cho khách hàng ở CSDL
-        KhachHangDTO dTO = getObjectsFromTable(row);
-        dTO.setTheThanhVien(theThanhVienService.findByNgayHetHan(ngayHetHan.getTime()));
-//        Cập nhật số lượng loại thẻ
-//        loaiTheDTO.setGiaTri(loaiTheDTO.getSoLuong()+1);
-//        loaiTheService.update(loaiTheDTO);
-
-        khachHangService.update(dTO);
-        loadDataTable();
-    }//GEN-LAST:event_button4ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnNext;
@@ -531,7 +461,6 @@ public class ViewKhachHang extends javax.swing.JPanel {
     private view.swing.Button btnThemMoi;
     private view.swing.Button button2;
     private view.swing.Button button3;
-    private view.swing.Button button4;
     private view.swing.Button button5;
     private view.swing.Button button6;
     private javax.swing.JButton jButton1;
@@ -557,6 +486,6 @@ public class ViewKhachHang extends javax.swing.JPanel {
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLabel lbPagination;
     private javax.swing.JLabel lbTotal;
-    private view.swing.table.Table tbKhachHang;
+    private view.swing.table.Table tbTheThanhVien;
     // End of variables declaration//GEN-END:variables
 }
