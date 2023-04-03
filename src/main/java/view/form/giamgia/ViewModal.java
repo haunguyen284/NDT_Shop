@@ -5,16 +5,19 @@
 package view.form.giamgia;
 
 import comon.constant.giamgia.LoaiGiamGia;
+import comon.constant.giamgia.TrangThaiGiamGia;
 import dto.giamgia.GiamGiaDTO;
 import java.awt.Color;
 import java.util.Date;
+import service.giamgia.GiamGiaService;
 
 /**
  *
  * @author ADMIN KH
  */
 public class ViewModal extends javax.swing.JDialog {
-
+    private GiamGiaService service;
+     
     /**
      * Creates new form ViewModal
      */
@@ -38,8 +41,20 @@ public class ViewModal extends javax.swing.JDialog {
         x.setNgayKetThuc(txtKetThuc.getDate().getTime());
         x.setDieuKienGiamGia(Float.parseFloat(txtDieuKien.getText()));
         x.setLoaiGiamGia((LoaiGiamGia) cbb.getSelectedItem());
+        
         x.setTen(txtTen.getText());
         x.setMoTa(lblMoTa.getText());
+        switch (x.getTrangThaiGiamGia()) {
+            case "Khách hàng mới":
+                x.setTrangThaiKhachHang(TrangThaiGiamGia.DANG_HOAT_DONG);
+                break;
+            case "Đã là thành viên":
+                dTO.setTrangThaiKhachHang(TrangThaiKhachHang.TRANG_THAI_2);
+                break;
+            case "Đã huỷ":
+                dTO.setTrangThaiKhachHang(TrangThaiKhachHang.TRANG_THAI_3);
+                break;
+        }
         return x;
     }
 

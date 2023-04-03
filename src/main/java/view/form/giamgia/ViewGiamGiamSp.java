@@ -47,8 +47,8 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
         loadData();
         createbutton();
     }
-    
-    private void createbutton(){
+
+    private void createbutton() {
         TableActionEvent event = new TableActionEvent() {
             @Override
             public void onEdit(int row) {
@@ -76,7 +76,7 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
 
             @Override
             public void onView(int row) {
-                     row = tblGiamGia.getSelectedRow();
+                row = tblGiamGia.getSelectedRow();
                 if (row < 0) {
                     return;
                 }
@@ -85,7 +85,7 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
                 if (optional.isPresent()) {
                     modal.fill(optional.get());
                     modal.setVisible(true);
-                          modal.getBtnSave().setText("View");
+                    modal.getBtnSave().setText("View");
                 }
             }
         };
@@ -101,15 +101,12 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
         String[] columns = {"ID", "TÊN", "GIÁ TRỊ MỨC GIAM GIÁ ", "ĐIỀU KIỆN ", "LOẠI GIẢM GIÁ", "TRẠNG THÁI", "NGÀY BẮT ĐẦU", "NGÀY KẾT THÚC", "MÔ TẢ", "FUNCTION"};
         dtm.setColumnIdentifiers(columns);
         tblGiamGia.setModel(dtm);
-        showPaganation();
-        showData(service.getAll(currentPage));
-    }
-
-    public void showData(List<GiamGiaDTO> lists) {
+        List<GiamGiaDTO> listData = service.getAll(currentPage);
         dtm.setRowCount(0);
-        for (GiamGiaDTO x : lists) {
+        for (GiamGiaDTO x : listData) {
             dtm.addRow(x.toDataRow());
         }
+        showPaganation();
     }
 
     public void showPaganation() {
@@ -454,7 +451,7 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
         currentPage = 1;
         btnNext.setEnabled(true);
         btnPrevious.setEnabled(false);
-        showData(service.getAll(currentPage));
+        loadData();
         showPaganation();
     }//GEN-LAST:event_btnFirstActionPerformed
 
@@ -465,7 +462,7 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
         }
         currentPage--;
         btnNext.setEnabled(true);
-        showData(service.getAll(currentPage));
+        loadData();
         showPaganation();
     }//GEN-LAST:event_btnPreviousActionPerformed
 
@@ -476,7 +473,7 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
         }
         currentPage++;
         btnPrevious.setEnabled(true);
-        showData(service.getAll(currentPage));
+        loadData();
         showPaganation();
     }//GEN-LAST:event_btnNextActionPerformed
 
@@ -484,7 +481,7 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
         currentPage = totalPage;
         btnNext.setEnabled(false);
         btnPrevious.setEnabled(true);
-        showData(service.getAll(currentPage));
+        loadData();
         showPaganation();
     }//GEN-LAST:event_btnLastActionPerformed
 
