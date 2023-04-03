@@ -4,6 +4,8 @@ import comon.constant.ModelProperties;
 import comon.constant.PaginationConstant;
 import comon.validator.NDTValidator;
 import dto.giamgia.GiamGiaDTO;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -33,7 +35,7 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
     private final Validator validator;
     private int currentPage = 1;
     private int totalPage = 1;
-    private Modal modal;
+    private ViewModal viewModal;
 
     public ViewGiamGiamSp() {
         initComponents();
@@ -43,7 +45,7 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
         this.dtm = new DefaultTableModel();
         this.service = new GiamGiaImpl();
         this.validator = NDTValidator.getValidator();
-        this.modal = new Modal();
+        this.viewModal = new ViewModal(null, true);
         loadData();
         createbutton();
     }
@@ -59,9 +61,9 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
                 String id = tblGiamGia.getValueAt(row, 0).toString();
                 Optional<GiamGiaDTO> optional = service.findById(id);
                 if (optional.isPresent()) {
-                    modal.fill(optional.get());
-                    modal.setVisible(true);
-                    modal.getBtnSave().setText("Update");
+                    viewModal.fill(optional.get());
+                    viewModal.setVisible(true);
+                    viewModal.getBtnSave().setText("Update");
                 }
             }
 
@@ -83,9 +85,9 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
                 String id = tblGiamGia.getValueAt(row, 0).toString();
                 Optional<GiamGiaDTO> optional = service.findById(id);
                 if (optional.isPresent()) {
-                    modal.fill(optional.get());
-                    modal.setVisible(true);
-                    modal.getBtnSave().setText("View");
+                    viewModal.fill(optional.get());
+                    viewModal.setVisible(true);
+                    viewModal.getBtnSave().setText("View");
                 }
             }
         };
@@ -107,6 +109,7 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
             dtm.addRow(x.toDataRow());
         }
         showPaganation();
+        createbutton();
     }
 
     public void showPaganation() {
@@ -452,7 +455,7 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
         btnNext.setEnabled(true);
         btnPrevious.setEnabled(false);
         loadData();
-        showPaganation();
+//        showPaganation();
     }//GEN-LAST:event_btnFirstActionPerformed
 
     private void btnPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreviousActionPerformed
@@ -487,7 +490,14 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-        new Modal().setVisible(true);
+        viewModal.setVisible(true);
+        viewModal.getBtnSave().setText("Save");
+        viewModal.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                loadData();
+            }
+        });
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void tblGiamGiaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblGiamGiaMouseClicked

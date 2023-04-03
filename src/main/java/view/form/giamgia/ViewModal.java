@@ -6,26 +6,51 @@ package view.form.giamgia;
 
 import comon.constant.giamgia.LoaiGiamGia;
 import comon.constant.giamgia.TrangThaiGiamGia;
+import comon.validator.NDTValidator;
 import dto.giamgia.GiamGiaDTO;
 import java.awt.Color;
 import java.util.Date;
+import java.util.Set;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import lombok.Getter;
+import lombok.Setter;
 import service.giamgia.GiamGiaService;
+import service.giamgia.impl.GiamGiaImpl;
 
 /**
  *
  * @author ADMIN KH
  */
+@Getter
+@Setter
 public class ViewModal extends javax.swing.JDialog {
-    private GiamGiaService service;
-     
+
+    private final GiamGiaService service;
+    private final Validator validator;
+    private DefaultComboBoxModel cbb ;
+
     /**
      * Creates new form ViewModal
      */
     public ViewModal(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.service = new GiamGiaImpl();
+        this.validator = NDTValidator.getValidator();
+        this.cbb = new DefaultComboBoxModel();
+        loadCbb();
     }
-        public void fill(GiamGiaDTO x) {
+    
+    public void loadCbb(){
+        cbb.addElement("Đang hoạt động");
+        cbb.addElement("Ngừng hoạt động");
+        cboTrangThai.setModel(cbb);
+    }
+
+    public void fill(GiamGiaDTO x) {
         txtTen.setText(x.getTen());
         txtKetThuc.setDate(new Date(x.getNgayKetThuc()));
         txtBatDau.setDate(new Date(x.getNgayBatDau()));
@@ -40,22 +65,46 @@ public class ViewModal extends javax.swing.JDialog {
         x.setNgayBatDau(txtBatDau.getDate().getTime());
         x.setNgayKetThuc(txtKetThuc.getDate().getTime());
         x.setDieuKienGiamGia(Float.parseFloat(txtDieuKien.getText()));
-        x.setLoaiGiamGia((LoaiGiamGia) cbb.getSelectedItem());
-        
         x.setTen(txtTen.getText());
         x.setMoTa(lblMoTa.getText());
-        switch (x.getTrangThaiGiamGia()) {
-            case "Khách hàng mới":
-                x.setTrangThaiKhachHang(TrangThaiGiamGia.DANG_HOAT_DONG);
+        switch (x.getTrangThaiGiamGia(cboTrangThai.getSelectedItem().toString())) {
+            case "Đang hoạt động":
+                x.setTrangThaiGiamGia(TrangThaiGiamGia.DANG_HOAT_DONG);
                 break;
-            case "Đã là thành viên":
-                dTO.setTrangThaiKhachHang(TrangThaiKhachHang.TRANG_THAI_2);
-                break;
-            case "Đã huỷ":
-                dTO.setTrangThaiKhachHang(TrangThaiKhachHang.TRANG_THAI_3);
+            case "Ngừng hoạt động":
+                x.setTrangThaiGiamGia(TrangThaiGiamGia.NGUNG_HOAT_DONG);
                 break;
         }
         return x;
+    }
+
+    public void saveOrUpdate(String action) {
+        GiamGiaDTO qLGiamGia = form();
+//        Set<ConstraintViolation<GiamGiaDTO>> violations = validator.validate(qLGiamGia);
+//        if (!violations.isEmpty()) {
+//            String errors = "";
+//            for (ConstraintViolation<GiamGiaDTO> x : violations) {
+//                errors += x.getMessage() + "\n";
+//            }
+//            JOptionPane.showMessageDialog(this, errors, "ERRORS", JOptionPane.ERROR_MESSAGE);
+//            return;
+//        }
+//        int row = new ViewGiamGiamSp().getTblGiamGia().getSelectedRow();
+//        String idCV = new ViewGiamGiamSp().getTblGiamGia().getValueAt(row, 0).toString();
+//        if (action.equals("update")) {
+//            qLGiamGia.setId(idCV);
+//        }
+//        if (action.equals("add")) {
+//            for (GiamGiaDTO x : service.getAll(currentPage)) {
+//                if (x.getMaGg().equals(qLGiamGia.getMaGg())) {
+//                    JOptionPane.showMessageDialog(this, "Mã - này đã tồn tại !");
+//                    return;
+//                }
+//            }
+//        }
+        String result = service.saveOrUpdate(action, qLGiamGia);
+        JOptionPane.showMessageDialog(this, result);
+        new ViewGiamGiamSp().loadData();
     }
 
     /**
@@ -320,7 +369,7 @@ public class ViewModal extends javax.swing.JDialog {
     private void btnSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseClicked
         // TODO add your handling code here:
         saveOrUpdate("add");
-        new ViewGiamGiamSp().showData(service.getAll(currentPage));
+        new ViewGiamGiamSp().loadData();
     }//GEN-LAST:event_btnSaveMouseClicked
 
     private void btnSaveMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseEntered
@@ -346,8 +395,8 @@ public class ViewModal extends javax.swing.JDialog {
     }//GEN-LAST:event_txtTenMousePressed
 
     private void btnCloseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCloseMouseClicked
+        new ViewGiamGiamSp().loadData();
         this.dispose();
-        new ViewGiamGiamSp().showData(service.getAll(currentPage));
     }//GEN-LAST:event_btnCloseMouseClicked
 
     private void btnCloseMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCloseMouseEntered
