@@ -5,10 +5,15 @@
 package service.giamgia.impl;
 
 import comon.utilities.Mapper;
+import comon.validator.NDTValidator;
 import dto.giamgia.GiamGiaDTO;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import javax.swing.JOptionPane;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import model.giamgia.GiamGia;
 import org.modelmapper.ModelMapper;
 import repository.giamgia.GiamGiaRepository;
@@ -22,10 +27,12 @@ public class GiamGiaImpl implements GiamGiaService {
 
     private final GiamGiaRepository repository;
     private final ModelMapper mapper;
+    private final Validator validator;
 
     public GiamGiaImpl() {
         this.repository = new GiamGiaRepository();
         this.mapper = Mapper.modelMapper();
+        this.validator = NDTValidator.getValidator();
     }
 
     @Override
@@ -55,6 +62,13 @@ public class GiamGiaImpl implements GiamGiaService {
         String result;
         GiamGia model = mapper.map(x, GiamGia.class);
         Optional<GiamGia> optional = repository.finByID(model.getId());
+        Set<ConstraintViolation<GiamGiaDTO>> violations = validator.validate(x);
+        if (!violations.isEmpty()) {
+            String errors = "";
+            for (ConstraintViolation<GiamGiaDTO> x : violations) {
+                errors += x.getMessage() + "\n";
+            }
+        }
         switch (action) {
             case "add" -> {
                 model.setId(null);

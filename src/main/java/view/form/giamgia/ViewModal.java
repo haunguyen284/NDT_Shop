@@ -30,7 +30,7 @@ public class ViewModal extends javax.swing.JDialog {
 
     private final GiamGiaService service;
     private final Validator validator;
-    private DefaultComboBoxModel cbb ;
+    private DefaultComboBoxModel cbb;
 
     /**
      * Creates new form ViewModal
@@ -43,8 +43,8 @@ public class ViewModal extends javax.swing.JDialog {
         this.cbb = new DefaultComboBoxModel();
         loadCbb();
     }
-    
-    public void loadCbb(){
+
+    private void loadCbb() {
         cbb.addElement("Đang hoạt động");
         cbb.addElement("Ngừng hoạt động");
         cboTrangThai.setModel(cbb);
@@ -58,6 +58,7 @@ public class ViewModal extends javax.swing.JDialog {
         txtDieuKien.setText("" + x.getDieuKienGiamGia());
         cboLoai.setSelectedItem(x.getLoaiGiamGia());
         lblMoTa.setText(x.getMoTa());
+        cboTrangThai.setSelectedItem(x.getLoaiGiamGia());
     }
 
     public GiamGiaDTO form() {
@@ -67,28 +68,34 @@ public class ViewModal extends javax.swing.JDialog {
         x.setDieuKienGiamGia(Float.parseFloat(txtDieuKien.getText()));
         x.setTen(txtTen.getText());
         x.setMoTa(lblMoTa.getText());
-        switch (x.getTrangThaiGiamGia(cboTrangThai.getSelectedItem().toString())) {
-            case "Đang hoạt động":
+        x.setGiaTriGiamGia(Float.parseFloat(txtGiaTri.getText()));
+        switch (cboTrangThai.getSelectedItem().toString()) {
+            case "Đang hoạt động" ->
                 x.setTrangThaiGiamGia(TrangThaiGiamGia.DANG_HOAT_DONG);
-                break;
-            case "Ngừng hoạt động":
+            case "Ngừng hoạt động" ->
                 x.setTrangThaiGiamGia(TrangThaiGiamGia.NGUNG_HOAT_DONG);
-                break;
+        }
+        switch (cboLoai.getSelectedItem().toString()) {
+            case "Giảm giá theo %" ->
+                x.setLoaiGiamGia(LoaiGiamGia.GIAM_GIA_THEO_PHAN_TRAM);
+            case "Giảm giá theo tiền mặt" ->
+                x.setLoaiGiamGia(LoaiGiamGia.GIAM_GIA_THEO_TIEN_MAT);
         }
         return x;
+
     }
 
     public void saveOrUpdate(String action) {
         GiamGiaDTO qLGiamGia = form();
-//        Set<ConstraintViolation<GiamGiaDTO>> violations = validator.validate(qLGiamGia);
-//        if (!violations.isEmpty()) {
-//            String errors = "";
-//            for (ConstraintViolation<GiamGiaDTO> x : violations) {
-//                errors += x.getMessage() + "\n";
-//            }
-//            JOptionPane.showMessageDialog(this, errors, "ERRORS", JOptionPane.ERROR_MESSAGE);
-//            return;
-//        }
+        Set<ConstraintViolation<GiamGiaDTO>> violations = validator.validate(qLGiamGia);
+        if (!violations.isEmpty()) {
+            String errors = "";
+            for (ConstraintViolation<GiamGiaDTO> x : violations) {
+                errors += x.getMessage() + "\n";
+            }
+            JOptionPane.showMessageDialog(this, errors, "ERRORS", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 //        int row = new ViewGiamGiamSp().getTblGiamGia().getSelectedRow();
 //        String idCV = new ViewGiamGiamSp().getTblGiamGia().getValueAt(row, 0).toString();
 //        if (action.equals("update")) {
@@ -274,7 +281,7 @@ public class ViewModal extends javax.swing.JDialog {
         cboTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         bg1.add(cboTrangThai, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 170, 270, 30));
 
-        cboLoai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboLoai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Giảm giá theo %", "Giảm giá theo tiền mặt", " " }));
         bg1.add(cboLoai, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 100, 270, 30));
 
         userLabel10.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N

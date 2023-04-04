@@ -46,7 +46,34 @@ public class GiamGiaDTO extends AuditModelDTO {
 
     private String moTa;
 
-    public Object[] toDataRow() {
-        return new Object[]{getId(), ten, giaTriGiamGia, dieuKienGiamGia, loaiGiamGia, trangThaiGiamGia, new Date(ngayBatDau), new Date(ngayKetThuc), moTa};
+    public String convertGiamGia() {
+        switch (trangThaiGiamGia) {
+            case DANG_HOAT_DONG -> {
+                return "Đang hoạt động";
+            }
+            case NGUNG_HOAT_DONG -> {
+                return "Ngừng hoạt động";
+            }
+            default ->
+                throw new AssertionError();
+        }
     }
+
+    public String convertLoaiGiamGia() {
+        switch (loaiGiamGia) {
+            case GIAM_GIA_THEO_PHAN_TRAM -> {
+                return "Giảm giá theo %";
+            }
+            case GIAM_GIA_THEO_TIEN_MAT -> {
+                return "Giảm giá theo tiền mặt";
+            }
+            default ->
+                throw new AssertionError();
+        }
+    }
+
+    public Object[] toDataRow() {
+        return new Object[]{getId(), ten, giaTriGiamGia, dieuKienGiamGia,convertLoaiGiamGia(), convertGiamGia(), new Date(ngayBatDau), new Date(ngayKetThuc), moTa};
+    }
+
 }

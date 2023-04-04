@@ -354,11 +354,10 @@
         <Component class="javax.swing.JComboBox" name="cboLoai">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="4">
-                <StringItem index="0" value="Item 1"/>
-                <StringItem index="1" value="Item 2"/>
-                <StringItem index="2" value="Item 3"/>
-                <StringItem index="3" value="Item 4"/>
+              <StringArray count="3">
+                <StringItem index="0" value="Gi&#x1ea3;m gi&#xe1; theo %"/>
+                <StringItem index="1" value="Gi&#x1ea3;m gi&#xe1; theo ti&#x1ec1;n m&#x1eb7;t"/>
+                <StringItem index="2" value=" "/>
               </StringArray>
             </Property>
           </Properties>
