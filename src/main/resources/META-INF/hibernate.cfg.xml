@@ -11,10 +11,10 @@
             jdbc:sqlserver://localhost:1433;databaseName=NDT_Shop;;encrypt=true;trustservercertificate=true;
         </property>
         <property name="hibernate.connection.username">
-            SA
+            sa
         </property>
         <property name="hibernate.connection.password">
-            Nguyen@123
+            13031999
         </property>
         <property name="hibernate.dialect">
             org.hibernate.dialect.SQLServer2008Dialect
@@ -28,8 +28,7 @@
         <!--        sản phẩm-->
         <mapping class="model.sanpham.Ao"/>
         <mapping class="model.sanpham.ChatLieu"/>
-        <mapping class="model.sanpham.SizeAo"/> 
-        <mapping class="model.sanpham.DanhMuc"/> 
+        <mapping class="model.sanpham.SizeAo"/>  
         <mapping class="model.sanpham.SizeQuan"/>
         <mapping class="model.sanpham.MauSac"/>
         <mapping class="model.sanpham.XuatXu"/>
