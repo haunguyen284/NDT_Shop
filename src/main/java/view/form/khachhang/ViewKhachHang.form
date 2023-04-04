@@ -33,9 +33,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
                       <Component id="btnThemMoi" pref="193" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
-                      <Component id="button4" pref="185" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="290" max="-2" attributes="0"/>
                       <Component id="button5" pref="185" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="69" max="-2" attributes="0"/>
                       <Component id="button6" pref="185" max="32767" attributes="0"/>
@@ -53,7 +51,6 @@
               <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnThemMoi" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="button4" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="button5" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="button6" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -249,7 +246,7 @@
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tbKhachHangMouseClicked"/>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tbKhachHangMouseReleased"/>
               </Events>
             </Component>
           </SubComponents>
@@ -546,20 +543,6 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="view.swing.Button" name="button4">
-      <Properties>
-        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="ff" green="66" red="0" type="rgb"/>
-        </Property>
-        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="ff" green="ff" red="ff" type="rgb"/>
-        </Property>
-        <Property name="text" type="java.lang.String" value="T&#x1ea1;o th&#x1ebb; th&#xe0;nh vi&#xea;n"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="button4ActionPerformed"/>
-      </Events>
-    </Component>
     <Component class="view.swing.Button" name="button5">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">

@@ -47,23 +47,13 @@ public class LoaiTheServiceImpl implements LoaiTheService{
     }
 
     @Override
-    public String create(LoaiTheDTO dTO) {
+    public String save(LoaiTheDTO dTO) {
         dTO.setId(null);
         LoaiThe model = mapper.map(dTO, LoaiThe.class);
         if(loaiTheRepository.save(model)!=null){
             return "Thêm thành công";
         }else{
             return "Thêm thất bại";
-        }
-    }
-
-    @Override
-    public String update(LoaiTheDTO dTO) {
-        LoaiThe model = mapper.map(dTO, LoaiThe.class);
-        if(loaiTheRepository.save(model)!=null){
-            return "Sửa thành công";
-        }else{
-            return "Sửa thất bại";
         }
     }
 

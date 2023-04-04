@@ -21,9 +21,7 @@ public interface LoaiTheService {
     
     LoaiTheDTO findByTen(String ten);
 
-    String create(LoaiTheDTO dTO);
-
-    String update(LoaiTheDTO dTO);
+    String save(LoaiTheDTO dTO);
 
     boolean delete(String id);
 

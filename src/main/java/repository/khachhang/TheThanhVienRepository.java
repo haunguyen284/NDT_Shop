@@ -6,6 +6,7 @@ package repository.khachhang;
 
 import comon.utilities.HibernateUtil;
 import java.util.List;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import model.khachhang.TheThanhVien;
 import org.hibernate.Session;
@@ -49,6 +50,19 @@ public class TheThanhVienRepository {
             model = query.getSingleResult();
         }
         return model;
+    }
+    
+    public String findId(String maTTV) {
+        String id;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT id FROM TheThanhVien n Where n.maTTV=:maTTV";
+            TypedQuery<String> query = session.createQuery(hql, String.class);
+            query.setParameter("maTTV", maTTV);
+            id = query.getSingleResult();
+        } catch (NoResultException e) {
+            id = null;
+        }
+        return id;
     }
 
     public TheThanhVien save(TheThanhVien model) {
@@ -101,6 +115,16 @@ public class TheThanhVienRepository {
             String hql = "SELECT n FROM TheThanhVien n Where n.ngayHetHan=:ngayHetHan";
             TypedQuery<TheThanhVien> query = session.createQuery(hql, TheThanhVien.class);
             query.setParameter("ngayHetHan", ngayHetHan);
+            model = query.getSingleResult();
+        }
+        return model;
+    }
+    public TheThanhVien findByMaTheTV(String maTTV) {
+        TheThanhVien model;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT n FROM TheThanhVien n Where n.maTTV=:maTTV";
+            TypedQuery<TheThanhVien> query = session.createQuery(hql, TheThanhVien.class);
+            query.setParameter("maTTV", maTTV);
             model = query.getSingleResult();
         }
         return model;

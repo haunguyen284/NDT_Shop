@@ -64,6 +64,18 @@ public class KhachHangRepository {
         }
         return model;
     }
+    
+    public KhachHang findByIdTheThanhVien(String idTTV) {
+        KhachHang model;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+//            String hql = "SELECT n FROM KhachHang n Where n.the_thanh_vien_id=:idTTV";
+            String hql = "SELECT n FROM KhachHang n WHERE n.theThanhVien.id = :idTTV";
+            TypedQuery<KhachHang> query = session.createQuery(hql, KhachHang.class);
+            query.setParameter("idTTV", idTTV);
+            model = query.getSingleResult();
+        }
+        return model;
+    }
 
     public String findId(String maKH) {
         String id;

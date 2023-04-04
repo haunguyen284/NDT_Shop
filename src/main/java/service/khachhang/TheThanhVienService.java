@@ -17,11 +17,13 @@ public interface TheThanhVienService {
 
     TheThanhVienDTO findById(String id);
     
+    String findId(String maTTV);
+    
     TheThanhVienDTO findByNgayHetHan(Long ngayHetHan);
+    
+    TheThanhVienDTO findByMaTTV(String maTTV);
 
-    String create(TheThanhVienDTO dTO);
-
-    String update(TheThanhVienDTO dTO);
+    String save(TheThanhVienDTO dTO);
 
     boolean delete(String id);
 

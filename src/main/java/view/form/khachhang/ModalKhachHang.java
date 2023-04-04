@@ -6,10 +6,15 @@ package view.form.khachhang;
 
 import comon.constant.khachhang.TrangThaiKhachHang;
 import dto.khachhang.KhachHangDTO;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
+import java.util.Random;
 import javax.swing.JOptionPane;
 import service.khachhang.KhachHangService;
+import service.khachhang.TheThanhVienService;
 import service.khachhang.impl.KhachHangServiceImpl;
+import service.khachhang.impl.TheThanhVienServiceImpl;
 
 /**
  *
@@ -18,6 +23,7 @@ import service.khachhang.impl.KhachHangServiceImpl;
 public class ModalKhachHang extends javax.swing.JDialog {
 
     private final KhachHangService khachHangService;
+    private final TheThanhVienService theThanhVienService;
 
     /**
      * Creates new form ModalKhachHang
@@ -26,11 +32,13 @@ public class ModalKhachHang extends javax.swing.JDialog {
         super(parent, modal);
         this.setUndecorated(true);
         khachHangService = new KhachHangServiceImpl();
+        theThanhVienService = new TheThanhVienServiceImpl();
         initComponents();
     }
 
     public void fill(KhachHangDTO dTO) {
-        txtMaKH.setText(dTO.getMaKH());
+        lbMaKH.setText(dTO.getMaKH());
+        lbMaTTV.setText(dTO.getTheThanhVien().getMaTTV());
         txtHoTen.setText(dTO.getTen());
         txtSDT.setText(dTO.getSdt());
         txtEmail.setText(dTO.getEmail());
@@ -40,10 +48,8 @@ public class ModalKhachHang extends javax.swing.JDialog {
         txtGhiChu.setText(dTO.getGhiChu());
         txtSoLanMua.setText(dTO.getSoLanMua() + "");
         cbxTrangThai.setSelectedItem(dTO.getTrangThaiKhachHang());
-        txtMaKH.setEnabled(false);
     }
     public void clear() {
-        txtMaKH.setText("");
         txtHoTen.setText("");
         txtSDT.setText("");
         txtEmail.setText("");
@@ -53,12 +59,42 @@ public class ModalKhachHang extends javax.swing.JDialog {
         txtGhiChu.setText("");
         txtSoLanMua.setText("");
         cbxTrangThai.setSelectedIndex(0);
-        txtMaKH.setEnabled(true);
+    }
+    
+    public String generateCustomerId(KhachHangDTO khachHang) {
+        String hoTen = khachHang.getTen();
+        Date ngaySinh = new Date(khachHang.getNgaySinh());
+         LocalDate localDate = ngaySinh.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        String maKH = "";
+        if (hoTen.contains(" ")) {
+            String[] parts = hoTen.split(" ");
+            maKH = parts[0].substring(0, 1) + parts[1].substring(0, 1);
+        } else {
+            maKH = hoTen.substring(0, 2);
+        }
+
+        String year = Integer.toString(localDate.getYear()).substring(2);
+        maKH += year;
+
+        String randomString = generateRandomString(5);
+        maKH += randomString;
+
+        return maKH;
+    }
+
+    private String generateRandomString(int length) {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random rand = new Random();
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            sb.append(characters.charAt(rand.nextInt(characters.length())));
+        }
+        return sb.toString();
     }
 
     public KhachHangDTO getObjectFromInput() {
         KhachHangDTO dTO = new KhachHangDTO();
-        String maKH = txtMaKH.getText();
         String ten = txtHoTen.getText();
         String sdt = txtSDT.getText();
         String email = txtEmail.getText();
@@ -69,8 +105,7 @@ public class ModalKhachHang extends javax.swing.JDialog {
         String soLanMua = txtSoLanMua.getText();
         String trangThai = cbxTrangThai.getSelectedItem().toString();
 
-        dTO.setMaKH(maKH);
-        dTO.setId(khachHangService.findId(maKH));
+        
         dTO.setTen(ten);
         dTO.setSdt(sdt);
         dTO.setEmail(email);
@@ -79,6 +114,15 @@ public class ModalKhachHang extends javax.swing.JDialog {
         dTO.setGioiTinh(gioiTinh);
         dTO.setGhiChu(ghiChu);
         dTO.setSoLanMua(Integer.parseInt(soLanMua));
+        if(lbMaKH.getText().isBlank()){
+            dTO.setMaKH(generateCustomerId(dTO));
+        }else{
+            dTO.setMaKH(lbMaKH.getText());
+        }
+        if(!lbMaTTV.getText().isBlank()){
+            dTO.setTheThanhVien(theThanhVienService.findByMaTTV(lbMaTTV.getText()));
+        }
+        dTO.setId(khachHangService.findId(dTO.getMaKH()));
         switch (trangThai) {
             case "Khách hàng mới":
                 dTO.setTrangThaiKhachHang(TrangThaiKhachHang.TRANG_THAI_1);
@@ -105,7 +149,6 @@ public class ModalKhachHang extends javax.swing.JDialog {
         bg = new javax.swing.JPanel();
         heading = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        txtMaKH = new javax.swing.JTextField();
         txtHoTen = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         txtSDT = new javax.swing.JTextField();
@@ -126,6 +169,9 @@ public class ModalKhachHang extends javax.swing.JDialog {
         btnSave = new view.swing.Button();
         btnExit = new view.swing.Button();
         cbxGioiTinh = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        lbMaKH = new javax.swing.JLabel();
+        lbMaTTV = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -191,6 +237,13 @@ public class ModalKhachHang extends javax.swing.JDialog {
 
         cbxGioiTinh.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nam", "Nữ", "Khác" }));
 
+        jLabel2.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+        jLabel2.setText("Mã Thẻ TV");
+
+        lbMaKH.setForeground(new java.awt.Color(255, 0, 0));
+
+        lbMaTTV.setForeground(new java.awt.Color(255, 0, 0));
+
         javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
         bg.setLayout(bgLayout);
         bgLayout.setHorizontalGroup(
@@ -198,46 +251,55 @@ public class ModalKhachHang extends javax.swing.JDialog {
             .addGroup(bgLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
-                        .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtMaKH)
-                            .addComponent(txtHoTen, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtSDT, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
-                            .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
-                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jdNgaySinh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel18))
-                        .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(cbxGioiTinh, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(bgLayout.createSequentialGroup()
-                                    .addGap(21, 21, 21)
-                                    .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(txtGhiChu, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
-                                        .addComponent(txtSoLanMua, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
-                                        .addComponent(jLabel15)
-                                        .addComponent(jLabel14)
-                                        .addComponent(jLabel17)
-                                        .addComponent(jLabel19)
-                                        .addComponent(cbxTrangThai, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtDiaChi, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap())
                     .addGroup(bgLayout.createSequentialGroup()
                         .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(heading)
+                            .addComponent(jLabel19)
+                            .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(cbxTrangThai, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtHoTen, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtSDT, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jdNgaySinh, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                                .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.LEADING)))
+                        .addGap(18, 18, 18)
+                        .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
+                                .addGap(0, 1, Short.MAX_VALUE)
+                                .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(cbxGioiTinh, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(bgLayout.createSequentialGroup()
+                                                .addGap(3, 3, 3)
+                                                .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(txtGhiChu)
+                                                    .addComponent(txtSoLanMua, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(jLabel14)
+                                                    .addComponent(jLabel17))))
+                                        .addComponent(txtDiaChi, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel15))))
+                            .addGroup(bgLayout.createSequentialGroup()
+                                .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2))
+                                .addGap(43, 43, 43)
+                                .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lbMaKH)
+                                    .addComponent(lbMaTTV))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(bgLayout.createSequentialGroup()
+                        .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(bgLayout.createSequentialGroup()
                                 .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(260, Short.MAX_VALUE))))
+                                .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(heading))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         bgLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnExit, btnSave});
@@ -248,27 +310,40 @@ public class ModalKhachHang extends javax.swing.JDialog {
                 .addGap(29, 29, 29)
                 .addComponent(heading)
                 .addGap(18, 18, 18)
-                .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtMaKH, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtDiaChi, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel11))
-                    .addGroup(bgLayout.createSequentialGroup()
-                        .addComponent(jLabel16)
-                        .addGap(54, 54, 54)
-                        .addComponent(jLabel15)))
+                .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel1)
+                    .addComponent(lbMaKH))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtHoTen, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(lbMaTTV)))
                 .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
-                        .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtHoTen, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbxGioiTinh, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(bgLayout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addComponent(txtDiaChi, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel13)
+                        .addComponent(jLabel15)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
+                                .addComponent(cbxGioiTinh, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(138, 138, 138))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
+                                .addComponent(jLabel14)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtGhiChu, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel17)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtSoLanMua, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel13)
+                            .addComponent(jLabel16))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtSDT, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -276,21 +351,13 @@ public class ModalKhachHang extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel18))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
-                        .addComponent(jLabel14)
+                        .addComponent(jLabel18)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtGhiChu, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jdNgaySinh, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel17)
+                        .addComponent(jLabel19)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtSoLanMua, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel19)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jdNgaySinh, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
-                    .addComponent(cbxTrangThai))
+                        .addComponent(cbxTrangThai, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(36, 36, 36)
                 .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -317,7 +384,7 @@ public class ModalKhachHang extends javax.swing.JDialog {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         KhachHangDTO dTO = getObjectFromInput();
-        String result = khachHangService.create(dTO);
+        String result = khachHangService.save(dTO);
         JOptionPane.showMessageDialog(this, result);
         new ViewKhachHang().loadDataTable();
         this.dispose();
@@ -387,12 +454,14 @@ public class ModalKhachHang extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
     private com.toedter.calendar.JDateChooser jdNgaySinh;
+    private javax.swing.JLabel lbMaKH;
+    private javax.swing.JLabel lbMaTTV;
     private javax.swing.JTextField txtDiaChi;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtGhiChu;
     private javax.swing.JTextField txtHoTen;
-    private javax.swing.JTextField txtMaKH;
     private javax.swing.JTextField txtSDT;
     private javax.swing.JTextField txtSoLanMua;
     // End of variables declaration//GEN-END:variables

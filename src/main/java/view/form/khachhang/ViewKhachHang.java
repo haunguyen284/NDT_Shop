@@ -8,19 +8,28 @@ import dto.khachhang.KhachHangDTO;
 import dto.khachhang.LoaiTheDTO;
 import dto.khachhang.TheThanhVienDTO;
 import dto.khachhang.ViDiemDTO;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.Normalizer;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import javax.swing.JOptionPane;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import service.khachhang.KhachHangService;
 import service.khachhang.LoaiTheService;
 import service.khachhang.TheThanhVienService;
+import service.khachhang.ViDiemService;
 import service.khachhang.impl.KhachHangServiceImpl;
 import service.khachhang.impl.LoaiTheServiceImpl;
 import service.khachhang.impl.TheThanhVienServiceImpl;
+import service.khachhang.impl.ViDiemServiceImpl;
 import view.dialog.Message;
 import view.main.Main;
 
@@ -29,6 +38,7 @@ public class ViewKhachHang extends javax.swing.JPanel {
     private final KhachHangService khachHangService;
     private final TheThanhVienService theThanhVienService;
     private final LoaiTheService loaiTheService;
+    private final ViDiemService viDiemService;
     private int currentPage;
     private int totalPages;
     private final int pageSize;
@@ -39,16 +49,17 @@ public class ViewKhachHang extends javax.swing.JPanel {
         initComponents();
         tbKhachHang.fixTable(jScrollPane1);
         setOpaque(false);
-        pageSize = 5;
+        pageSize = 8;
         currentPage = 1;
         khachHangService = new KhachHangServiceImpl();
         theThanhVienService = new TheThanhVienServiceImpl();
         loaiTheService = new LoaiTheServiceImpl();
+        viDiemService = new ViDiemServiceImpl();
         modalKhachHang = new ModalKhachHang(null, true);
         loadDataTable();
     }
 
-    public void loadDataTable() {
+    public final void loadDataTable() {
         List<KhachHangDTO> listDTOs = khachHangService.findAll(currentPage - 1, pageSize);
         DefaultTableModel dtm = (DefaultTableModel) tbKhachHang.getModel();
         tbKhachHang.setModel(dtm);
@@ -106,7 +117,6 @@ public class ViewKhachHang extends javax.swing.JPanel {
         jComboBox3 = new javax.swing.JComboBox<>();
         jSpinner3 = new javax.swing.JSpinner();
         button2 = new view.swing.Button();
-        button4 = new view.swing.Button();
         button5 = new view.swing.Button();
         button6 = new view.swing.Button();
 
@@ -139,8 +149,8 @@ public class ViewKhachHang extends javax.swing.JPanel {
         });
         tbKhachHang.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbKhachHang.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbKhachHangMouseClicked(evt);
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tbKhachHangMouseReleased(evt);
             }
         });
         jScrollPane1.setViewportView(tbKhachHang);
@@ -337,15 +347,6 @@ public class ViewKhachHang extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        button4.setBackground(new java.awt.Color(0, 102, 255));
-        button4.setForeground(new java.awt.Color(255, 255, 255));
-        button4.setText("Tạo thẻ thành viên");
-        button4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                button4ActionPerformed(evt);
-            }
-        });
-
         button5.setBackground(new java.awt.Color(0, 102, 255));
         button5.setForeground(new java.awt.Color(255, 255, 255));
         button5.setText("Nhập Excel");
@@ -372,9 +373,7 @@ public class ViewKhachHang extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(51, 51, 51)
                         .addComponent(btnThemMoi, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
-                        .addGap(50, 50, 50)
-                        .addComponent(button4, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
-                        .addGap(55, 55, 55)
+                        .addGap(290, 290, 290)
                         .addComponent(button5, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
                         .addGap(69, 69, 69)
                         .addComponent(button6, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
@@ -388,7 +387,6 @@ public class ViewKhachHang extends javax.swing.JPanel {
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnThemMoi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(button4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(button5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(button6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
@@ -424,22 +422,6 @@ public class ViewKhachHang extends javax.swing.JPanel {
         });
     }//GEN-LAST:event_btnThemMoiActionPerformed
 
-    private void tbKhachHangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbKhachHangMouseClicked
-        int row = this.tbKhachHang.getSelectedRow();
-        if (row < 0) {
-            return;
-        }
-        KhachHangDTO dTO = getObjectsFromTable(row);
-        modalKhachHang.fill(dTO);
-        modalKhachHang.setVisible(true);
-        modalKhachHang.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent e) {
-                loadDataTable();
-            }
-        });
-    }//GEN-LAST:event_tbKhachHangMouseClicked
-
     private KhachHangDTO getObjectsFromTable(int row) throws NumberFormatException {
         String maKH = this.tbKhachHang.getValueAt(row, 0).toString();
         String maTTV = this.tbKhachHang.getValueAt(row, 1).toString();
@@ -454,7 +436,8 @@ public class ViewKhachHang extends javax.swing.JPanel {
         String trangThai = this.tbKhachHang.getValueAt(row, 10).toString();
         KhachHangDTO dTO = new KhachHangDTO();
         dTO.setMaKH(maKH);
-        dTO.setTheThanhVien(null);
+        dTO.setId(khachHangService.findId(maKH));
+        dTO.setTheThanhVien(theThanhVienService.findByMaTTV(maTTV));
         dTO.setTen(ten);
         dTO.setSdt(sdt);
         dTO.setEmail(email);
@@ -477,53 +460,85 @@ public class ViewKhachHang extends javax.swing.JPanel {
         return dTO;
     }
 
-    private void button4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button4ActionPerformed
-        int row = tbKhachHang.getSelectedRow();
-        if (row < 0) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng cần tạo thẻ!");
-            return;
-        }
-        if (!tbKhachHang.getValueAt(row, 1).equals("Chưa có thẻ")) {
-            JOptionPane.showMessageDialog(this, "Khách hàng này đã có thẻ!");
-            return;
-        }
+    public String generateMemberCardId(KhachHangDTO khachHang) {
+        String maKH = khachHang.getMaKH();
+        String tenKH = khachHang.getTen();
+        String[] parts = tenKH.split(" ");
+        Date ngaySinh = new Date(khachHang.getNgaySinh());
+        LocalDate localDate = ngaySinh.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        String year = Integer.toString(localDate.getYear()).substring(2);
+        String month = String.format("%02d", localDate.getMonthValue());
+        String day = String.format("%02d", localDate.getDayOfMonth());
+        String last = Normalizer.normalize(parts[2], Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+        String memberCardId = maKH.substring(4) + year + month + day + last.toUpperCase() + parts[0].substring(0, 1) + parts[1].substring(0, 1);
+        return memberCardId;
+    }
 
+    private void tbKhachHangMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbKhachHangMouseReleased
+        // Kiểm tra xem người dùng đã nhấp chuột phải
+        if (SwingUtilities.isRightMouseButton(evt)) {
+            // Lấy vị trí hàng được chọn
+            int row = tbKhachHang.rowAtPoint(evt.getPoint());
+            // Hiển thị menu tạm thời
+            JPopupMenu popupMenu = new JPopupMenu();
+            JMenuItem menuUpdate = new JMenuItem("Cập nhật");
+            menuUpdate.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    KhachHangDTO dTO = getObjectsFromTable(row);
+                    modalKhachHang.fill(dTO);
+                    modalKhachHang.setVisible(true);
+                    modalKhachHang.addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosed(WindowEvent e) {
+                            loadDataTable();
+                        }
+                    });
+                }
+            });
+            JMenuItem menuCreateMemberCard = new JMenuItem("Tạo thẻ");
+            menuCreateMemberCard.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if (!tbKhachHang.getValueAt(row, 1).equals("Chưa có thẻ")) {
+                        showMessage("Khách hàng này đã có thẻ!");
+                        return;
+                    }
+                    KhachHangDTO dTO = getObjectsFromTable(row);
 //        Tạo điểm tích luỹ
-        Date ngayPhatHanh = new Date();
-        Date ngayHetHan = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(ngayPhatHanh);
-        calendar.add(Calendar.YEAR, 2);
-        ngayHetHan = calendar.getTime();
+                    Date ngayPhatHanh = new Date();
+                    Date ngayHetHan = new Date();
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(ngayPhatHanh);
+                    calendar.add(Calendar.YEAR, 2);
+                    ngayHetHan = calendar.getTime();
 //        Set giá trị mặc định khi khởi tạo điểm tích luỹ
-        ViDiemDTO viDiemDTO = new ViDiemDTO();
-        viDiemDTO.setTongDiem(0);
-        viDiemDTO.setDiemDaDung(0);
-        viDiemDTO.setDiemDaCong(0);
-        viDiemDTO.setTrangThaiViDiem(TrangThaiViDiem.TRANG_THAI_1);
+                    ViDiemDTO viDiemDTO = new ViDiemDTO();
+                    viDiemDTO.setTongDiem(0);
+                    viDiemDTO.setDiemDaDung(0);
+                    viDiemDTO.setDiemDaCong(0);
+                    viDiemDTO.setTrangThaiViDiem(TrangThaiViDiem.TRANG_THAI_1);
 //        Tạo thẻ thành viên.
-        String idTheBronze = "69386c0c-1097-4f0b-90a8-3295e6d92be8";
 //        Khi tạo thẻ thành viên, thẻ thành viên sẽ được mặc định phân loại là thẻ BRONZE với giá trị thẻ là 0.
-        TheThanhVienDTO theThanhVienDTO = new TheThanhVienDTO();
-        LoaiTheDTO loaiTheDTO = loaiTheService.findById(idTheBronze);
+                    TheThanhVienDTO theThanhVienDTO = new TheThanhVienDTO();
+                    LoaiTheDTO loaiTheDTO = loaiTheService.findByTen("BRONZE");
 //        Set giá trị mặc định khi khởi tạo thẻ thành viên
-        theThanhVienDTO.setViDiem(viDiemDTO);
-        theThanhVienDTO.setNgayPhatHanh(ngayPhatHanh.getTime());
-        theThanhVienDTO.setNgayHetHan(ngayHetHan.getTime());
-//        theThanhVienDTO.setDiemTichLuy(diemTichLuyService.findByNgayHetHan(ngayHetHanDiem.getTime()));
-        theThanhVienDTO.setLoaiThe(loaiTheDTO);
-        theThanhVienDTO.setTrangThaiTheThanhVien(TrangThaiTheThanhVien.DANG_SU_DUNG);
-        JOptionPane.showMessageDialog(this, theThanhVienService.create(theThanhVienDTO));
+                    theThanhVienDTO.setViDiem(viDiemService.save(viDiemDTO));
+                    theThanhVienDTO.setNgayPhatHanh(ngayPhatHanh.getTime());
+                    theThanhVienDTO.setNgayHetHan(ngayHetHan.getTime());
+                    theThanhVienDTO.setLoaiThe(loaiTheDTO);
+                    theThanhVienDTO.setTrangThaiTheThanhVien(TrangThaiTheThanhVien.DANG_SU_DUNG);
+                    theThanhVienDTO.setMaTTV(generateMemberCardId(dTO));
+                    showMessage(theThanhVienService.save(theThanhVienDTO));
 //        Cập nhật thẻ thành viên cho khách hàng ở CSDL
-        KhachHangDTO dTO = getObjectsFromTable(row);
-        dTO.setTheThanhVien(theThanhVienService.findByNgayHetHan(ngayHetHan.getTime()));
-//        Cập nhật số lượng loại thẻ
-//        loaiTheDTO.setGiaTri(loaiTheDTO.getSoLuong()+1);
-//        loaiTheService.update(loaiTheDTO);
-
-        khachHangService.update(dTO);
-        loadDataTable();
-    }//GEN-LAST:event_button4ActionPerformed
+                    dTO.setTheThanhVien(theThanhVienService.findByNgayHetHan(ngayHetHan.getTime()));
+                    khachHangService.save(dTO);
+                    loadDataTable();
+                }
+            });
+            popupMenu.add(menuUpdate);
+            popupMenu.add(menuCreateMemberCard);
+            popupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_tbKhachHangMouseReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnNext;
@@ -531,7 +546,6 @@ public class ViewKhachHang extends javax.swing.JPanel {
     private view.swing.Button btnThemMoi;
     private view.swing.Button button2;
     private view.swing.Button button3;
-    private view.swing.Button button4;
     private view.swing.Button button5;
     private view.swing.Button button6;
     private javax.swing.JButton jButton1;

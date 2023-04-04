@@ -6,6 +6,7 @@ package dto.khachhang;
 
 import comon.constant.khachhang.TrangThaiTheThanhVien;
 import comon.model.AuditModelDTO;
+import comon.utilities.DateTimeUtil;
 import java.util.Date;
 import java.util.Objects;
 import javax.validation.constraints.NotNull;
@@ -37,7 +38,7 @@ public class TheThanhVienDTO extends AuditModelDTO {
     @NotNull(message = "Trạng thái thẻ  - Không được để trống !")
     private TrangThaiTheThanhVien trangThaiTheThanhVien;
     
-    private String convertTrangThai(){
+    public String convertTrangThai(){
         String converted = "";
         switch(this.trangThaiTheThanhVien){
             case DANG_SU_DUNG:
@@ -50,6 +51,6 @@ public class TheThanhVienDTO extends AuditModelDTO {
         return converted;
     }
     public Object[] toDataRow(){
-        return new Object[]{maTTV, new Date(ngayPhatHanh), new Date(ngayHetHan), Objects.isNull(viDiem.getId()) ? "" : viDiem.getId(), convertTrangThai()};
+        return new Object[]{maTTV, DateTimeUtil.formatDate(new Date(ngayPhatHanh)), DateTimeUtil.formatDate(new Date(ngayHetHan)), loaiThe.getTen(), viDiem.getTongDiem(), convertTrangThai()};
     }
 }

@@ -9,6 +9,7 @@ import comon.validator.NDTValidator;
 import dto.khachhang.KhachHangDTO;
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import model.khachhang.KhachHang;
 import org.modelmapper.ModelMapper;
@@ -49,7 +50,7 @@ public class KhachHangServiceImpl implements KhachHangService{
     }
 
     @Override
-    public String create(KhachHangDTO dTO) {
+    public String save(KhachHangDTO dTO) {
 //        Validator validator = NDTValidator.getValidator();
 //        Set<ConstraintViolation<KhachHangDTO>> violations = validator.validate(dTO);
 //        if (!violations.isEmpty()) {
@@ -64,25 +65,6 @@ public class KhachHangServiceImpl implements KhachHangService{
             return "Cập nhật thành công";
         }else{
             return "Cập nhật thất bại";
-        }
-    }
-
-    @Override
-    public String update(KhachHangDTO dTO) {
-        Validator validator = NDTValidator.getValidator();
-//        Set<ConstraintViolation<KhachHangDTO>> violations = validator.validate(dTO);
-//        if (!violations.isEmpty()) {
-//            String errorMessages = "";
-//            for (ConstraintViolation<KhachHangDTO> violation : violations) {
-//                errorMessages += violation.getMessage() + "\n";
-//            }
-//            return errorMessages;
-//        }
-        KhachHang model = mapper.map(dTO, KhachHang.class);
-        if(khachHangRepository.save(model)!=null){
-            return "Sửa thành công";
-        }else{
-            return "Sửa thất bại";
         }
     }
 
@@ -109,6 +91,12 @@ public class KhachHangServiceImpl implements KhachHangService{
     @Override
     public String findId(String maKH) {
         return khachHangRepository.findId(maKH);
+    }
+
+    @Override
+    public KhachHangDTO findByIdTheThanhVien(String idTTV) {
+        KhachHang model = khachHangRepository.findByIdTheThanhVien(idTTV);
+        return mapper.map(model, KhachHangDTO.class);
     }
     
     

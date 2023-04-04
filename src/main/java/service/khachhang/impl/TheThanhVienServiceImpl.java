@@ -47,22 +47,12 @@ public class TheThanhVienServiceImpl implements TheThanhVienService{
     }
 
     @Override
-    public String create(TheThanhVienDTO dTO) {
+    public String save(TheThanhVienDTO dTO) {
         TheThanhVien model = mapper.map(dTO, TheThanhVien.class);
         if(TheThanhVienRepository.save(model)!=null){
             return "Thêm thành công";
         }else{
             return "Thêm thất bại";
-        }
-    }
-
-    @Override
-    public String update(TheThanhVienDTO dTO) {
-        TheThanhVien model = mapper.map(dTO, TheThanhVien.class);
-        if(TheThanhVienRepository.save(model)!=null){
-            return "Sửa thành công";
-        }else{
-            return "Sửa thất bại";
         }
     }
 
@@ -82,6 +72,15 @@ public class TheThanhVienServiceImpl implements TheThanhVienService{
         return mapper.map(model, TheThanhVienDTO.class);
     }
     
-    
+    @Override
+    public String findId(String maKH) {
+        return TheThanhVienRepository.findId(maKH);
+    }
+
+    @Override
+    public TheThanhVienDTO findByMaTTV(String maTTV) {
+        TheThanhVien model = TheThanhVienRepository.findByMaTheTV(maTTV);
+        return mapper.map(model, TheThanhVienDTO.class);
+    }
     
 }

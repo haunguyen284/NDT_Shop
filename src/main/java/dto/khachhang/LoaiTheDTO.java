@@ -18,6 +18,8 @@ import org.hibernate.validator.constraints.NotBlank;
 @Getter
 @Setter
 public class LoaiTheDTO extends AuditModelDTO {
+    
+    private String id;
 
     private String ten;
     @NotBlank(message = "Giá trị - Không được để trống !")
@@ -25,4 +27,8 @@ public class LoaiTheDTO extends AuditModelDTO {
 
     @NotNull(message = "Số lượng - Không được để trống !")
     private int soLuong;
+    
+    public Object[] toDataRow(){
+        return new Object[]{id,ten,giaTri,soLuong};
+    }
 }

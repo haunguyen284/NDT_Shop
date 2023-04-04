@@ -19,11 +19,11 @@ public interface KhachHangService {
 
     KhachHangDTO findById(String id);
     
+    KhachHangDTO findByIdTheThanhVien(String idTTV);
+    
     String findId(String maKH);
 
-    String create(KhachHangDTO dTO);
-
-    String update(KhachHangDTO dTO);
+    String save(KhachHangDTO dTO);
 
     boolean delete(String id);
 

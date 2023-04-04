@@ -47,23 +47,9 @@ public class ViDiemServiceImpl implements ViDiemService{
     }
 
     @Override
-    public String create(ViDiemDTO dTO) {
+    public ViDiemDTO save(ViDiemDTO dTO) {
         ViDiem model = mapper.map(dTO, ViDiem.class);
-        if(ViDiemRepository.save(model)!=null){
-            return "Thêm thành công";
-        }else{
-            return "Thêm thất bại";
-        }
-    }
-
-    @Override
-    public String update(ViDiemDTO dTO) {
-        ViDiem model = mapper.map(dTO, ViDiem.class);
-        if(ViDiemRepository.save(model)!=null){
-            return "Sửa thành công";
-        }else{
-            return "Sửa thất bại";
-        }
+        return mapper.map(ViDiemRepository.save(model), ViDiemDTO.class);
     }
 
     @Override

@@ -4,24 +4,24 @@
  */
 package service.khachhang;
 
-import dto.khachhang.ViDiemDTO;
+import dto.khachhang.QuyDoiDiemDTO;
 import java.util.List;
 
 /**
  *
  * @author Admin
  */
-public interface ViDiemService {
+public interface QuyDoiDiemService {
 
-    List<ViDiemDTO> findAll(int position, int pageSize);
+    List<QuyDoiDiemDTO> findAll(int position, int pageSize);
     
-    List<ViDiemDTO> findAll();
+    List<QuyDoiDiemDTO> findAll();
 
-    ViDiemDTO findById(String id);
+    QuyDoiDiemDTO findById(String id);
     
-    ViDiemDTO findByTen(String ten);
+    QuyDoiDiemDTO findByTen(String ten);
 
-    ViDiemDTO save(ViDiemDTO dTO);
+    String save(QuyDoiDiemDTO dTO);
 
     boolean delete(String id);
 
