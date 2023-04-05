@@ -1,56 +1,96 @@
 package view.form.sanpham;
 
+import comon.constant.PaginationConstant;
+import dto.sanpham.AoDTO;
+import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
+import java.util.List;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
+import service.sanpham.AoService;
+import service.sanpham.impl.AoServiceImpl;
 import view.dialog.Message;
 import view.main.Main;
-import view.model.ModelStudent;
-import view.swing.table.EventAction;
 
 public class ViewAo extends javax.swing.JPanel {
 
+    private AoService aoService;
+    private int currentPage;
+    private int totalPages;
+    private long totalRecords;
+
     public ViewAo() {
         initComponents();
-        table1.fixTable(jScrollPane1);
+        tbHienThi.fixTable(jScrollPane1);
         setOpaque(false);
-        initData();
+
+        currentPage = PaginationConstant.DEFAULT_PAGE;
+        aoService = new AoServiceImpl();
+        initTable();
+        loadDataTable();
     }
 
-    private void initData() {
-        initTableData();
+    private void initTable() {
+        JPopupMenu popupMenu = new JPopupMenu();
+        JMenuItem editMenuItem = new JMenuItem("Sửa bản ghi");
+        JMenuItem viewMenuItem = new JMenuItem("Xem bản ghi");
+
+        popupMenu.add(viewMenuItem);
+        popupMenu.add(editMenuItem);
+
+        editMenuItem.addActionListener((ActionEvent e) -> {
+            if (e.getSource() == editMenuItem) {
+                    Frame parentWindow = (Frame) SwingUtilities.windowForComponent(this);
+                    new DialogAo(parentWindow, true).setVisible(true);
+            }
+        });
+
+        tbHienThi.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    int row = tbHienThi.getSelectedRow();
+                    if (row >= 0) {
+                        tbHienThi.setRowSelectionInterval(row, row);
+                        popupMenu.show(tbHienThi, e.getX(), e.getY());
+                    }
+                }
+            }
+        });
     }
 
-    private void initTableData() {
-        EventAction eventAction = new EventAction() {
-            @Override
-            public void delete(ModelStudent student) {
-                if (showMessage("Delete Student : " + student.getName())) {
-                    System.out.println("User click OK");
-                } else {
-                    System.out.println("User click Cancel");
-                }
-            }
-
-            @Override
-            public void update(ModelStudent student) {
-                if (showMessage("Update Student : " + student.getName())) {
-                    System.out.println("User click OK");
-                } else {
-                    System.out.println("User click Cancel");
-                }
-            }
-        };
+    private void loadDataTable() {
+        List<AoDTO> listDTO = aoService.findAll(currentPage - 1);
+        tbHienThi.clearAllRow();
         DecimalFormat df = new DecimalFormat("#,##0.##");
-        table1.addRow(new Object[]{1, "Áo rách", df.format(2300), df.format(233300), "Đen thùi lùi", "Vải giả", "XL"});
-        table1.addRow(new Object[]{2, "Áo cà xa", df.format(2300), df.format(233300), "Trắng tinh tươm", "Nhựa đểu", "LT"});
-        table1.addRow(new Object[]{3, "Áo vải", df.format(2300), df.format(233300), "Đỏ may mắn", "China", "CC"});
-        table1.addRow(new Object[]{4, "Áo quần", df.format(2300), df.format(233300), "Hồng cánh sen", "Lụa", "VL"});
-        table1.addRow(new Object[]{5, "Áo đại bàng", df.format(2300), df.format(233300), "Tím mộng mơ", "Vải tơ tằm", "CL"});
-        table1.addRow(new Object[]{6, "Áo long bào", df.format(2300), df.format(233300), "Xanh lừa dối", "Vải thiều", "VCL"});
-        table1.addRow(new Object[]{6, "Áo long bào", df.format(2300), df.format(233300), "Xanh lừa dối", "Vải thiều", "VCL"});
-        table1.addRow(new Object[]{6, "Áo long bào", df.format(2300), df.format(233300), "Xanh lừa dối", "Vải thiều", "VCL"});
-        table1.addRow(new Object[]{6, "Áo long bào", df.format(2300), df.format(233300), "Xanh lừa dối", "Vải thiều", "VCL"});
-        table1.addRow(new Object[]{6, "Áo long bào", df.format(2300), df.format(233300), "Xanh lừa dối", "Vải thiều", "VCL"});
+        for (AoDTO dto : listDTO) {
+            tbHienThi.addRow(new Object[]{
+                dto.getSanPham().getMaSP(),
+                dto.getSanPham().getTenSP(),
+                df.format(dto.getSanPham().getGiaBan()) + " VNĐ",
+                df.format(dto.getSanPham().getSoLuongTon()),
+                dto.getSanPham().getMauSac().getTen(),
+                dto.getSanPham().getChatLieu().getTen(),
+                dto.getSizeAo().getTen(),
+                dto.getSanPham().getThuongHieu().getTen(),
+                dto.getSanPham().getXuatXu().getTen()
+            });
+        }
 
+        totalRecords = aoService.totalCount();
+        lbTotalChucVu.setText("Total: " + totalRecords);
+        totalPages = (int) (totalRecords / PaginationConstant.DEFAULT_SIZE) + 1;
+        setStatePagination();
+    }
+
+    private void setStatePagination() {
+        btnPrevious.setEnabled(currentPage > 1);
+        btnNext.setEnabled(currentPage < totalPages);
+        lbPagination.setText(currentPage + "/" + totalPages);
     }
 
     private boolean showMessage(String message) {
@@ -67,7 +107,7 @@ public class ViewAo extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        table1 = new view.swing.table.Table();
+        tbHienThi = new view.swing.table.Table();
         btnPrevious = new javax.swing.JButton();
         btnNext = new javax.swing.JButton();
         lbPagination = new javax.swing.JLabel();
@@ -92,7 +132,6 @@ public class ViewAo extends javax.swing.JPanel {
         jComboBox3 = new javax.swing.JComboBox<>();
         jSpinner3 = new javax.swing.JSpinner();
         button2 = new view.swing.Button();
-        button4 = new view.swing.Button();
         button5 = new view.swing.Button();
         button6 = new view.swing.Button();
 
@@ -107,7 +146,7 @@ public class ViewAo extends javax.swing.JPanel {
         jLabel5.setText("Danh sách áo");
         jLabel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
 
-        table1.setModel(new javax.swing.table.DefaultTableModel(
+        tbHienThi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -115,11 +154,11 @@ public class ViewAo extends javax.swing.JPanel {
                 "Mã", "Tên", "Giá bán", "Số lượng tồn", "Màu sắc", "Chất liệu", "Cỡ", "Thương hiệu", "Xuất xứ"
             }
         ));
-        table1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(table1);
-        if (table1.getColumnModel().getColumnCount() > 0) {
-            table1.getColumnModel().getColumn(0).setResizable(false);
-            table1.getColumnModel().getColumn(0).setPreferredWidth(15);
+        tbHienThi.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(tbHienThi);
+        if (tbHienThi.getColumnModel().getColumnCount() > 0) {
+            tbHienThi.getColumnModel().getColumn(0).setResizable(false);
+            tbHienThi.getColumnModel().getColumn(0).setPreferredWidth(15);
         }
 
         btnPrevious.setText("<");
@@ -206,6 +245,11 @@ public class ViewAo extends javax.swing.JPanel {
         button1.setBackground(new java.awt.Color(0, 102, 255));
         button1.setForeground(new java.awt.Color(255, 255, 255));
         button1.setText("Thêm mới");
+        button1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                button1ActionPerformed(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Lọc"));
@@ -309,10 +353,6 @@ public class ViewAo extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        button4.setBackground(new java.awt.Color(0, 102, 255));
-        button4.setForeground(new java.awt.Color(255, 255, 255));
-        button4.setText("Sửa");
-
         button5.setBackground(new java.awt.Color(0, 102, 255));
         button5.setForeground(new java.awt.Color(255, 255, 255));
         button5.setText("Nhập Excel");
@@ -339,11 +379,9 @@ public class ViewAo extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(51, 51, 51)
                         .addComponent(button1, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
-                        .addGap(50, 50, 50)
-                        .addComponent(button4, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
-                        .addGap(55, 55, 55)
+                        .addGap(182, 182, 182)
                         .addComponent(button5, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
-                        .addGap(69, 69, 69)
+                        .addGap(177, 177, 177)
                         .addComponent(button6, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
                         .addGap(112, 112, 112))))
         );
@@ -355,7 +393,6 @@ public class ViewAo extends javax.swing.JPanel {
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(button4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(button5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(button6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
@@ -380,13 +417,17 @@ public class ViewAo extends javax.swing.JPanel {
 //        loadDataTable();
     }//GEN-LAST:event_btnNextActionPerformed
 
+    private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
+        Frame parentWindow = (Frame) SwingUtilities.windowForComponent(this);
+        new DialogAo(parentWindow, true).setVisible(true);
+    }//GEN-LAST:event_button1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnPrevious;
     private view.swing.Button button1;
     private view.swing.Button button2;
     private view.swing.Button button3;
-    private view.swing.Button button4;
     private view.swing.Button button5;
     private view.swing.Button button6;
     private javax.swing.JButton jButton1;
@@ -412,6 +453,6 @@ public class ViewAo extends javax.swing.JPanel {
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLabel lbPagination;
     private javax.swing.JLabel lbTotalChucVu;
-    private view.swing.table.Table table1;
+    private view.swing.table.Table tbHienThi;
     // End of variables declaration//GEN-END:variables
 }

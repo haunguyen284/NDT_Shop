@@ -6,9 +6,9 @@ package comon.constant.sanpham;
 
 /**
  *
- * @author ADMIN KH
+ * @author nguyenth28
  */
-public enum TrangThaiQuanAo {
+public enum TrangThaiXuatXu {
     ACTIVE,
     IN_ACTIVE
 }

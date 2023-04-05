@@ -17,9 +17,6 @@ import org.hibernate.validator.constraints.NotBlank;
 @Setter
 public class QuanDTO extends AuditModelDTO {
 
-    @NotBlank(message = "Mã quần - Không được để trống !")
-    private String ma;
-
     private SanPhamDTO sanPham;
 
     private SizeQuanDTO sizeQuan;

@@ -29,7 +29,6 @@
         <mapping class="model.sanpham.Ao"/>
         <mapping class="model.sanpham.ChatLieu"/>
         <mapping class="model.sanpham.SizeAo"/> 
-        <mapping class="model.sanpham.DanhMuc"/> 
         <mapping class="model.sanpham.SizeQuan"/>
         <mapping class="model.sanpham.MauSac"/>
         <mapping class="model.sanpham.XuatXu"/>

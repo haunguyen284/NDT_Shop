@@ -72,6 +72,11 @@ public class Table extends JTable {
         DefaultTableModel mod = (DefaultTableModel) getModel();
         mod.addRow(row);
     }
+    
+    public void clearAllRow(){
+        DefaultTableModel mod = (DefaultTableModel) getModel();
+        mod.setRowCount(0);
+    }
 
     public void fixTable(JScrollPane scroll) {
         scroll.getViewport().setBackground(Color.WHITE);

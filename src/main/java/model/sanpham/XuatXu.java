@@ -5,6 +5,8 @@
 package model.sanpham;
 
 import comon.constant.ModelProperties;
+import comon.constant.sanpham.TrangThaiThuongHieu;
+import comon.constant.sanpham.TrangThaiXuatXu;
 import comon.model.PrimaryModel;
 import java.io.Serializable;
 import java.util.Set;
@@ -33,14 +35,7 @@ public class XuatXu extends PrimaryModel implements Serializable {
     @Nationalized
     private String ten;
 
-    @Column(length = ModelProperties.LENGTH_PHONE)
-    private String sdt;
-
-    @Column(length = ModelProperties.LENGTH_EMAIL)
-    private String email;
-
-    @Column(length = ModelProperties.LENGTH_DESCRIPTION)
-    @Nationalized
-    private String diaChi;
+    @Column
+    private TrangThaiXuatXu trangThaiXuatXu;
 
 }

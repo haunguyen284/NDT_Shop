@@ -4,12 +4,11 @@
  */
 package repository.sanpham;
 
-
-import comon.constant.sanpham.TrangThaiChatLieu;
+import comon.constant.sanpham.TrangThaiThuongHieu;
 import comon.utilities.HibernateUtil;
 import java.util.List;
 import javax.persistence.TypedQuery;
-import model.sanpham.ChatLieu;
+import model.sanpham.ThuongHieu;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -17,23 +16,23 @@ import org.hibernate.Transaction;
  *
  * @author nguyenth28
  */
-public class ChatLieuRepository {
+public class ThuongHieuRepository {
 
-    public List<ChatLieu> findAll(TrangThaiChatLieu trangThai) {
-        List<ChatLieu> listModel;
+    public List<ThuongHieu> findAll(TrangThaiThuongHieu trangThai) {
+        List<ThuongHieu> listModel;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT x FROM ChatLieu x WHERE "
-                    + "(:trangThaiChatLieu IS NULL "
-                    + "OR trangThaiChatLieu LIKE '%' + :trangThaiChatLieu + '%')"
+            String hql = "SELECT x FROM ThuongHieu x "
+                    + "WHERE (:trangThaiThuongHieu IS NULL "
+                    + "OR trangThaiThuongHieu LIKE '%' + :trangThaiThuongHieu + '%')"
                     + "ORDER BY ten";
-            TypedQuery<ChatLieu> query = session.createQuery(hql, ChatLieu.class);
-            query.setParameter("trangThaiChatLieu", trangThai != null ? String.valueOf(trangThai.ordinal()): trangThai);
+            TypedQuery<ThuongHieu> query = session.createQuery(hql, ThuongHieu.class);
+            query.setParameter("trangThaiThuongHieu", trangThai != null ? String.valueOf(trangThai.ordinal()) : trangThai);
             listModel = query.getResultList();
         }
         return listModel;
     }
 
-    public ChatLieu save(ChatLieu model) {
+    public ThuongHieu save(ThuongHieu model) {
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.getTransaction();
             transaction.begin();
@@ -50,12 +49,12 @@ public class ChatLieuRepository {
         }
     }
 
-    public ChatLieu findByMa(String ma) {
-        ChatLieu model = null;
-        List<ChatLieu> listModel;
+    public ThuongHieu findByMa(String ma) {
+        ThuongHieu model = null;
+        List<ThuongHieu> listModel;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT x FROM ChatLieu x WHERE x.ma = :ma";
-            TypedQuery<ChatLieu> query = session.createQuery(hql, ChatLieu.class);
+            String hql = "SELECT x FROM ThuongHieu x WHERE x.ma = :ma";
+            TypedQuery<ThuongHieu> query = session.createQuery(hql, ThuongHieu.class);
             query.setParameter("ma", ma);
             listModel = query.getResultList();
         }

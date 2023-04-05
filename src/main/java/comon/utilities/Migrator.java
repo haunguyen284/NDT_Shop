@@ -22,6 +22,7 @@ import comon.constant.sanpham.TrangThaiMauSac;
 import comon.constant.sanpham.TrangThaiQuanAo;
 import comon.constant.sanpham.TrangThaiSanPham;
 import comon.constant.sanpham.TrangThaiThuongHieu;
+import comon.constant.sanpham.TrangThaiXuatXu;
 import model.dongiao.DonGiao;
 import model.dongiao.ThongSo;
 import model.giamgia.GiamGia;
@@ -150,58 +151,54 @@ public class Migrator {
         ThuongHieu th = new ThuongHieu();
         th.setMa("TH01");
         th.setTen("Tên thương hiệu 1");
-        th.setTrangThaiThuongHieu(TrangThaiThuongHieu.TRANG_THAI_1);
+        th.setTrangThaiThuongHieu(TrangThaiThuongHieu.ACTIVE);
         session.save(th);
 
         ThuongHieu th1 = new ThuongHieu();
         th1.setMa("TH02");
         th1.setTen("Tên thương hiệu 2");
-        th1.setTrangThaiThuongHieu(TrangThaiThuongHieu.TRANG_THAI_1);
+        th1.setTrangThaiThuongHieu(TrangThaiThuongHieu.ACTIVE);
         session.save(th1);
 
         ThuongHieu th2 = new ThuongHieu();
         th2.setMa("TH03");
         th2.setTen("Tên thương hiệu 3");
-        th2.setTrangThaiThuongHieu(TrangThaiThuongHieu.TRANG_THAI_2);
+        th2.setTrangThaiThuongHieu(TrangThaiThuongHieu.ACTIVE);
         session.save(th2);
 
         ChatLieu cl = new ChatLieu();
         cl.setMa("CL1");
         cl.setTen("Nilong");
-        cl.setTrangThaiChatLieu(TrangThaiChatLieu.TRANG_THAI_1);
+        cl.setTrangThaiChatLieu(TrangThaiChatLieu.ACTIVE);
         session.save(cl);
 
         ChatLieu cl1 = new ChatLieu();
         cl1.setMa("CL10322");
         cl1.setTen("N7 + cốt tông");
-        cl1.setTrangThaiChatLieu(TrangThaiChatLieu.TRANG_THAI_2);
+        cl1.setTrangThaiChatLieu(TrangThaiChatLieu.ACTIVE);
         session.save(cl1);
 
         MauSac ms = new MauSac();
         ms.setMa("MS1");
         ms.setTen("Blue");
-        ms.setTrangThaiMauSac(TrangThaiMauSac.TRANG_THAI_1);
+        ms.setTrangThaiMauSac(TrangThaiMauSac.ACTIVE);
         session.save(ms);
 
         MauSac ms1 = new MauSac();
         ms1.setMa("MS2");
         ms1.setTen("Yellow");
-        ms1.setTrangThaiMauSac(TrangThaiMauSac.TRANG_THAI_2);
+        ms1.setTrangThaiMauSac(TrangThaiMauSac.ACTIVE);
         session.save(ms1);
 
         XuatXu x = new XuatXu();
         x.setMa("X01");
-        x.setDiaChi("Hà Nội");
-        x.setEmail("nhaCungCap@gamil.com");
-        x.setSdt("0973207405");
         x.setTen("Xuất xứ 1");
+        x.setTrangThaiXuatXu(TrangThaiXuatXu.ACTIVE);
         session.save(x);
 
         XuatXu x2 = new XuatXu();
         x2.setMa("X02");
-        x2.setDiaChi("Tokyo");
-        x2.setEmail("nhaCungCap2@gamil.com");
-        x2.setSdt("080003333");
+        x2.setTrangThaiXuatXu(TrangThaiXuatXu.ACTIVE);
         x2.setTen("Xuất xứ 2");
         session.save(x2);
 
@@ -212,7 +209,7 @@ public class Migrator {
         s.setMong(70);
         s.setTen("Quần 1");
         s.setCanNang(55);
-        s.setTrangThaiQuanAo(TrangThaiQuanAo.TRANG_THAI_1);
+        s.setTrangThaiQuanAo(TrangThaiQuanAo.ACTIVE);
         session.save(s);
 
         SizeQuan s1 = new SizeQuan();
@@ -222,27 +219,33 @@ public class Migrator {
         s1.setMong(78);
         s1.setTen("Quần 2");
         s1.setCanNang(68);
-        s1.setTrangThaiQuanAo(TrangThaiQuanAo.TRANG_THAI_2);
+        s1.setTrangThaiQuanAo(TrangThaiQuanAo.ACTIVE);
         session.save(s1);
 
         SizeAo s3 = new SizeAo();
         s3.setMa("Sa3");
         s3.setTen("L");
-        s3.setRongVai(57);
-        s3.setDai(47);
+        s3.setRongVaiBeNhat(57);
+        s3.setRongVaiLonNhat(70);
+        s3.setDaiBeNhat(47);
+        s3.setDaiLonNhat(70);
         s3.setTen("Aó 2");
-        s3.setTayAo(48);
-        s3.setTrangThaiQuanAo(TrangThaiQuanAo.TRANG_THAI_2);
+        s3.setTayAoBeNhat(48);
+        s3.setTayAoLonNhat(70);
+        s3.setTrangThaiQuanAo(TrangThaiQuanAo.ACTIVE);
         session.save(s3);
 
         SizeAo s4 = new SizeAo();
         s4.setMa("Sa4");
         s4.setTen("L");
-        s4.setRongVai(57);
-        s4.setDai(47);
-        s4.setTen("Aó 4");
-        s4.setTayAo(48);
-        s4.setTrangThaiQuanAo(TrangThaiQuanAo.TRANG_THAI_1);
+        s3.setRongVaiBeNhat(30);
+        s3.setRongVaiLonNhat(70);
+        s3.setDaiBeNhat(30);
+        s3.setDaiLonNhat(70);
+        s3.setTen("Aó 1");
+        s3.setTayAoBeNhat(30);
+        s3.setTayAoLonNhat(70);
+        s4.setTrangThaiQuanAo(TrangThaiQuanAo.ACTIVE);
         session.save(s4);
 
         SanPham sp = new SanPham();
@@ -257,7 +260,7 @@ public class Migrator {
         sp.setChatLieu(cl1);
         sp.setMauSac(ms1);
         sp.setThuongHieu(th2);
-        sp.setTrangThaiSanPham(TrangThaiSanPham.TRANG_THAI_1);
+        sp.setTrangThaiSanPham(TrangThaiSanPham.ACTIVE);
         session.save(sp);
 
         SanPham sp1 = new SanPham();
@@ -272,7 +275,7 @@ public class Migrator {
         sp1.setChatLieu(cl);
         sp1.setMauSac(ms);
         sp1.setThuongHieu(th);
-        sp1.setTrangThaiSanPham(TrangThaiSanPham.TRANG_THAI_2);
+        sp1.setTrangThaiSanPham(TrangThaiSanPham.ACTIVE);
         session.save(sp1);
 
         SanPham sp2 = new SanPham();
@@ -287,7 +290,7 @@ public class Migrator {
         sp2.setChatLieu(cl);
         sp2.setMauSac(ms1);
         sp2.setThuongHieu(th);
-        sp2.setTrangThaiSanPham(TrangThaiSanPham.TRANG_THAI_1);
+        sp2.setTrangThaiSanPham(TrangThaiSanPham.ACTIVE);
         session.save(sp2);
 
         SanPham sp3 = new SanPham();
@@ -302,29 +305,25 @@ public class Migrator {
         sp3.setChatLieu(cl);
         sp3.setMauSac(ms1);
         sp3.setThuongHieu(th);
-        sp3.setTrangThaiSanPham(TrangThaiSanPham.TRANG_THAI_1);
+        sp3.setTrangThaiSanPham(TrangThaiSanPham.ACTIVE);
         session.save(sp3);
 
         Ao a = new Ao();
-        a.setMa("A01");
         a.setSanPham(sp1);
         a.setSizeAo(s4);
         session.save(a);
 
         Ao a1 = new Ao();
-        a1.setMa("A02");
         a1.setSanPham(sp);
         a1.setSizeAo(s3);
         session.save(a1);
 
         Quan q = new Quan();
-        q.setMa("Q01");
         q.setSanPham(sp3);
         q.setSizeQuan(s1);
         session.save(q);
 
         Quan q1 = new Quan();
-        q1.setMa("Q02");
         q1.setSanPham(sp2);
         q1.setSizeQuan(s);
         session.save(q1);
