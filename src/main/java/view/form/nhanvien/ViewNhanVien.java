@@ -1,57 +1,64 @@
 package view.form.nhanvien;
 
-import view.form.sanpham.*;
-import java.text.DecimalFormat;
+import comon.utilities.DateTimeUtil;
+import dto.nhanvien.NhanVienDTO;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.text.Normalizer;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+import service.nhanvien.NhanVienService;
+import service.nhanvien.impl.NhanVienServiceImpl;
 import view.dialog.Message;
 import view.main.Main;
-import view.model.ModelStudent;
-import view.swing.table.EventAction;
 
 public class ViewNhanVien extends javax.swing.JPanel {
 
+    private final NhanVienService nhanVienService;
+    private int currentPage;
+    private int totalPages;
+    private final int pageSize;
+    private long totalKhachHang;
+    private final ModalNhanVien modalNhanVien;
+
     public ViewNhanVien() {
         initComponents();
-        table1.fixTable(jScrollPane1);
+        tbNhanVien.fixTable(jScrollPane1);
         setOpaque(false);
-        initData();
+        pageSize = 8;
+        currentPage = 1;
+        nhanVienService = new NhanVienServiceImpl();
+        modalNhanVien = new ModalNhanVien(null, true);
+        loadDataTable();
     }
 
-    private void initData() {
-        initTableData();
+    public final void loadDataTable() {
+        List<NhanVienDTO> listDTOs = nhanVienService.findAll(currentPage - 1);
+        DefaultTableModel dtm = (DefaultTableModel) tbNhanVien.getModel();
+        tbNhanVien.setModel(dtm);
+        dtm.setRowCount(0);
+        for (NhanVienDTO dto : listDTOs) {
+            dtm.addRow(dto.toDataRow());
+        }
+        totalKhachHang = nhanVienService.totalCount();
+        lbTotal.setText("Total: " + totalKhachHang);
+        totalPages = (int) (totalKhachHang / pageSize) + 1;
+        setStatePagination();
     }
 
-    private void initTableData() {
-        EventAction eventAction = new EventAction() {
-            @Override
-            public void delete(ModelStudent student) {
-                if (showMessage("Delete Student : " + student.getName())) {
-                    System.out.println("User click OK");
-                } else {
-                    System.out.println("User click Cancel");
-                }
-            }
-
-            @Override
-            public void update(ModelStudent student) {
-                if (showMessage("Update Student : " + student.getName())) {
-                    System.out.println("User click OK");
-                } else {
-                    System.out.println("User click Cancel");
-                }
-            }
-        };
-        DecimalFormat df = new DecimalFormat("#,##0.##");
-        table1.addRow(new Object[]{1, "Áo rách", df.format(2300), df.format(233300), "Đen thùi lùi", "Vải giả", "XL"});
-        table1.addRow(new Object[]{2, "Áo cà xa", df.format(2300), df.format(233300), "Trắng tinh tươm", "Nhựa đểu", "LT"});
-        table1.addRow(new Object[]{3, "Áo vải", df.format(2300), df.format(233300), "Đỏ may mắn", "China", "CC"});
-        table1.addRow(new Object[]{4, "Áo quần", df.format(2300), df.format(233300), "Hồng cánh sen", "Lụa", "VL"});
-        table1.addRow(new Object[]{5, "Áo đại bàng", df.format(2300), df.format(233300), "Tím mộng mơ", "Vải tơ tằm", "CL"});
-        table1.addRow(new Object[]{6, "Áo long bào", df.format(2300), df.format(233300), "Xanh lừa dối", "Vải thiều", "VCL"});
-        table1.addRow(new Object[]{6, "Áo long bào", df.format(2300), df.format(233300), "Xanh lừa dối", "Vải thiều", "VCL"});
-        table1.addRow(new Object[]{6, "Áo long bào", df.format(2300), df.format(233300), "Xanh lừa dối", "Vải thiều", "VCL"});
-        table1.addRow(new Object[]{6, "Áo long bào", df.format(2300), df.format(233300), "Xanh lừa dối", "Vải thiều", "VCL"});
-        table1.addRow(new Object[]{6, "Áo long bào", df.format(2300), df.format(233300), "Xanh lừa dối", "Vải thiều", "VCL"});
-
+    private void setStatePagination() {
+        btnPrevious.setEnabled(currentPage > 1);
+        btnNext.setEnabled(currentPage < totalPages);
+        lbPagination.setText(currentPage + "/" + totalPages);
     }
 
     private boolean showMessage(String message) {
@@ -68,17 +75,17 @@ public class ViewNhanVien extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        table1 = new view.swing.table.Table();
+        tbNhanVien = new view.swing.table.Table();
         btnPrevious = new javax.swing.JButton();
         btnNext = new javax.swing.JButton();
         lbPagination = new javax.swing.JLabel();
-        lbTotalChucVu = new javax.swing.JLabel();
+        lbTotal = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         button3 = new view.swing.Button();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
         jLabel9 = new javax.swing.JLabel();
-        button1 = new view.swing.Button();
+        btnThemMoi = new view.swing.Button();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -93,35 +100,43 @@ public class ViewNhanVien extends javax.swing.JPanel {
         jComboBox3 = new javax.swing.JComboBox<>();
         jSpinner3 = new javax.swing.JSpinner();
         button2 = new view.swing.Button();
-        button4 = new view.swing.Button();
         button5 = new view.swing.Button();
         button6 = new view.swing.Button();
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(4, 72, 210));
-        jLabel1.setText("Nhân viên");
+        jLabel1.setText("Nhân Viên");
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel5.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(76, 76, 76));
-        jLabel5.setText("Danh sách áo");
+        jLabel5.setText("Danh sách Nhan Viên");
         jLabel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
 
-        table1.setModel(new javax.swing.table.DefaultTableModel(
+        tbNhanVien.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Mã", "Tên", "Giá bán", "Số lượng tồn", "Màu sắc", "Chất liệu", "Cỡ", "Thương hiệu", "Xuất xứ"
+                "Mã NV", "Họ tên", "SDT", "Giới tính", "Ngày sinh", "Địa chỉ", "Email"
             }
-        ));
-        table1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(table1);
-        if (table1.getColumnModel().getColumnCount() > 0) {
-            table1.getColumnModel().getColumn(0).setResizable(false);
-            table1.getColumnModel().getColumn(0).setPreferredWidth(15);
-        }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tbNhanVien.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tbNhanVien.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tbNhanVienMouseReleased(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbNhanVien);
 
         btnPrevious.setText("<");
         btnPrevious.addActionListener(new java.awt.event.ActionListener() {
@@ -139,7 +154,7 @@ public class ViewNhanVien extends javax.swing.JPanel {
 
         lbPagination.setText("1/1");
 
-        lbTotalChucVu.setText("Total: 0");
+        lbTotal.setText("Total: 0");
 
         jButton1.setBackground(new java.awt.Color(0, 102, 255));
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
@@ -171,10 +186,10 @@ public class ViewNhanVien extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton1)
                         .addGap(40, 40, 40)
-                        .addComponent(lbTotalChucVu))
+                        .addComponent(lbTotal))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 581, Short.MAX_VALUE)
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -199,17 +214,17 @@ public class ViewNhanVien extends javax.swing.JPanel {
                     .addComponent(btnPrevious)
                     .addComponent(btnNext)
                     .addComponent(lbPagination)
-                    .addComponent(lbTotalChucVu)
+                    .addComponent(lbTotal)
                     .addComponent(jButton1))
                 .addGap(11, 11, 11))
         );
 
-        button1.setBackground(new java.awt.Color(0, 102, 255));
-        button1.setForeground(new java.awt.Color(255, 255, 255));
-        button1.setText("Thêm mới");
-        button1.addActionListener(new java.awt.event.ActionListener() {
+        btnThemMoi.setBackground(new java.awt.Color(0, 102, 255));
+        btnThemMoi.setForeground(new java.awt.Color(255, 255, 255));
+        btnThemMoi.setText("Thêm mới");
+        btnThemMoi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                button1ActionPerformed(evt);
+                btnThemMoiActionPerformed(evt);
             }
         });
 
@@ -315,10 +330,6 @@ public class ViewNhanVien extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        button4.setBackground(new java.awt.Color(0, 102, 255));
-        button4.setForeground(new java.awt.Color(255, 255, 255));
-        button4.setText("Sửa");
-
         button5.setBackground(new java.awt.Color(0, 102, 255));
         button5.setForeground(new java.awt.Color(255, 255, 255));
         button5.setText("Nhập Excel");
@@ -344,10 +355,8 @@ public class ViewNhanVien extends javax.swing.JPanel {
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGap(51, 51, 51)
-                        .addComponent(button1, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
-                        .addGap(50, 50, 50)
-                        .addComponent(button4, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
-                        .addGap(55, 55, 55)
+                        .addComponent(btnThemMoi, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+                        .addGap(290, 290, 290)
                         .addComponent(button5, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
                         .addGap(69, 69, 69)
                         .addComponent(button6, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
@@ -360,8 +369,7 @@ public class ViewNhanVien extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(button4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnThemMoi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(button5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(button6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
@@ -373,30 +381,86 @@ public class ViewNhanVien extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreviousActionPerformed
-//        if (currentPage > 1) {
-//            currentPage--;
-//        }
-//        loadDataTable();
+        if (currentPage > 1) {
+            currentPage--;
+        }
+        loadDataTable();
     }//GEN-LAST:event_btnPreviousActionPerformed
 
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
-//        if (currentPage < totalPages) {
-//            currentPage++;
-//        }
-//        loadDataTable();
+        if (currentPage < totalPages) {
+            currentPage++;
+        }
+        loadDataTable();
     }//GEN-LAST:event_btnNextActionPerformed
 
-    private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_button1ActionPerformed
+    private void btnThemMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemMoiActionPerformed
+        modalNhanVien.clear();
+        modalNhanVien.setVisible(true);
+        modalNhanVien.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                loadDataTable();
+            }
+        });
+    }//GEN-LAST:event_btnThemMoiActionPerformed
+
+    private NhanVienDTO getObjectsFromTable(int row) throws NumberFormatException {
+        String maNV = this.tbNhanVien.getValueAt(row, 0).toString();
+        String ten = this.tbNhanVien.getValueAt(row, 1).toString();
+        String sdt = this.tbNhanVien.getValueAt(row, 2).toString();
+        String email = this.tbNhanVien.getValueAt(row, 6).toString();
+        String ngaySinh = this.tbNhanVien.getValueAt(row, 4).toString();
+        String diaChi = this.tbNhanVien.getValueAt(row, 5).toString();
+        String gioiTinh = this.tbNhanVien.getValueAt(row, 3).toString();
+        NhanVienDTO dTO = new NhanVienDTO();
+        dTO.setMaNV(maNV);
+        dTO.setId(nhanVienService.findId(maNV));
+        dTO.setTen(ten);
+        dTO.setSdt(sdt);
+        dTO.setEmail(email);
+        dTO.setNgaySinh(DateTimeUtil.stringToDate(ngaySinh).getTime());
+        dTO.setDiaChi(diaChi);
+        dTO.setGioiTinh(gioiTinh);
+       
+        return dTO;
+    }
+
+    
+
+    private void tbNhanVienMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbNhanVienMouseReleased
+        // Kiểm tra xem người dùng đã nhấp chuột phải
+        if (SwingUtilities.isRightMouseButton(evt)) {
+            // Lấy vị trí hàng được chọn
+            int row = tbNhanVien.rowAtPoint(evt.getPoint());
+            // Hiển thị menu tạm thời
+            JPopupMenu popupMenu = new JPopupMenu();
+            JMenuItem menuUpdate = new JMenuItem("Cập nhật");
+            menuUpdate.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    NhanVienDTO dTO = getObjectsFromTable(row);
+                    modalNhanVien.fill(dTO);
+                    modalNhanVien.setVisible(true);
+                    modalNhanVien.addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosed(WindowEvent e) {
+                            loadDataTable();
+                        }
+                    });
+                }
+            });
+            
+            popupMenu.add(menuUpdate);
+            popupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_tbNhanVienMouseReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnPrevious;
-    private view.swing.Button button1;
+    private view.swing.Button btnThemMoi;
     private view.swing.Button button2;
     private view.swing.Button button3;
-    private view.swing.Button button4;
     private view.swing.Button button5;
     private view.swing.Button button6;
     private javax.swing.JButton jButton1;
@@ -421,7 +485,7 @@ public class ViewNhanVien extends javax.swing.JPanel {
     private javax.swing.JSpinner jSpinner3;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLabel lbPagination;
-    private javax.swing.JLabel lbTotalChucVu;
-    private view.swing.table.Table table1;
+    private javax.swing.JLabel lbTotal;
+    private view.swing.table.Table tbNhanVien;
     // End of variables declaration//GEN-END:variables
 }

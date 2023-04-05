@@ -17,6 +17,7 @@ import view.form.thongke.ViewDoanhThu;
 import view.form.MainForm;
 import view.form.khachhang.ViewKhachHang;
 import view.form.khachhang.ViewTheThanhVien;
+import view.form.nhanvien.ViewNhanVien;
 import view.form.sanpham.ViewAo;
 import view.swing.MenuItem;
 import view.swing.PopupMenu;
@@ -57,10 +58,12 @@ public class Main extends javax.swing.JFrame implements Runnable {
                     if (subMenuIndex == 0) {
                         main.showForm(new ViewAo());
                     }
+                } else if (menuIndex == 4) {
+                        main.showForm(new ViewNhanVien());
                 } else if (menuIndex == 5) {
                     if (subMenuIndex == 0) {
                         main.showForm(new ViewKhachHang());
-                    }else if (subMenuIndex == 1){
+                    } else if (subMenuIndex == 1) {
                         main.showForm(new ViewTheThanhVien(main));
                     }
                 } else if (menuIndex == 7) {
