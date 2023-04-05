@@ -207,6 +207,11 @@ public class ViewNhanVien extends javax.swing.JPanel {
         button1.setBackground(new java.awt.Color(0, 102, 255));
         button1.setForeground(new java.awt.Color(255, 255, 255));
         button1.setText("Thêm mới");
+        button1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                button1ActionPerformed(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Lọc"));
@@ -380,6 +385,10 @@ public class ViewNhanVien extends javax.swing.JPanel {
 //        }
 //        loadDataTable();
     }//GEN-LAST:event_btnNextActionPerformed
+
+    private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_button1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnNext;
