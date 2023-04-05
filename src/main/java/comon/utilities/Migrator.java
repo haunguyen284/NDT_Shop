@@ -332,27 +332,27 @@ public class Migrator {
 //        Giam giá
         GiamGia g = new GiamGia();
         g.setMaGg("G01");
-        g.setGiaTriGiamGia(5);
-   
+        g.setMucGiamGiaPhanTram(5);
+        g.setMucGiamGiaTienMat(300);
         g.setNgayBatDau(Long.MIN_VALUE);
         g.setNgayKetThuc(Long.MAX_VALUE);
         g.setTen("Tên giảm giá 1");
         g.setMoTa("Khuyến mãi giảm giá nhân dịp sinh nhất chủ của hàng Lê Duy");
-        g.setTrangThaiGiamGia(TrangThaiGiamGia.DANG_HOAT_DONG);
-        g.setLoaiGiamGia(LoaiGiamGia.GIAM_GIA_THEO_PHAN_TRAM);
+        g.setTrangThaiGiamGia(TrangThaiGiamGia.TRANG_THAI_1);
+        g.setLoaiGiamGia(LoaiGiamGia.LOAI_1);
         g.setDieuKienGiamGia(1200);
         session.save(g);
 
         GiamGia g1 = new GiamGia();
         g1.setMaGg("G02");
-        g1.setGiaTriGiamGia(0);
-   
+        g1.setMucGiamGiaPhanTram(10);
+        g1.setMucGiamGiaTienMat(600);
         g1.setNgayBatDau(Long.MIN_VALUE);
         g1.setNgayKetThuc(Long.MAX_VALUE);
         g1.setTen("Tên giảm giá 2");
         g1.setMoTa("Khuyến mãi giảm giá nhân dịp pass môn dự án 1");
-        g1.setTrangThaiGiamGia(TrangThaiGiamGia.NGUNG_HOAT_DONG);
-        g1.setLoaiGiamGia(LoaiGiamGia.GIAM_GIA_THEO_TIEN_MAT);
+        g1.setTrangThaiGiamGia(TrangThaiGiamGia.TRANG_THAI_2);
+        g1.setLoaiGiamGia(LoaiGiamGia.LOAI_2);
         g1.setDieuKienGiamGia(3000);
         session.save(g1);
 

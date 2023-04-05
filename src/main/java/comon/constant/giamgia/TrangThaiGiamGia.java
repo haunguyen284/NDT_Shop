@@ -11,6 +11,6 @@ import comon.constant.sanpham.*;
  * @author ADMIN KH
  */
 public enum TrangThaiGiamGia {
-    DANG_HOAT_DONG,
-    NGUNG_HOAT_DONG
+    TRANG_THAI_1,
+    TRANG_THAI_2
 }

@@ -34,9 +34,8 @@ public class Table extends JTable {
                     Profile cell = new Profile(data);
                     if (selected) {
                         cell.setBackground(new Color(239, 244, 255));
-     
                     } else {
-                        cell.setBackground(Color.white);
+                        cell.setBackground(Color.WHITE);
                     }
                     return cell;
 
@@ -45,18 +44,18 @@ public class Table extends JTable {
                     Action cell = new Action(data);
                     if (selected) {
                         cell.setBackground(new Color(239, 244, 255));
-               } else {
-                        cell.setBackground(Color.white);
+                    } else {
+                        cell.setBackground(Color.WHITE);
                     }
                     return cell;
                 } else {
                     Component com = super.getTableCellRendererComponent(jtable, o, selected, focus, i, i1);
                     setBorder(noFocusBorder);
                     com.setForeground(new Color(102, 102, 102));
-                    if (selected ==false&& i%2==0) {
+                    if (selected) {
                         com.setBackground(new Color(239, 244, 255));
                     } else {
-                        com.setBackground(Color.white);
+                        com.setBackground(Color.WHITE);
                     }
                     return com;
                 }

@@ -9,6 +9,7 @@ package comon.constant.giamgia;
  * @author ADMIN KH
  */
 public enum LoaiGiamGia {
-    GIAM_GIA_THEO_PHAN_TRAM,
-    GIAM_GIA_THEO_TIEN_MAT
+    LOAI_1,
+    LOAI_2,
+    LOAI_3
 }
