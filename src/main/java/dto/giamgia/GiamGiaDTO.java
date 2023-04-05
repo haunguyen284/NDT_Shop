@@ -38,10 +38,8 @@ public class GiamGiaDTO extends AuditModelDTO {
 //    @NotNull(message = "Điều kiện giảm giá  - Không được để trống !")
     private float dieuKienGiamGia;
 
-//    @NotNull(message = "Trạng thái giảm giá  - Không được để trống !")
     private TrangThaiGiamGia trangThaiGiamGia;
 
-//    @NotNull(message = "Loại giảm giá  - Không được để trống !")
     private LoaiGiamGia loaiGiamGia;
 
     private String moTa;

@@ -4,6 +4,7 @@ import comon.constant.ModelProperties;
 import comon.constant.PaginationConstant;
 import comon.validator.NDTValidator;
 import dto.giamgia.GiamGiaDTO;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
@@ -22,6 +23,8 @@ import raven.cell.TableActionEvent;
 import service.giamgia.GiamGiaService;
 import service.giamgia.impl.GiamGiaImpl;
 import view.dialog.Message;
+import view.dialog.ShowMessage;
+import view.dialog.ShowMessageSuccessful;
 import view.main.Main;
 import view.model.ModelStudent;
 import view.swing.table.EventAction;
@@ -54,6 +57,10 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
         TableActionEvent event = new TableActionEvent() {
             @Override
             public void onEdit(int row) {
+                viewModal.getBtnSave().setVisible(true);
+                viewModal.getTxtSave().setVisible(true);
+                viewModal.getBtnSave().setText("Update");
+
                 row = tblGiamGia.getSelectedRow();
                 if (row < 0) {
                     return;
@@ -63,21 +70,28 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
                 if (optional.isPresent()) {
                     viewModal.fill(optional.get());
                     viewModal.setVisible(true);
-                    viewModal.getBtnSave().setText("Update");
                 }
             }
 
             @Override
             public void onDelete(int row) {
-                if (tblGiamGia.isEditing()) {
-                    tblGiamGia.getCellEditor().stopCellEditing();
+                row = tblGiamGia.getSelectedRow();
+                if (row < 0) {
+                    return;
                 }
-                DefaultTableModel model = (DefaultTableModel) tblGiamGia.getModel();
-                model.removeRow(row);
+                if(ShowMessage.show("Bạn muốn xóa giảm giá này chứ ?")){
+                         String id = tblGiamGia.getValueAt(row, 0).toString();
+                    String result = service.delete(id);
+                    ShowMessageSuccessful.showSuccessful(result);
+                    loadData();
+                }
+
             }
 
             @Override
             public void onView(int row) {
+                viewModal.getBtnSave().setVisible(false);
+                viewModal.getTxtSave().setVisible(false);
                 row = tblGiamGia.getSelectedRow();
                 if (row < 0) {
                     return;
@@ -87,7 +101,6 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
                 if (optional.isPresent()) {
                     viewModal.fill(optional.get());
                     viewModal.setVisible(true);
-                    viewModal.getBtnSave().setText("View");
                 }
             }
         };
@@ -490,8 +503,11 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-        viewModal.setVisible(true);
+        viewModal.clearForm();
+        viewModal.getBtnSave().setVisible(true);
+        viewModal.getTxtSave().setVisible(true);
         viewModal.getBtnSave().setText("Save");
+        viewModal.setVisible(true);
         viewModal.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
@@ -508,8 +524,8 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
 //        String id = tblGiamGia.getValueAt(row, 0).toString();
 //        Optional<GiamGiaDTO> optional = service.findById(id);
 //        if (optional.isPresent()) {
-//            modal.fill(optional.get());
-//            modal.setVisible(true);
+//            viewModal.fill(optional.get());
+//            viewModal.setVisible(true);
 //        }
     }//GEN-LAST:event_tblGiamGiaMouseClicked
 

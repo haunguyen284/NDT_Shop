@@ -27,12 +27,10 @@ public class GiamGiaImpl implements GiamGiaService {
 
     private final GiamGiaRepository repository;
     private final ModelMapper mapper;
-    private final Validator validator;
 
     public GiamGiaImpl() {
         this.repository = new GiamGiaRepository();
         this.mapper = Mapper.modelMapper();
-        this.validator = NDTValidator.getValidator();
     }
 
     @Override
@@ -62,13 +60,6 @@ public class GiamGiaImpl implements GiamGiaService {
         String result;
         GiamGia model = mapper.map(x, GiamGia.class);
         Optional<GiamGia> optional = repository.finByID(model.getId());
-        Set<ConstraintViolation<GiamGiaDTO>> violations = validator.validate(x);
-        if (!violations.isEmpty()) {
-            String errors = "";
-            for (ConstraintViolation<GiamGiaDTO> x : violations) {
-                errors += x.getMessage() + "\n";
-            }
-        }
         switch (action) {
             case "add" -> {
                 model.setId(null);
@@ -81,7 +72,7 @@ public class GiamGiaImpl implements GiamGiaService {
                     result = "Add fail !";
                 }
             }
-            case "update" -> {
+            case "update" -> {             
                 if (optional.isEmpty()) {
                     return "Giam giá này không tồn tại !";
                 }
