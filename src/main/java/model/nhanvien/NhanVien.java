@@ -53,7 +53,5 @@ public class NhanVien extends PrimaryModel implements Serializable{
     @Nationalized
     private String email;
     
-    @OneToMany(mappedBy="nhanVien")
-    private Set<HoaDon> dsHoaDon;
     
 }

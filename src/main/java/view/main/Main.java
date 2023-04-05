@@ -15,13 +15,15 @@ import view.event.EventMenuSelected;
 import view.event.EventShowPopupMenu;
 import view.form.thongke.ViewDoanhThu;
 import view.form.MainForm;
+import view.form.khachhang.ViewKhachHang;
+import view.form.khachhang.ViewTheThanhVien;
 import view.form.sanpham.ViewAo;
 import view.swing.MenuItem;
 import view.swing.PopupMenu;
 import view.swing.icon.GoogleMaterialDesignIcons;
 import view.swing.icon.IconFontSwing;
 
-public class Main extends javax.swing.JFrame implements Runnable{
+public class Main extends javax.swing.JFrame implements Runnable {
 
     private MigLayout layout;
     private Menu menu;
@@ -54,6 +56,12 @@ public class Main extends javax.swing.JFrame implements Runnable{
                 } else if (menuIndex == 2) {
                     if (subMenuIndex == 0) {
                         main.showForm(new ViewAo());
+                    }
+                } else if (menuIndex == 5) {
+                    if (subMenuIndex == 0) {
+                        main.showForm(new ViewKhachHang());
+                    }else if (subMenuIndex == 1){
+                        main.showForm(new ViewTheThanhVien(main));
                     }
                 } else if (menuIndex == 7) {
                     if (ShowMessage.show("Bạn chắc chắn muốn thoát ?")) {

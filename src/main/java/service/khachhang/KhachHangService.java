@@ -1,13 +1,31 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package service.khachhang;
 
+import dto.khachhang.KhachHangDTO;
+import java.util.List;
+
 /**
  *
- * @author ADMIN KH
+ * @author Admin
  */
 public interface KhachHangService {
+
+    List<KhachHangDTO> findAll(int position, int pageSize);
     
+    List<KhachHangDTO> findByName(String ten, int position, int pageSize);
+
+    KhachHangDTO findById(String id);
+    
+    KhachHangDTO findByIdTheThanhVien(String idTTV);
+    
+    String findId(String maKH);
+
+    String save(KhachHangDTO dTO);
+
+    boolean delete(String id);
+
+    long totalCount();
 }

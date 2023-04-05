@@ -5,7 +5,9 @@
 package dto.khachhang;
 
 import comon.model.AuditModelDTO;
+import comon.utilities.DateTimeUtil;
 import dto.hoadon.HoaDonDTO;
+import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
@@ -17,11 +19,9 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class LichSuTichDiemDTO extends AuditModelDTO {
+public class LichSuTieuDiemDTO extends AuditModelDTO {
 
     private ViDiemDTO viDiem;
-
-    private List<HoaDonDTO> hoaDon;
 
     private QuyDoiDiemDTO quyDoiDiem;
 
@@ -33,4 +33,8 @@ public class LichSuTichDiemDTO extends AuditModelDTO {
 
     @NotNull(message = "Ngày sử dụng - Không được để trống !")
     private Long ngaySuDung;
+
+    public Object[] toDataRow() {
+        return new Object[]{DateTimeUtil.formatDate(new Date(ngaySuDung)), soDiemCong, soDiemDaDung};
+    }
 }
