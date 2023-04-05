@@ -8,6 +8,7 @@ import comon.utilities.Mapper;
 import dto.khachhang.TheThanhVienDTO;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import model.khachhang.TheThanhVien;
 import org.modelmapper.ModelMapper;
 import repository.khachhang.TheThanhVienRepository;
@@ -80,6 +81,9 @@ public class TheThanhVienServiceImpl implements TheThanhVienService{
     @Override
     public TheThanhVienDTO findByMaTTV(String maTTV) {
         TheThanhVien model = TheThanhVienRepository.findByMaTheTV(maTTV);
+        if(Objects.isNull(model)){
+            return null;
+        }
         return mapper.map(model, TheThanhVienDTO.class);
     }
     

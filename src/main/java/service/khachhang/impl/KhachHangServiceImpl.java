@@ -9,6 +9,7 @@ import comon.validator.NDTValidator;
 import dto.khachhang.KhachHangDTO;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import model.khachhang.KhachHang;
@@ -51,15 +52,6 @@ public class KhachHangServiceImpl implements KhachHangService{
 
     @Override
     public String save(KhachHangDTO dTO) {
-//        Validator validator = NDTValidator.getValidator();
-//        Set<ConstraintViolation<KhachHangDTO>> violations = validator.validate(dTO);
-//        if (!violations.isEmpty()) {
-//            String errorMessages = "";
-//            for (ConstraintViolation<KhachHangDTO> violation : violations) {
-//                errorMessages += violation.getMessage() + "\n";
-//            }
-//            return errorMessages;
-//        }
         KhachHang model = mapper.map(dTO, KhachHang.class);
         if(khachHangRepository.save(model)!=null){
             return "Cập nhật thành công";

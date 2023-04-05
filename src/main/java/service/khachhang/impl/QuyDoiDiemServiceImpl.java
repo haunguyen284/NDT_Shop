@@ -48,12 +48,11 @@ public class QuyDoiDiemServiceImpl implements QuyDoiDiemService{
 
     @Override
     public String save(QuyDoiDiemDTO dTO) {
-        dTO.setId(null);
         QuyDoiDiem model = mapper.map(dTO, QuyDoiDiem.class);
         if(QuyDoiDiemRepository.save(model)!=null){
-            return "Thêm thành công";
+            return "Cập nhật thành công";
         }else{
-            return "Thêm thất bại";
+            return "Cập nhật thất bại";
         }
     }
 

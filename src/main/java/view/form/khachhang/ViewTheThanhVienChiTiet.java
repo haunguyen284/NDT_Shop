@@ -1,10 +1,12 @@
 package view.form.khachhang;
 
+import comon.constant.khachhang.TrangThaiQuyDoi;
 import comon.constant.khachhang.TrangThaiTheThanhVien;
 import comon.utilities.DateTimeUtil;
 import dto.khachhang.KhachHangDTO;
 import dto.khachhang.LichSuTieuDiemDTO;
 import dto.khachhang.LoaiTheDTO;
+import dto.khachhang.QuyDoiDiemDTO;
 import dto.khachhang.TheThanhVienDTO;
 import dto.khachhang.ViDiemDTO;
 import java.awt.event.WindowAdapter;
@@ -15,11 +17,13 @@ import javax.swing.table.DefaultTableModel;
 import service.khachhang.KhachHangService;
 import service.khachhang.LichSuTieuDiemService;
 import service.khachhang.LoaiTheService;
+import service.khachhang.QuyDoiDiemService;
 import service.khachhang.TheThanhVienService;
 import service.khachhang.ViDiemService;
 import service.khachhang.impl.KhachHangServiceImpl;
 import service.khachhang.impl.LichSuTieuDiemServiceImpl;
 import service.khachhang.impl.LoaiTheServiceImpl;
+import service.khachhang.impl.QuyDoiDiemServiceImpl;
 import service.khachhang.impl.TheThanhVienServiceImpl;
 import service.khachhang.impl.ViDiemServiceImpl;
 import view.dialog.Message;
@@ -32,11 +36,13 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
     private final LoaiTheService loaiTheService;
     private final ViDiemService viDiemService;
     private final LichSuTieuDiemService lichSuTieuDiemService;
+    private final QuyDoiDiemService quyDoiDiemService;
     private int currentPage;
     private int totalPages;
     private final int pageSize;
     private long total;
     private final String maTheTV;
+    private ModalQuyDoiDiem modalQuyDoiDiem;
 
     public ViewTheThanhVienChiTiet(String maTheTV) {
         initComponents();
@@ -49,9 +55,11 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
         viDiemService = new ViDiemServiceImpl();
         loaiTheService = new LoaiTheServiceImpl();
         lichSuTieuDiemService = new LichSuTieuDiemServiceImpl();
+        quyDoiDiemService = new QuyDoiDiemServiceImpl();
         this.maTheTV = maTheTV;
-//        loadDataTable();
+        loadDataTable();
         loadLabel();
+        loadQuyDoiDiem();
     }
 
     public final void loadDataTable() {
@@ -65,6 +73,13 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
         lbTotal.setText("Total: " + lichSuTieuDiemService.totalCount());
         totalPages = (int) (total / pageSize) + 1;
         setStatePagination();
+    }
+    
+    public final void loadQuyDoiDiem(){
+        QuyDoiDiemDTO dTO = quyDoiDiemService.findById("7bdd597b-1baf-404b-8be7-7ff51c4425bc");
+        modalQuyDoiDiem = new ModalQuyDoiDiem(null, true, dTO);
+        lbTien.setText(dTO.getTienTichDiem()+"");
+        lbDiem.setText("= "+dTO.getTienTieuDiem());
     }
 
     public final void loadLabel() {
@@ -135,7 +150,14 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         lbMaKH = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        lbTien = new javax.swing.JLabel();
+        lbTrangThai2 = new javax.swing.JLabel();
+        lbDiem = new javax.swing.JLabel();
+        lb = new javax.swing.JLabel();
+        btnDoi = new view.swing.ButtonOutLine();
         panelPreview = new javax.swing.JPanel();
+        jLabel15 = new javax.swing.JLabel();
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(4, 72, 210));
@@ -223,7 +245,7 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
                         .addComponent(lbTotal))
                     .addGroup(panelLichSuTieuDiemLayout.createSequentialGroup()
                         .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 604, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -335,12 +357,47 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
         lbMaKH.setForeground(new java.awt.Color(0, 0, 0));
         lbMaKH.setText("lbMaKH");
 
+        jLabel14.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(255, 0, 0));
+        jLabel14.setText("Quy Đổi Điểm:");
+
+        lbTien.setFont(new java.awt.Font("Roboto Light", 0, 14)); // NOI18N
+        lbTien.setForeground(new java.awt.Color(0, 0, 0));
+        lbTien.setText("lbTien");
+
+        lbTrangThai2.setBackground(new java.awt.Color(204, 102, 0));
+        lbTrangThai2.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        lbTrangThai2.setForeground(new java.awt.Color(255, 255, 255));
+        lbTrangThai2.setText("VND");
+        lbTrangThai2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 102, 0), 2));
+        lbTrangThai2.setOpaque(true);
+
+        lbDiem.setFont(new java.awt.Font("Roboto Light", 0, 14)); // NOI18N
+        lbDiem.setForeground(new java.awt.Color(0, 0, 0));
+        lbDiem.setText("=lbDiem");
+
+        lb.setBackground(new java.awt.Color(0, 102, 153));
+        lb.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        lb.setForeground(new java.awt.Color(255, 255, 255));
+        lb.setText("Điểm");
+        lb.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 153), 2));
+        lb.setOpaque(true);
+
+        btnDoi.setBackground(new java.awt.Color(255, 0, 0));
+        btnDoi.setForeground(new java.awt.Color(255, 0, 0));
+        btnDoi.setText("Đổi");
+        btnDoi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDoiActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelThongTinKHLayout = new javax.swing.GroupLayout(panelThongTinKH);
         panelThongTinKH.setLayout(panelThongTinKHLayout);
         panelThongTinKHLayout.setHorizontalGroup(
             panelThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelThongTinKHLayout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addGap(22, 22, 22)
                 .addGroup(panelThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
                     .addComponent(jLabel6)
@@ -351,9 +408,21 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
                     .addComponent(jLabel12)
                     .addComponent(jLabel3)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel13))
-                .addGap(69, 69, 69)
+                    .addComponent(jLabel13)
+                    .addGroup(panelThongTinKHLayout.createSequentialGroup()
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lbTien)))
+                .addGap(31, 31, 31)
                 .addGroup(panelThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelThongTinKHLayout.createSequentialGroup()
+                        .addComponent(lbTrangThai2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbDiem)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lb)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnDoi, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lbTenKH)
                     .addComponent(lbMaThe)
                     .addComponent(lbTrangThai)
@@ -364,12 +433,12 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
                     .addComponent(lbNgayHetHan)
                     .addComponent(lbNgayPhatHanh)
                     .addComponent(lbMaKH))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelThongTinKHLayout.setVerticalGroup(
             panelThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelThongTinKHLayout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addContainerGap()
                 .addGroup(panelThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(lbTenKH))
@@ -409,20 +478,36 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
                 .addGroup(panelThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
                     .addComponent(lbTrangThai))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addGap(9, 9, 9)
+                .addGroup(panelThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(lbTien)
+                    .addComponent(lbTrangThai2)
+                    .addComponent(lbDiem)
+                    .addComponent(lb)
+                    .addComponent(btnDoi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         panelPreview.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel15.setText("jLabel15");
 
         javax.swing.GroupLayout panelPreviewLayout = new javax.swing.GroupLayout(panelPreview);
         panelPreview.setLayout(panelPreviewLayout);
         panelPreviewLayout.setHorizontalGroup(
             panelPreviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(panelPreviewLayout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 545, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(158, Short.MAX_VALUE))
         );
         panelPreviewLayout.setVerticalGroup(
             panelPreviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(panelPreviewLayout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -475,7 +560,18 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
 
     }//GEN-LAST:event_tbLichSuTieuDiemMouseClicked
 
+    private void btnDoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDoiActionPerformed
+        modalQuyDoiDiem.setVisible(true);
+        modalQuyDoiDiem.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                loadQuyDoiDiem();
+            }
+        });
+    }//GEN-LAST:event_btnDoiActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private view.swing.ButtonOutLine btnDoi;
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnPrevious;
     private view.swing.Button button3;
@@ -485,6 +581,8 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -496,6 +594,8 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JLabel lb;
+    private javax.swing.JLabel lbDiem;
     private javax.swing.JLabel lbDiemDaCong;
     private javax.swing.JLabel lbDiemDaDung;
     private javax.swing.JLabel lbLoaiThe;
@@ -505,9 +605,11 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
     private javax.swing.JLabel lbNgayPhatHanh;
     private javax.swing.JLabel lbPagination;
     private javax.swing.JLabel lbTenKH;
+    private javax.swing.JLabel lbTien;
     private javax.swing.JLabel lbTongDiem;
     private javax.swing.JLabel lbTotal;
     private javax.swing.JLabel lbTrangThai;
+    private javax.swing.JLabel lbTrangThai2;
     private javax.swing.JPanel panelLichSuTieuDiem;
     private javax.swing.JPanel panelPreview;
     private javax.swing.JPanel panelThongTinKH;

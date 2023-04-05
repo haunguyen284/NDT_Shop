@@ -5,16 +5,23 @@
 package view.form.khachhang;
 
 import comon.constant.khachhang.TrangThaiKhachHang;
+import comon.validator.NDTValidator;
 import dto.khachhang.KhachHangDTO;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Random;
+import java.util.Set;
 import javax.swing.JOptionPane;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import service.khachhang.KhachHangService;
 import service.khachhang.TheThanhVienService;
 import service.khachhang.impl.KhachHangServiceImpl;
 import service.khachhang.impl.TheThanhVienServiceImpl;
+import view.dialog.Message;
+import view.main.Main;
 
 /**
  *
@@ -35,10 +42,16 @@ public class ModalKhachHang extends javax.swing.JDialog {
         theThanhVienService = new TheThanhVienServiceImpl();
         initComponents();
     }
+    
+    private boolean showMessage(String message) {
+        Message obj = new Message(Main.getFrames()[0], true);
+        obj.showMessage(message);
+        return obj.isOk();
+    }
 
     public void fill(KhachHangDTO dTO) {
         lbMaKH.setText(dTO.getMaKH());
-        lbMaTTV.setText(dTO.getTheThanhVien().getMaTTV());
+        lbMaTTV.setText(Objects.isNull(dTO.getTheThanhVien()) ? "" : dTO.getTheThanhVien().getMaTTV());
         txtHoTen.setText(dTO.getTen());
         txtSDT.setText(dTO.getSdt());
         txtEmail.setText(dTO.getEmail());
@@ -50,6 +63,8 @@ public class ModalKhachHang extends javax.swing.JDialog {
         cbxTrangThai.setSelectedItem(dTO.getTrangThaiKhachHang());
     }
     public void clear() {
+        lbMaKH.setText("");
+        lbMaTTV.setText("");
         txtHoTen.setText("");
         txtSDT.setText("");
         txtEmail.setText("");
@@ -113,7 +128,17 @@ public class ModalKhachHang extends javax.swing.JDialog {
         dTO.setDiaChi(diaChi);
         dTO.setGioiTinh(gioiTinh);
         dTO.setGhiChu(ghiChu);
-        dTO.setSoLanMua(Integer.parseInt(soLanMua));
+        dTO.setSoLanMua(soLanMua.equals("") ? 0 : Integer.parseInt(soLanMua));
+        Validator validator = NDTValidator.getValidator();
+        Set<ConstraintViolation<KhachHangDTO>> violations = validator.validate(dTO);
+        if (!violations.isEmpty()) {
+            String errorMessages = "";
+            for (ConstraintViolation<KhachHangDTO> violation : violations) {
+                errorMessages += violation.getMessage() + "\n";
+            }
+            JOptionPane.showMessageDialog(this, errorMessages);
+            return null;
+        }
         if(lbMaKH.getText().isBlank()){
             dTO.setMaKH(generateCustomerId(dTO));
         }else{
@@ -385,7 +410,7 @@ public class ModalKhachHang extends javax.swing.JDialog {
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         KhachHangDTO dTO = getObjectFromInput();
         String result = khachHangService.save(dTO);
-        JOptionPane.showMessageDialog(this, result);
+        showMessage(result);
         new ViewKhachHang().loadDataTable();
         this.dispose();
     }//GEN-LAST:event_btnSaveActionPerformed

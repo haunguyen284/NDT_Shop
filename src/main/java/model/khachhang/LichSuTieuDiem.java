@@ -36,11 +36,6 @@ public class LichSuTieuDiem extends PrimaryModel implements Serializable {
     @JoinColumn(name = "vi_diem_id")
     private ViDiem viDiem;
     
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "hoa_don_id", referencedColumnName = "id")
-    private List<HoaDon> hoaDon;
-
-
     @ManyToOne
     @JoinColumn(name = "quy_doi_diem_id")
     private QuyDoiDiem quyDoiDiem;

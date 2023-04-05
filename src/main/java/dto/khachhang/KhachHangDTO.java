@@ -27,30 +27,29 @@ public class KhachHangDTO extends AuditModelDTO {
 
     private TheThanhVienDTO theThanhVien;
 
-//    @NotBlank(message = "Mã khách hàng - Không được để trống !")
     private String maKH;
 
     @NotBlank(message = "Tên - Không được để trống !")
 //    @Pattern(regexp = ModelProperties.REGEX_NAME, message = "Tên không hợp lệ")
     private String ten;
 
-//    @NotNull(message = "Ngày sinh - Không được để trống !")
+    @NotNull(message = "Ngày sinh - Không được để trống !")
     private long ngaySinh;
 
-//    @NotEmpty(message = "Gioi tính - Không được để trống !")
+    @NotEmpty(message = "Gioi tính - Không được để trống !")
     private String gioiTinh;
 
-//    @NotBlank(message = "SĐT - Không được để trống !")
+    @NotBlank(message = "SĐT - Không được để trống !")
     private String sdt;
 
-//    @NotBlank(message = "Địa chỉ - Không được để trống !")
+    @NotBlank(message = "Địa chỉ - Không được để trống !")
     private String diaChi;
 
-//    @NotBlank(message = "Email - Không được để trống !")
+    @NotBlank(message = "Email - Không được để trống !")
     @Pattern(regexp = ModelProperties.REGEX_EMAIL)
     private String email;
 
-//    @NotNull(message = "Số lần mua - Không được để trống !")
+    @NotNull(message = "Số lần mua - Không được để trống !")
     private int soLanMua;
 
     private TrangThaiKhachHang trangThaiKhachHang;

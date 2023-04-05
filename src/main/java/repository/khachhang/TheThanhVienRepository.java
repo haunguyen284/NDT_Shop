@@ -126,6 +126,8 @@ public class TheThanhVienRepository {
             TypedQuery<TheThanhVien> query = session.createQuery(hql, TheThanhVien.class);
             query.setParameter("maTTV", maTTV);
             model = query.getSingleResult();
+        }catch(NoResultException e){
+            model = null;
         }
         return model;
     }

@@ -67,7 +67,8 @@ public class ViewKhachHang extends javax.swing.JPanel {
         for (KhachHangDTO dto : listDTOs) {
             dtm.addRow(dto.toDataRow());
         }
-        lbTotal.setText("Total: " + khachHangService.totalCount());
+        totalKhachHang = khachHangService.totalCount();
+        lbTotal.setText("Total: " + totalKhachHang);
         totalPages = (int) (totalKhachHang / pageSize) + 1;
         setStatePagination();
     }
@@ -530,6 +531,7 @@ public class ViewKhachHang extends javax.swing.JPanel {
                     showMessage(theThanhVienService.save(theThanhVienDTO));
 //        Cập nhật thẻ thành viên cho khách hàng ở CSDL
                     dTO.setTheThanhVien(theThanhVienService.findByNgayHetHan(ngayHetHan.getTime()));
+                    dTO.setTrangThaiKhachHang(TrangThaiKhachHang.TRANG_THAI_2);
                     khachHangService.save(dTO);
                     loadDataTable();
                 }

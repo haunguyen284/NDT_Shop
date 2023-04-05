@@ -44,5 +44,4 @@ public class NhanVienDTO extends AuditModelDTO {
     @Pattern(regexp = ModelProperties.REGEX_EMAIL)
     private String email;
 
-    private Set<HoaDonDTO> dsHoaDon;
 }

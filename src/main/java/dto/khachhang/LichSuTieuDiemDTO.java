@@ -23,8 +23,6 @@ public class LichSuTieuDiemDTO extends AuditModelDTO {
 
     private ViDiemDTO viDiem;
 
-    private List<HoaDonDTO> hoaDon;
-
     private QuyDoiDiemDTO quyDoiDiem;
 
     @NotNull(message = "Số điểm đã dùng - Không được để trống !")
