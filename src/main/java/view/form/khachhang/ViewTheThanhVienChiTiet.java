@@ -87,6 +87,7 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
         KhachHangDTO khachHangDTO = khachHangService.findByIdTheThanhVien(theThanhVienDTO.getId());
         ViDiemDTO viDiemDTO = viDiemService.findById(theThanhVienDTO.getViDiem().getId());
 
+//        label panelThongTin
         lbTenKH.setText(khachHangDTO.getTen());
         lbMaKH.setText(khachHangDTO.getMaKH());
         lbMaThe.setText(theThanhVienDTO.getMaTTV());
@@ -97,6 +98,16 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
         lbDiemDaDung.setText(viDiemDTO.getDiemDaDung() + "");
         lbDiemDaCong.setText(viDiemDTO.getDiemDaCong() + "");
         lbTrangThai.setText(theThanhVienDTO.convertTrangThai());
+//        label panelPreview
+//        front
+        lbCardFront_id.setText("ID "+maTheTV);
+//        back
+        lbCardBack_loaiThe.setText(theThanhVienDTO.getLoaiThe().getTen());
+        lbCardBack_ngayPhatHanh.setText(DateTimeUtil.formatDate(new Date(theThanhVienDTO.getNgayPhatHanh())));
+        lbCardBack_ngayHetHan.setText(DateTimeUtil.formatDate(new Date(theThanhVienDTO.getNgayHetHan())));
+        lbCardBack_maKH.setText(khachHangDTO.getMaKH());
+        lbCardBack_id.setText("ID "+maTheTV);
+        lbCardBack_ten.setText(khachHangDTO.getTen());
     }
 
     private void setStatePagination() {
@@ -115,7 +126,7 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        lbHeading = new javax.swing.JLabel();
         panelLichSuTieuDiem = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -124,7 +135,6 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
         btnNext = new javax.swing.JButton();
         lbPagination = new javax.swing.JLabel();
         lbTotal = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         button3 = new view.swing.Button();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
@@ -157,11 +167,32 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
         lb = new javax.swing.JLabel();
         btnDoi = new view.swing.ButtonOutLine();
         panelPreview = new javax.swing.JPanel();
-        jLabel15 = new javax.swing.JLabel();
+        lpPreviewBack = new javax.swing.JLayeredPane();
+        lpBack = new javax.swing.JLayeredPane();
+        lpContextBack = new javax.swing.JLayeredPane();
+        lbCardBack_shop = new javax.swing.JLabel();
+        lbCardBack_loaiThe = new javax.swing.JLabel();
+        lbCardBack_ngayPhatHanh = new javax.swing.JLabel();
+        lbCardBack_ngayHetHan = new javax.swing.JLabel();
+        lbCardBack_maKH = new javax.swing.JLabel();
+        lpCode = new javax.swing.JLayeredPane();
+        lbCardBack = new javax.swing.JLabel();
+        lbCardBack_maVach = new javax.swing.JLabel();
+        lbCardBack_id = new javax.swing.JLabel();
+        lbCardBack_ten = new javax.swing.JLabel();
+        lbBgBack = new javax.swing.JLabel();
+        lpPreviewFront = new javax.swing.JLayeredPane();
+        lpFront = new javax.swing.JLayeredPane();
+        lpContextFront = new javax.swing.JLayeredPane();
+        lbCardFront_shop = new javax.swing.JLabel();
+        lbCardFront = new javax.swing.JLabel();
+        lbCardFront_id = new javax.swing.JLabel();
+        lbBgFront = new javax.swing.JLabel();
+        lbPreview = new javax.swing.JLabel();
 
-        jLabel1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(4, 72, 210));
-        jLabel1.setText("Thẻ thành viên / Ví điểm");
+        lbHeading.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
+        lbHeading.setForeground(new java.awt.Color(4, 72, 210));
+        lbHeading.setText("Thẻ thành viên / Ví điểm");
 
         panelLichSuTieuDiem.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -212,10 +243,6 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
 
         lbTotal.setText("Total: 0");
 
-        jButton1.setBackground(new java.awt.Color(0, 102, 255));
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Hiển thị sản phẩm ẩn");
-
         button3.setBackground(new java.awt.Color(0, 102, 255));
         button3.setBorder(null);
         button3.setForeground(new java.awt.Color(255, 255, 255));
@@ -232,7 +259,6 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
             .addGroup(panelLichSuTieuDiemLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelLichSuTieuDiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addGroup(panelLichSuTieuDiemLayout.createSequentialGroup()
                         .addComponent(btnPrevious)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -240,8 +266,6 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(lbPagination)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addGap(40, 40, 40)
                         .addComponent(lbTotal))
                     .addGroup(panelLichSuTieuDiemLayout.createSequentialGroup()
                         .addComponent(jLabel5)
@@ -251,7 +275,10 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(button3, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(9, 9, 9)))
+                        .addGap(9, 9, 9))
+                    .addGroup(panelLichSuTieuDiemLayout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 499, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panelLichSuTieuDiemLayout.setVerticalGroup(
@@ -270,8 +297,7 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
                     .addComponent(btnPrevious)
                     .addComponent(btnNext)
                     .addComponent(lbPagination)
-                    .addComponent(lbTotal)
-                    .addComponent(jButton1))
+                    .addComponent(lbTotal))
                 .addGap(11, 11, 11))
         );
 
@@ -416,24 +442,29 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
                 .addGap(31, 31, 31)
                 .addGroup(panelThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelThongTinKHLayout.createSequentialGroup()
-                        .addComponent(lbTrangThai2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbDiem)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lb)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnDoi, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lbTenKH)
-                    .addComponent(lbMaThe)
-                    .addComponent(lbTrangThai)
-                    .addComponent(lbDiemDaCong)
-                    .addComponent(lbDiemDaDung)
-                    .addComponent(lbTongDiem)
-                    .addComponent(lbLoaiThe)
-                    .addComponent(lbNgayHetHan)
-                    .addComponent(lbNgayPhatHanh)
-                    .addComponent(lbMaKH))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(panelThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbDiemDaDung)
+                            .addComponent(lbTongDiem))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelThongTinKHLayout.createSequentialGroup()
+                        .addGroup(panelThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelThongTinKHLayout.createSequentialGroup()
+                                .addComponent(lbTrangThai2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbDiem)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lb)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnDoi, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lbTenKH)
+                            .addComponent(lbTrangThai)
+                            .addComponent(lbDiemDaCong)
+                            .addComponent(lbMaKH)
+                            .addComponent(lbMaThe)
+                            .addComponent(lbLoaiThe)
+                            .addComponent(lbNgayHetHan)
+                            .addComponent(lbNgayPhatHanh))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         panelThongTinKHLayout.setVerticalGroup(
             panelThongTinKHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -486,29 +517,283 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
                     .addComponent(lbDiem)
                     .addComponent(lb)
                     .addComponent(btnDoi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(11, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         panelPreview.setBackground(new java.awt.Color(255, 255, 255));
+        panelPreview.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel15.setText("jLabel15");
+        lbCardBack_shop.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lbCardBack_shop.setForeground(new java.awt.Color(0, 0, 0));
+        lbCardBack_shop.setText("NDT SHOP");
 
-        javax.swing.GroupLayout panelPreviewLayout = new javax.swing.GroupLayout(panelPreview);
-        panelPreview.setLayout(panelPreviewLayout);
-        panelPreviewLayout.setHorizontalGroup(
-            panelPreviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelPreviewLayout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 545, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(158, Short.MAX_VALUE))
+        lbCardBack_loaiThe.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbCardBack_loaiThe.setForeground(new java.awt.Color(0, 0, 0));
+        lbCardBack_loaiThe.setText("BRONZE");
+
+        lbCardBack_ngayPhatHanh.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbCardBack_ngayPhatHanh.setForeground(new java.awt.Color(0, 0, 0));
+        lbCardBack_ngayPhatHanh.setText("DD/MM/YY");
+
+        lbCardBack_ngayHetHan.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbCardBack_ngayHetHan.setForeground(new java.awt.Color(0, 0, 0));
+        lbCardBack_ngayHetHan.setText("DD/MM/YY");
+
+        lbCardBack_maKH.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbCardBack_maKH.setForeground(new java.awt.Color(0, 0, 0));
+        lbCardBack_maKH.setText("XXXXXXXXX");
+
+        lbCardBack.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        lbCardBack.setForeground(new java.awt.Color(0, 0, 0));
+        lbCardBack.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbCardBack.setText("MEMBER CARD");
+
+        lbCardBack_maVach.setBackground(new java.awt.Color(204, 204, 204));
+        lbCardBack_maVach.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbCardBack_maVach.setForeground(new java.awt.Color(0, 0, 0));
+        lbCardBack_maVach.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbCardBack_maVach.setText("Mã vạch");
+        lbCardBack_maVach.setOpaque(true);
+
+        lbCardBack_id.setFont(new java.awt.Font("Segoe UI", 1, 8)); // NOI18N
+        lbCardBack_id.setForeground(new java.awt.Color(0, 0, 0));
+        lbCardBack_id.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbCardBack_id.setText("ID XXXXXXXXXXXXXXXXX");
+
+        lpCode.setLayer(lbCardBack, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpCode.setLayer(lbCardBack_maVach, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpCode.setLayer(lbCardBack_id, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout lpCodeLayout = new javax.swing.GroupLayout(lpCode);
+        lpCode.setLayout(lpCodeLayout);
+        lpCodeLayout.setHorizontalGroup(
+            lpCodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(lpCodeLayout.createSequentialGroup()
+                .addComponent(lbCardBack, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addComponent(lbCardBack_maVach, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lbCardBack_id, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
         );
-        panelPreviewLayout.setVerticalGroup(
-            panelPreviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelPreviewLayout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(39, Short.MAX_VALUE))
+        lpCodeLayout.setVerticalGroup(
+            lpCodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(lpCodeLayout.createSequentialGroup()
+                .addComponent(lbCardBack)
+                .addGap(0, 0, 0)
+                .addComponent(lbCardBack_maVach, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(lbCardBack_id))
         );
+
+        lbCardBack_ten.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lbCardBack_ten.setForeground(new java.awt.Color(0, 0, 0));
+        lbCardBack_ten.setText("Nguyễn Văn A");
+
+        lpContextBack.setLayer(lbCardBack_shop, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpContextBack.setLayer(lbCardBack_loaiThe, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpContextBack.setLayer(lbCardBack_ngayPhatHanh, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpContextBack.setLayer(lbCardBack_ngayHetHan, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpContextBack.setLayer(lbCardBack_maKH, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpContextBack.setLayer(lpCode, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpContextBack.setLayer(lbCardBack_ten, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout lpContextBackLayout = new javax.swing.GroupLayout(lpContextBack);
+        lpContextBack.setLayout(lpContextBackLayout);
+        lpContextBackLayout.setHorizontalGroup(
+            lpContextBackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(lpContextBackLayout.createSequentialGroup()
+                .addGap(69, 69, 69)
+                .addGroup(lpContextBackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbCardBack_ten, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(lpContextBackLayout.createSequentialGroup()
+                        .addGroup(lpContextBackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lbCardBack_loaiThe, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbCardBack_ngayPhatHanh, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbCardBack_ngayHetHan, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbCardBack_maKH, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbCardBack_shop))
+                        .addGap(46, 46, 46)
+                        .addComponent(lpCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(60, Short.MAX_VALUE))
+        );
+        lpContextBackLayout.setVerticalGroup(
+            lpContextBackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(lpContextBackLayout.createSequentialGroup()
+                .addGap(78, 78, 78)
+                .addComponent(lbCardBack_shop)
+                .addGap(10, 10, 10)
+                .addComponent(lbCardBack_ten)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lbCardBack_loaiThe, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(lpContextBackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(lpContextBackLayout.createSequentialGroup()
+                        .addComponent(lbCardBack_ngayPhatHanh, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbCardBack_ngayHetHan, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbCardBack_maKH, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lpCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(81, Short.MAX_VALUE))
+        );
+
+        lbBgBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Member_Card_Back.png"))); // NOI18N
+
+        lpBack.setVisible(true);
+
+        lpBack.setLayer(lpContextBack, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpBack.setLayer(lbBgBack, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout lpBackLayout = new javax.swing.GroupLayout(lpBack);
+        lpBack.setLayout(lpBackLayout);
+        lpBackLayout.setHorizontalGroup(
+            lpBackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 454, Short.MAX_VALUE)
+            .addGroup(lpBackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(lpBackLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(lpContextBack)
+                    .addContainerGap()))
+            .addGroup(lpBackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(lpBackLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(lbBgBack, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+        lpBackLayout.setVerticalGroup(
+            lpBackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 327, Short.MAX_VALUE)
+            .addGroup(lpBackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(lpBackLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(lpContextBack)
+                    .addContainerGap()))
+            .addGroup(lpBackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(lpBackLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(lbBgBack, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+
+        lpPreviewBack.setLayer(lpBack, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout lpPreviewBackLayout = new javax.swing.GroupLayout(lpPreviewBack);
+        lpPreviewBack.setLayout(lpPreviewBackLayout);
+        lpPreviewBackLayout.setHorizontalGroup(
+            lpPreviewBackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lpBack)
+        );
+        lpPreviewBackLayout.setVerticalGroup(
+            lpPreviewBackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lpBack)
+        );
+
+        panelPreview.add(lpPreviewBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(41, 33, -1, -1));
+
+        lbCardFront_shop.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lbCardFront_shop.setForeground(new java.awt.Color(255, 255, 255));
+        lbCardFront_shop.setText("NDT SHOP");
+
+        lbCardFront.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        lbCardFront.setForeground(new java.awt.Color(255, 255, 255));
+        lbCardFront.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbCardFront.setText("MEMBER CARD");
+
+        lbCardFront_id.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lbCardFront_id.setForeground(new java.awt.Color(255, 255, 255));
+        lbCardFront_id.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbCardFront_id.setText("ID XXXXXXXXXXXXXXXXX");
+
+        lpContextFront.setLayer(lbCardFront_shop, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpContextFront.setLayer(lbCardFront, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpContextFront.setLayer(lbCardFront_id, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout lpContextFrontLayout = new javax.swing.GroupLayout(lpContextFront);
+        lpContextFront.setLayout(lpContextFrontLayout);
+        lpContextFrontLayout.setHorizontalGroup(
+            lpContextFrontLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(lpContextFrontLayout.createSequentialGroup()
+                .addGroup(lpContextFrontLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(lpContextFrontLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lbCardFront, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE))
+                    .addGroup(lpContextFrontLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lbCardFront_id, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(lpContextFrontLayout.createSequentialGroup()
+                .addGap(124, 124, 124)
+                .addComponent(lbCardFront_shop)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        lpContextFrontLayout.setVerticalGroup(
+            lpContextFrontLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(lpContextFrontLayout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addComponent(lbCardFront_shop)
+                .addGap(42, 42, 42)
+                .addComponent(lbCardFront)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbCardFront_id)
+                .addContainerGap(102, Short.MAX_VALUE))
+        );
+
+        lbBgFront.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Member_Card_Front.png"))); // NOI18N
+
+        lpBack.setVisible(true);
+
+        lpFront.setLayer(lpContextFront, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpFront.setLayer(lbBgFront, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout lpFrontLayout = new javax.swing.GroupLayout(lpFront);
+        lpFront.setLayout(lpFrontLayout);
+        lpFrontLayout.setHorizontalGroup(
+            lpFrontLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 454, Short.MAX_VALUE)
+            .addGroup(lpFrontLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(lpFrontLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(lpContextFront)
+                    .addContainerGap()))
+            .addGroup(lpFrontLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(lpFrontLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(lbBgFront, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+        lpFrontLayout.setVerticalGroup(
+            lpFrontLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 287, Short.MAX_VALUE)
+            .addGroup(lpFrontLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(lpFrontLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(lpContextFront)
+                    .addContainerGap()))
+            .addGroup(lpFrontLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(lpFrontLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(lbBgFront, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+
+        lpPreviewFront.setLayer(lpFront, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout lpPreviewFrontLayout = new javax.swing.GroupLayout(lpPreviewFront);
+        lpPreviewFront.setLayout(lpPreviewFrontLayout);
+        lpPreviewFrontLayout.setHorizontalGroup(
+            lpPreviewFrontLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lpFront)
+        );
+        lpPreviewFrontLayout.setVerticalGroup(
+            lpPreviewFrontLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lpFront)
+        );
+
+        panelPreview.add(lpPreviewFront, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 340, -1, -1));
+
+        lbPreview.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
+        lbPreview.setForeground(new java.awt.Color(4, 72, 210));
+        lbPreview.setText("Preview");
+        panelPreview.add(lbPreview, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -516,28 +801,26 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lbHeading)
                     .addComponent(panelLichSuTieuDiem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(panelThongTinKH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(panelPreview, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(panelThongTinKH, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panelPreview, javax.swing.GroupLayout.PREFERRED_SIZE, 544, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(lbHeading)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(panelPreview, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelThongTinKH, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelLichSuTieuDiem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(panelThongTinKH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panelLichSuTieuDiem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panelPreview, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -575,14 +858,11 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnPrevious;
     private view.swing.Button button3;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -595,21 +875,44 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLabel lb;
+    private javax.swing.JLabel lbBgBack;
+    private javax.swing.JLabel lbBgFront;
+    private javax.swing.JLabel lbCardBack;
+    private javax.swing.JLabel lbCardBack_id;
+    private javax.swing.JLabel lbCardBack_loaiThe;
+    private javax.swing.JLabel lbCardBack_maKH;
+    private javax.swing.JLabel lbCardBack_maVach;
+    private javax.swing.JLabel lbCardBack_ngayHetHan;
+    private javax.swing.JLabel lbCardBack_ngayPhatHanh;
+    private javax.swing.JLabel lbCardBack_shop;
+    private javax.swing.JLabel lbCardBack_ten;
+    private javax.swing.JLabel lbCardFront;
+    private javax.swing.JLabel lbCardFront_id;
+    private javax.swing.JLabel lbCardFront_shop;
     private javax.swing.JLabel lbDiem;
     private javax.swing.JLabel lbDiemDaCong;
     private javax.swing.JLabel lbDiemDaDung;
+    private javax.swing.JLabel lbHeading;
     private javax.swing.JLabel lbLoaiThe;
     private javax.swing.JLabel lbMaKH;
     private javax.swing.JLabel lbMaThe;
     private javax.swing.JLabel lbNgayHetHan;
     private javax.swing.JLabel lbNgayPhatHanh;
     private javax.swing.JLabel lbPagination;
+    private javax.swing.JLabel lbPreview;
     private javax.swing.JLabel lbTenKH;
     private javax.swing.JLabel lbTien;
     private javax.swing.JLabel lbTongDiem;
     private javax.swing.JLabel lbTotal;
     private javax.swing.JLabel lbTrangThai;
     private javax.swing.JLabel lbTrangThai2;
+    private javax.swing.JLayeredPane lpBack;
+    private javax.swing.JLayeredPane lpCode;
+    private javax.swing.JLayeredPane lpContextBack;
+    private javax.swing.JLayeredPane lpContextFront;
+    private javax.swing.JLayeredPane lpFront;
+    private javax.swing.JLayeredPane lpPreviewBack;
+    private javax.swing.JLayeredPane lpPreviewFront;
     private javax.swing.JPanel panelLichSuTieuDiem;
     private javax.swing.JPanel panelPreview;
     private javax.swing.JPanel panelThongTinKH;
