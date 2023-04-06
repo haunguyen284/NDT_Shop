@@ -1,22 +1,29 @@
 package view.main;
 
+import dto.nhanvien.TaiKhoanDTO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import java.util.Objects;
 import javax.swing.JLayeredPane;
+import lombok.Getter;
+import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import service.nhanvien.TaiKhoanService;
 import service.nhanvien.impl.TaiKhoanServiceImpl;
+import view.component.Header;
 import view.component.Message;
 import view.component.PanelCover;
 import view.component.PanelLoading;
 import view.component.PanelLogin;
 
+@Getter
+@Setter
 public class Login extends javax.swing.JFrame {
 
     private final DecimalFormat df = new DecimalFormat("##0.###", DecimalFormatSymbols.getInstance(Locale.US));
@@ -29,6 +36,8 @@ public class Login extends javax.swing.JFrame {
     private final double coverSize = 40;
     private final double loginSize = 60;
     private TaiKhoanService taiKhoanService;
+    private Main main;
+    private Header header;
 
     public Login() {
         initComponents();
@@ -36,10 +45,12 @@ public class Login extends javax.swing.JFrame {
     }
 
     private void init() {
+        main = new Main();
         taiKhoanService = new TaiKhoanServiceImpl();
         layout = new MigLayout("fill, insets 0");
         cover = new PanelCover();
         loading = new PanelLoading();
+        this.header = new Header();
         ActionListener eventLogin = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -109,16 +120,28 @@ public class Login extends javax.swing.JFrame {
         });
     }
 
-
-    private void login() {
+    public void login() {
         String user = loginPanel.getUser();
         String pass = loginPanel.getPass();
-        if(user.equals("admin")&&pass.equals("123")){
-            this.dispose();
-            new Main().setVisible(true);
-        }else{
-            showMessage(Message.MessageType.ERROR, "Tài khoản hoặc mật khẩu không chính xác");
+        try {
+            TaiKhoanDTO dTO = taiKhoanService.login(user, pass);
+            if (!Objects.isNull(dTO)) {
+
+                header.getLblRole().setText(dTO.getRole().toString());
+                header.getLblTen().setText(dTO.getNhanVien().getTen());
+                header.fill(dTO);
+                System.out.println("====="+dTO.getNhanVien().getTen());
+                this.dispose();
+                main.setVisible(true);
+            } else {
+                showMessage(Message.MessageType.ERROR, "Tài khoản hoặc mật khẩu không chính xác");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showMessage(Message.MessageType.ERROR, "Lỗi đăng nhập");
+
         }
+
 //        ModelLogin data = loginPanel.getDataLogin();
 //        try {
 //            ModelUser user = service.login(data);
@@ -133,7 +156,6 @@ public class Login extends javax.swing.JFrame {
 //            showMessage(Message.MessageType.ERROR, "Error Login");
 //        }
     }
-
 
     private void showMessage(Message.MessageType messageType, String message) {
         Message ms = new Message();

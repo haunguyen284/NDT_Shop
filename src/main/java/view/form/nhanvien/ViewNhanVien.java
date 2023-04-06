@@ -12,18 +12,22 @@ import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import service.nhanvien.NhanVienService;
+import service.nhanvien.TaiKhoanService;
 import service.nhanvien.impl.NhanVienServiceImpl;
+import service.nhanvien.impl.TaiKhoanServiceImpl;
 import view.dialog.Message;
 import view.main.Main;
 
 public class ViewNhanVien extends javax.swing.JPanel {
 
     private final NhanVienService nhanVienService;
+    private final TaiKhoanService taiKhoanService;
     private int currentPage;
     private int totalPages;
     private final int pageSize;
@@ -37,6 +41,7 @@ public class ViewNhanVien extends javax.swing.JPanel {
         pageSize = 8;
         currentPage = 1;
         nhanVienService = new NhanVienServiceImpl();
+        taiKhoanService = new TaiKhoanServiceImpl();
         modalNhanVien = new ModalNhanVien(null, true);
         loadDataTable();
     }
@@ -422,11 +427,10 @@ public class ViewNhanVien extends javax.swing.JPanel {
         dTO.setNgaySinh(DateTimeUtil.stringToDate(ngaySinh).getTime());
         dTO.setDiaChi(diaChi);
         dTO.setGioiTinh(gioiTinh);
-       
+
         return dTO;
     }
 
-    
 
     private void tbNhanVienMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbNhanVienMouseReleased
         // Kiểm tra xem người dùng đã nhấp chuột phải
@@ -436,6 +440,7 @@ public class ViewNhanVien extends javax.swing.JPanel {
             // Hiển thị menu tạm thời
             JPopupMenu popupMenu = new JPopupMenu();
             JMenuItem menuUpdate = new JMenuItem("Cập nhật");
+            JMenuItem menuCreate = new JMenuItem("Tạo tài khoản");
             menuUpdate.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     NhanVienDTO dTO = getObjectsFromTable(row);
@@ -449,8 +454,26 @@ public class ViewNhanVien extends javax.swing.JPanel {
                     });
                 }
             });
-            
+            menuCreate.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    NhanVienDTO dTO = getObjectsFromTable(row);
+                    if(!Objects.isNull(taiKhoanService.findByIdNhanVien(dTO.getId()))){
+                        showMessage("Nhân viên này đã có tài khoản");
+                        return;
+                    }
+                    ModalTaiKhoan modalTaiKhoan = new ModalTaiKhoan(null, true, dTO);
+                    modalTaiKhoan.setVisible(true);
+                    modalTaiKhoan.addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosed(WindowEvent e) {
+                            loadDataTable();
+                        }
+                    });
+                }
+            });
             popupMenu.add(menuUpdate);
+            popupMenu.add(menuCreate);
             popupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
         }
     }//GEN-LAST:event_tbNhanVienMouseReleased

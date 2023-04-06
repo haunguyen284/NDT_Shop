@@ -8,6 +8,7 @@ import comon.utilities.Mapper;
 import dto.nhanvien.TaiKhoanDTO;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import model.nhanvien.TaiKhoan;
 import repository.nhanvien.TaiKhoanRepositoy;
 import service.nhanvien.TaiKhoanService;
@@ -83,6 +84,15 @@ public class TaiKhoanServiceImpl implements TaiKhoanService {
     @Override
     public TaiKhoanDTO login(String user, String pass) {
         TaiKhoan model = repository.login(user, pass);
+        return Mapper.modelMapper().map(model, TaiKhoanDTO.class);
+    }
+
+    @Override
+    public TaiKhoanDTO findByIdNhanVien(String idNV) {
+        TaiKhoan model = repository.findByIdNhanVien(idNV);
+        if(Objects.isNull(model)){
+            return null;
+        }
         return Mapper.modelMapper().map(model, TaiKhoanDTO.class);
     }
 

@@ -7,9 +7,8 @@ package dto.nhanvien;
 import comon.constant.ModelProperties;
 import comon.model.AuditModelDTO;
 import comon.utilities.DateTimeUtil;
-import dto.hoadon.HoaDonDTO;
 import java.util.Date;
-import java.util.Set;
+import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import lombok.Getter;
@@ -40,7 +39,7 @@ public class NhanVienDTO extends AuditModelDTO {
 
     @NotBlank(message = "Địa chỉ - Không được để trống !")
     private String diaChi;
-
+    
     @NotBlank(message = "Email - Không được để trống !")
     @Pattern(regexp = ModelProperties.REGEX_EMAIL)
     private String email;

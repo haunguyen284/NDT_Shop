@@ -7,6 +7,7 @@ package repository.nhanvien;
 import comon.constant.PaginationConstant;
 import comon.utilities.HibernateUtil;
 import java.util.List;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import model.nhanvien.TaiKhoan;
@@ -47,6 +48,18 @@ public class TaiKhoanRepositoy {
             TypedQuery<TaiKhoan> query = session.createQuery(hql, TaiKhoan.class);
             query.setParameter("id", id);
             model = query.getSingleResult();
+        }
+        return model;
+    }
+    public TaiKhoan findByIdNhanVien(String idNV) {
+        TaiKhoan model;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT x FROM TaiKhoan x WHERE x.nhanVien.id = :idNV";
+            TypedQuery<TaiKhoan> query = session.createQuery(hql, TaiKhoan.class);
+            query.setParameter("idNV", idNV);
+            model = query.getSingleResult();
+        }catch(NoResultException e){
+            model = null;
         }
         return model;
     }
@@ -115,8 +128,8 @@ public class TaiKhoanRepositoy {
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT x FROM TaiKhoan x WHERE x.tenTaiKhoan = :user and x.matKhau = :pass";
             TypedQuery<TaiKhoan> query = session.createQuery(hql, TaiKhoan.class);
-            query.setParameter("tenTaiKhoan", user);
-            query.setParameter("matKhau", pass);
+            query.setParameter("user", user);
+            query.setParameter("pass", pass);
             model = query.getSingleResult();
         }
         return model;

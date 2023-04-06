@@ -18,6 +18,8 @@ public interface TaiKhoanService {
 
     TaiKhoanDTO findById(String id);
     
+    TaiKhoanDTO findByIdNhanVien(String idNV);
+    
     TaiKhoanDTO login(String user, String pass);
 
     String create(TaiKhoanDTO dto);
