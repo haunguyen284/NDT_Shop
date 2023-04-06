@@ -12,15 +12,18 @@ import java.util.List;
  * @author Dell
  */
 public interface TaiKhoanService {
+
     List<TaiKhoanDTO> findAll(int position);
 
     List<TaiKhoanDTO> findAll();
 
     TaiKhoanDTO findById(String id);
-    
+
     TaiKhoanDTO findByIdNhanVien(String idNV);
-    
+
     TaiKhoanDTO login(String user, String pass);
+
+    TaiKhoanDTO findByTenTaiKhoan(String user);
 
     String create(TaiKhoanDTO dto);
 
@@ -29,4 +32,6 @@ public interface TaiKhoanService {
     boolean delete(String id);
 
     long totalCount();
+
+    String findMatKhau(String id);
 }

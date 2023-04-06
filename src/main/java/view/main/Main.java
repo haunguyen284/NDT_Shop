@@ -10,6 +10,7 @@ import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import view.component.Header;
 import view.component.Menu;
+import view.dialog.Message;
 import view.dialog.ShowMessage;
 import view.event.EventMenuSelected;
 import view.event.EventShowPopupMenu;
@@ -17,6 +18,7 @@ import view.form.thongke.ViewDoanhThu;
 import view.form.MainForm;
 import view.form.khachhang.ViewKhachHang;
 import view.form.khachhang.ViewTheThanhVien;
+import view.form.nhanvien.ModalDoiMatKhau;
 import view.form.nhanvien.ViewNhanVien;
 import view.form.sanpham.ViewAo;
 import view.swing.MenuItem;
@@ -31,17 +33,27 @@ public class Main extends javax.swing.JFrame implements Runnable {
     private Header header;
     private MainForm main;
     private Animator animator;
+    private String ten;
+    private String role;
 
-    public Main() {
+    public Main(String ten, String role) {
         initComponents();
+        this.ten = ten;
+        this.role = role;
         init();
+    }
+
+    private boolean showMessage(String message) {
+        Message obj = new Message(Main.getFrames()[0], true);
+        obj.showMessage(message);
+        return obj.isOk();
     }
 
     private void init() {
         layout = new MigLayout("fill", "0[]0[100%, fill]0", "0[fill, top]0");
         bg.setLayout(layout);
         menu = new Menu();
-        header = new Header();
+        header = new Header(ten, role);
         main = new MainForm();
         new Thread(this).start();
         menu.addEvent(new EventMenuSelected() {
@@ -59,13 +71,20 @@ public class Main extends javax.swing.JFrame implements Runnable {
                         main.showForm(new ViewAo());
                     }
                 } else if (menuIndex == 4) {
-                        main.showForm(new ViewNhanVien());
+                    if (role.equals("STAFF")) {
+                        showMessage("Chỉ ADMin mới có quyền quản lý nhân viên");
+                        return;
+                    }
+                    main.showForm(new ViewNhanVien());
                 } else if (menuIndex == 5) {
                     if (subMenuIndex == 0) {
                         main.showForm(new ViewKhachHang());
                     } else if (subMenuIndex == 1) {
                         main.showForm(new ViewTheThanhVien(main));
                     }
+                } else if (menuIndex == 6) {
+                    new ModalDoiMatKhau(null, true, ten).setVisible(true);
+                    
                 } else if (menuIndex == 7) {
                     if (ShowMessage.show("Bạn chắc chắn muốn thoát ?")) {
                         System.exit(0);
@@ -199,7 +218,7 @@ public class Main extends javax.swing.JFrame implements Runnable {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new Main().setVisible(true);
+                new Main(new String(), new String()).setVisible(true);
             }
         });
     }

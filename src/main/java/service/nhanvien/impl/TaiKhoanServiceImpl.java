@@ -96,4 +96,15 @@ public class TaiKhoanServiceImpl implements TaiKhoanService {
         return Mapper.modelMapper().map(model, TaiKhoanDTO.class);
     }
 
+    @Override
+    public TaiKhoanDTO findByTenTaiKhoan(String user) {
+        TaiKhoan model = repository.findByTenTaiKhoan(user);
+        return Mapper.modelMapper().map(model, TaiKhoanDTO.class);
+    }
+
+    @Override
+    public String findMatKhau(String id) {
+        return repository.findMatKhau(id);
+    }
+
 }

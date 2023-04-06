@@ -7,27 +7,17 @@ import lombok.Setter;
 import model.nhanvien.TaiKhoan;
 import view.main.Login;
 
-@Getter
-@Setter
 public class Header extends javax.swing.JPanel {
-       
 
-    public Header() {
+    public Header(String ten, String role) {
+
         initComponents();
-        show();
-
+        lblTen.setText(ten);
+        lblRole.setText(role);
     }
 
     public void addMenuEvent(ActionListener event) {
         cmdMenu.addActionListener(event);
-    }
-
-    public void fill(TaiKhoanDTO x) {
-        lblTen.setText(x.getNhanVien().getTen());
-        lblRole.setText(x.getRole().toString());
-    }
-    public void show(){
-        new Login().login();
     }
 
     @SuppressWarnings("unchecked")
@@ -54,7 +44,7 @@ public class Header extends javax.swing.JPanel {
 
         cmdMenu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/menu.png"))); // NOI18N
 
-        pic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/profile1.jpg"))); // NOI18N
+        pic.setIcon(new javax.swing.ImageIcon("C:\\Users\\Dell\\Pictures\\z4242782433021_ebd389cf436dc3ca76b074f548e44afb.jpg")); // NOI18N
 
         lbCurrentTime.setForeground(new java.awt.Color(127, 127, 127));
         lbCurrentTime.setText("18:20:12 20/11/2020");

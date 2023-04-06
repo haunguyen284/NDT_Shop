@@ -45,12 +45,10 @@ public class Login extends javax.swing.JFrame {
     }
 
     private void init() {
-        main = new Main();
         taiKhoanService = new TaiKhoanServiceImpl();
         layout = new MigLayout("fill, insets 0");
         cover = new PanelCover();
         loading = new PanelLoading();
-        this.header = new Header();
         ActionListener eventLogin = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -126,11 +124,7 @@ public class Login extends javax.swing.JFrame {
         try {
             TaiKhoanDTO dTO = taiKhoanService.login(user, pass);
             if (!Objects.isNull(dTO)) {
-
-                header.getLblRole().setText(dTO.getRole().toString());
-                header.getLblTen().setText(dTO.getNhanVien().getTen());
-                header.fill(dTO);
-                System.out.println("====="+dTO.getNhanVien().getTen());
+                main = new Main(user, dTO.getRole().toString());
                 this.dispose();
                 main.setVisible(true);
             } else {

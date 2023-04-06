@@ -19,6 +19,7 @@ import org.hibernate.Transaction;
  * @author Dell
  */
 public class TaiKhoanRepositoy {
+
     public List<TaiKhoan> findAll(int position) {
         List<TaiKhoan> listModel;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -51,6 +52,7 @@ public class TaiKhoanRepositoy {
         }
         return model;
     }
+
     public TaiKhoan findByIdNhanVien(String idNV) {
         TaiKhoan model;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -58,7 +60,7 @@ public class TaiKhoanRepositoy {
             TypedQuery<TaiKhoan> query = session.createQuery(hql, TaiKhoan.class);
             query.setParameter("idNV", idNV);
             model = query.getSingleResult();
-        }catch(NoResultException e){
+        } catch (NoResultException e) {
             model = null;
         }
         return model;
@@ -122,7 +124,7 @@ public class TaiKhoanRepositoy {
         }
         return total;
     }
-    
+
     public TaiKhoan login(String user, String pass) {
         TaiKhoan model;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -133,6 +135,30 @@ public class TaiKhoanRepositoy {
             model = query.getSingleResult();
         }
         return model;
+    }
+
+    public TaiKhoan findByTenTaiKhoan(String user) {
+        TaiKhoan model;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT x FROM TaiKhoan x WHERE x.tenTaiKhoan = :user";
+            TypedQuery<TaiKhoan> query = session.createQuery(hql, TaiKhoan.class);
+            query.setParameter("user", user);
+            model = query.getSingleResult();
+        }
+        return model;
+    }
+
+    public String findMatKhau(String id) {
+        String matKhau;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT matKhau FROM TaiKhoan n Where n.id=:id";
+            TypedQuery<String> query = session.createQuery(hql, String.class);
+            query.setParameter("id", id);
+            matKhau = query.getSingleResult();
+        } catch (NoResultException e) {
+            matKhau = null;
+        }
+        return matKhau;
     }
 
 }

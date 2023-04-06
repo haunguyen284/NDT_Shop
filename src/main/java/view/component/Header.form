@@ -98,7 +98,7 @@
     <Container class="view.swing.ImageAvatar" name="pic">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/icon/profile1.jpg"/>
+          <Image iconType="2" name="C:\Users\Dell\Pictures\z4242782433021_ebd389cf436dc3ca76b074f548e44afb.jpg"/>
         </Property>
       </Properties>
 
