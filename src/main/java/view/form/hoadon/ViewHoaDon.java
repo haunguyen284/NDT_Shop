@@ -1,36 +1,10 @@
 package view.form.hoadon;
 
-import view.form.khachhang.*;
-import comon.constant.khachhang.TrangThaiKhachHang;
-import comon.constant.khachhang.TrangThaiTheThanhVien;
-import comon.constant.khachhang.TrangThaiViDiem;
-import comon.utilities.DateTimeUtil;
 import dto.khachhang.KhachHangDTO;
-import dto.khachhang.LoaiTheDTO;
-import dto.khachhang.TheThanhVienDTO;
-import dto.khachhang.ViDiemDTO;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
-import service.khachhang.KhachHangService;
-import service.khachhang.LoaiTheService;
-import service.khachhang.TheThanhVienService;
-import service.khachhang.ViDiemService;
-import service.khachhang.impl.KhachHangServiceImpl;
-import service.khachhang.impl.LoaiTheServiceImpl;
-import service.khachhang.impl.TheThanhVienServiceImpl;
-import service.khachhang.impl.ViDiemServiceImpl;
 import view.dialog.Message;
 import view.main.Main;
 
@@ -43,26 +17,14 @@ public class ViewHoaDon extends javax.swing.JPanel {
 
     public ViewHoaDon() {
         initComponents();
-//        tbHoaDon.fixTable(jScrollPane1);
         setOpaque(false);
         pageSize = 8;
         currentPage = 1;
-//        khachHangService = new KhachHangServiceImpl();
-//        theThanhVienService = new TheThanhVienServiceImpl();
-//        loaiTheService = new LoaiTheServiceImpl();
-//        viDiemService = new ViDiemServiceImpl();
-//        modalKhachHang = new ModalKhachHang(null, true);
     }
 
     public final void loadDataTable() {
         
     }
-
-//    private void setStatePagination() {
-//        btnPrevious.setEnabled(currentPage > 1);
-//        btnNext.setEnabled(currentPage < totalPages);
-//        lbPagination.setText(currentPage + "/" + totalPages);
-//    }
 
     private boolean showMessage(String message) {
         Message obj = new Message(Main.getFrames()[0], true);
@@ -245,7 +207,7 @@ public class ViewHoaDon extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTextField1)
                     .addComponent(jTextField3)
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+                    .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jTextField4)
                     .addComponent(jTextField5)
                     .addGroup(jPanel3Layout.createSequentialGroup()

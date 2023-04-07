@@ -16,11 +16,9 @@ import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
@@ -67,6 +65,11 @@ public class QrScanner extends javax.swing.JDialog implements Runnable, ThreadFa
         result_field = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         pnlWebcam.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -102,49 +105,10 @@ public class QrScanner extends javax.swing.JDialog implements Runnable, ThreadFa
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(QrScanner.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(QrScanner.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(QrScanner.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(QrScanner.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        isReading = false;
+    }//GEN-LAST:event_formWindowClosed
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                QrScanner dialog = new QrScanner(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     private void initWebcam() {
         Dimension size = WebcamResolution.QVGA.getSize();
@@ -159,18 +123,6 @@ public class QrScanner extends javax.swing.JDialog implements Runnable, ThreadFa
         executor.execute(this);
     }
 
-    public void stopReading() {
-        isReading = false;
-        executor.shutdown();
-        try {
-            executor.awaitTermination(10, TimeUnit.SECONDS);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(QrScanner.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        webcam.close();
-        panel.stop();
-    }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -178,44 +130,6 @@ public class QrScanner extends javax.swing.JDialog implements Runnable, ThreadFa
     private javax.swing.JTextField result_field;
     // End of variables declaration//GEN-END:variables
 
-//    @Override
-//    public void run() {
-//        do {
-//            try {
-//                Thread.sleep(100);
-//            } catch (InterruptedException ex) {
-//                Logger.getLogger(QrScanner.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//
-//            Result result = null;
-//            BufferedImage image = null;
-//            image = webcam.getImage();
-//
-//            if (webcam.isOpen()) {
-//                if (image == null) {
-//                    continue;
-//                }
-//            }
-//
-//            LuminanceSource source = new BufferedImageLuminanceSource(image);
-//            BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-//
-//            try {
-//                result = new MultiFormatReader().decode(bitmap);
-//            } catch (NotFoundException ex) {
-//                Logger.getLogger(QrScanner.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//
-//            if (result != null) {
-//                result_field.setText(result.getText());
-//                qrString = result_field.getText();
-//                stopReading();
-//                this.dispose();
-//                break;
-//            }
-//
-//        } while (true);
-//    }
     /**
      *
      */
@@ -246,11 +160,10 @@ public class QrScanner extends javax.swing.JDialog implements Runnable, ThreadFa
             } catch (NotFoundException ex) {
                 Logger.getLogger(QrScanner.class.getName()).log(Level.SEVERE, null, ex);
             }
-
             if (result != null) {
                 result_field.setText(result.getText());
                 qrString = result_field.getText();
-                stopReading();
+                isReading = false;
                 this.dispose();
                 break;
             }
@@ -262,7 +175,7 @@ public class QrScanner extends javax.swing.JDialog implements Runnable, ThreadFa
     @Override
     public Thread newThread(Runnable r) {
         Thread t = new Thread(r, "My Thread");
-        t.setDaemon(true);
+//        t.setDaemon(true);
         return t;
     }
 }
