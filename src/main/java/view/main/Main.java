@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
+import javax.swing.JFrame;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
@@ -15,6 +16,7 @@ import view.event.EventMenuSelected;
 import view.event.EventShowPopupMenu;
 import view.form.thongke.ViewDoanhThu;
 import view.form.MainForm;
+import view.form.hoadon.ViewHoaDon;
 import view.form.khachhang.ViewKhachHang;
 import view.form.khachhang.ViewTheThanhVien;
 import view.form.sanpham.ViewAo;
@@ -34,6 +36,7 @@ public class Main extends javax.swing.JFrame implements Runnable {
     public Main() {
         initComponents();
         init();
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     private void init() {
@@ -52,6 +55,10 @@ public class Main extends javax.swing.JFrame implements Runnable {
                         main.showForm(new ViewDoanhThu());
 //                    } else if (subMenuIndex == 1) {
 //                        main.showForm(new Form1());
+                    }
+                } else if (menuIndex == 1) {
+                    if (subMenuIndex == 0) {
+                        main.showForm(new ViewHoaDon());
                     }
                 } else if (menuIndex == 2) {
                     if (subMenuIndex == 0) {

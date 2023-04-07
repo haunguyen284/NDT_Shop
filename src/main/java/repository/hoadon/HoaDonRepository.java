@@ -4,104 +4,108 @@
  */
 package repository.hoadon;
 
-import comon.constant.PaginationConstant;
 import comon.utilities.HibernateUtil;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 import model.hoadon.HoaDon;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 /**
  *
- * @author ADMIN KH
+ * @author Admin
  */
 public class HoaDonRepository {
-    private final SessionFactory factory;
 
-    public HoaDonRepository() {
-        this.factory = HibernateUtil.getSessionFactory();
-    }
-    public List<HoaDon> getAll(int currentPage) {
-        String hql = "FROM HoaDon";
-        List<HoaDon> listHoaDon = new ArrayList<>();
-        try ( Session s = factory.openSession()) {
-            Query<HoaDon> query = s.createQuery(hql, HoaDon.class);
-            query.setFirstResult((currentPage - 1) * PaginationConstant.DEFAULT_SIZE);
-            query.setMaxResults(PaginationConstant.DEFAULT_SIZE);
-            listHoaDon = query.getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
+    public List<HoaDon> findAll(int position, int pageSize) {
+        List<HoaDon> listModel;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT n FROM HoaDon n";
+            TypedQuery<HoaDon> query = session.createQuery(hql, HoaDon.class);
+            query.setFirstResult(position);
+            query.setMaxResults(pageSize);
+            listModel = query.getResultList();
         }
-        return listHoaDon;
+        return listModel;
     }
 
-    public boolean saveOrUpdate(HoaDon x) {
-        Transaction tx = null;
-        try ( Session s = factory.openSession()) {
-            tx = s.beginTransaction();
-            s.saveOrUpdate(x);
-            tx.commit();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (tx != null) {
-                tx.rollback();
+    public List<HoaDon> findAll() {
+        List<HoaDon> listModel;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT n FROM HoaDon n";
+            TypedQuery<HoaDon> query = session.createQuery(hql, HoaDon.class);
+            listModel = query.getResultList();
+        }
+        return listModel;
+    }
+
+    public HoaDon findById(String id) {
+        HoaDon model;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT n FROM HoaDon n Where n.id=:id";
+            TypedQuery<HoaDon> query = session.createQuery(hql, HoaDon.class);
+            query.setParameter("id", id);
+            model = query.getSingleResult();
+        }
+        return model;
+    }
+    
+    public String findId(String maKH) {
+        String id;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT id FROM HoaDon n Where n.maKH=:maKH";
+            TypedQuery<String> query = session.createQuery(hql, String.class);
+            query.setParameter("maKH", maKH);
+            id = query.getSingleResult();
+        } catch (NoResultException e) {
+            id = null;
+        }
+        return id;
+    }
+
+    public HoaDon save(HoaDon model) {
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.getTransaction();
+            transaction.begin();
+            try {
+                session.saveOrUpdate(model);
+                transaction.commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+                transaction.rollback();
+                model = null;
             }
+        } finally {
+            return model;
         }
-        return false;
     }
 
     public boolean delete(String id) {
-        int check;
-        String hql = "DELETE FROM HoaDon WHERE id = :id";
-        Transaction tx = null;
-        try ( Session s = factory.openSession()) {
-            tx = s.beginTransaction();
-            Query q = s.createQuery(hql);
-            q.setParameter("id", id);
-            check = q.executeUpdate();
-            tx.commit();
-            return check > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (tx != null) {
-                tx.rollback();
+        int affectedRows = 0;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.getTransaction();
+            transaction.begin();
+            try {
+                String hql = "DELETE HoaDon n WHERE n.id = :id";
+                Query query = session.createQuery(hql);
+                query.setParameter("id", id);
+                affectedRows = query.executeUpdate();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-        return false;
+        return affectedRows > 0;
     }
 
-    public Optional<HoaDon> finByID(String id) {
-        String hql = "FROM HoaDon  WHERE id = :id";
-        List<HoaDon> list = new ArrayList<>();
-        HoaDon x = null;
-        try ( Session s = factory.openSession()) {
-            Query<HoaDon> q = s.createQuery(hql, HoaDon.class);
-            q.setParameter("id", id);
-            list = q.getResultList();
-        } catch (HibernateException e) {
-            e.printStackTrace();
+    public long totalCount() {
+        long total = 0;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT COUNT(n.id) FROM HoaDon n";
+            TypedQuery<Long> query = session.createQuery(hql, Long.class);
+            total = query.getSingleResult();
         }
-        if (!list.isEmpty()) {
-            x = list.get(0);
-        }
-        return Optional.ofNullable(x);
-    }
-
-    public long count() {
-        long count = 0;
-        String hql = "SELECT COUNT(id)FROM HoaDon";
-        try ( Session s = factory.openSession()) {
-            Query q = s.createQuery(hql);
-            count = (long) q.uniqueResult();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
-        return count;
+        return total;
     }
 }
