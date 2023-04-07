@@ -52,9 +52,6 @@ public class HoaDon extends PrimaryModel implements Serializable {
     @Column
     private float tongTien;
 
-    @OneToMany(mappedBy = "hoaDon")
-    private Set<HoaDonChiTiet> dsHoaDonChiTiet;
-
     @Column(length = ModelProperties.LENGTH_NAME)
     @Nationalized
     private String tenKH;

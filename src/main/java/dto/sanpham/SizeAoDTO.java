@@ -24,11 +24,17 @@ public class SizeAoDTO extends AuditModelDTO {
     @NotBlank(message = "Tên Size áo - Không được để trống !")
     private String ten;
 
-    private float rongVai;
+    private String rongVaiBeNhat;
+    
+    private String rongVaiLonNhat;
 
-    private float dai;
+    private String daiBeNhat;
+    
+    private String daiLonNhat;
 
-    private float tayAo;
+    private String tayAoBeNhat;
+    
+    private String tayAoLonNhat;
 
     private TrangThaiQuanAo trangThaiQuanAo;
 

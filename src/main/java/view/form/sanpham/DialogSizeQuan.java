@@ -4,59 +4,62 @@
  */
 package view.form.sanpham;
 
-import comon.constant.sanpham.TrangThaiXuatXu;
-import dto.sanpham.XuatXuDTO;
+import comon.constant.sanpham.TrangThaiQuanAo;
+import dto.sanpham.SizeQuanDTO;
 import java.util.List;
 import javax.swing.JOptionPane;
-import service.sanpham.XuatXuService;
-import service.sanpham.impl.XuatXuServiceImpl;
+import service.sanpham.SizeAoService;
+import service.sanpham.SizeQuanService;
+import service.sanpham.impl.SizeAoServiceImpl;
+import service.sanpham.impl.SizeQuanServiceImpl;
 import view.dialog.ShowMessage;
 
 /**
  *
  * @author nguyenth28
  */
-public class DialogXuatXu extends javax.swing.JDialog {
+public class DialogSizeQuan extends javax.swing.JDialog {
 
-    private final XuatXuService xuatXuService;
-    public XuatXuDTO selectedXuatXu;
+    private final SizeQuanService sizeQuanService;
+    public SizeQuanDTO selectedSizeQuan;
 
     /**
      * Creates new form DialogMauSac
      */
-    public DialogXuatXu(java.awt.Frame parent, boolean modal, XuatXuDTO dto) {
+    public DialogSizeQuan(java.awt.Frame parent, boolean modal, SizeQuanDTO dto) {
         super(parent, modal);
         initComponents();
-        xuatXuService = new XuatXuServiceImpl();
+        sizeQuanService = new SizeQuanServiceImpl();
         loadDataTable();
-        if( dto != null) fillPhanTu(dto);
+        if (dto != null) fillPhanTu(dto);
     }
     
-    private void fillPhanTu(XuatXuDTO dto) {
-        if (dto.getTrangThaiXuatXu()== TrangThaiXuatXu.ACTIVE) {
-            cbbTrangThai.setSelectedIndex(0);
-        } else {
-            cbbTrangThai.setSelectedIndex(1);
-        }
-        txtMa.setText(dto.getMa());
+    private void fillPhanTu(SizeQuanDTO dto){
         txtTen.setText(dto.getTen());
+        txtMa.setText(dto.getMa());
+        txtMongMax.setText(dto.getMongLonNhat());
+        txtMongMin.setText(dto.getMongBeNhat());
+        txtCanNangMax.setText(dto.getCanNangLonNhat());
+        txtCanNangMin.setText(dto.getCanNangBeNhat());
+        txtEoMax.setText(dto.getEoLonNhat());
+        txtEoMin.setText(dto.getEoBeNhat());
     }
 
     private void loadDataTable() {
-        TrangThaiXuatXu trangThai = null;
+        TrangThaiQuanAo trangThai = null;
         if (cbbHienThi.getSelectedItem().toString().equals("ACTIVE")) {
-            trangThai = TrangThaiXuatXu.ACTIVE;
+            trangThai = TrangThaiQuanAo.ACTIVE;
         } else if (cbbHienThi.getSelectedItem().toString().equals("IN ACTIVE")) {
-            trangThai = TrangThaiXuatXu.IN_ACTIVE;
+            trangThai = TrangThaiQuanAo.IN_ACTIVE;
         }
-        List<XuatXuDTO> listDTO = xuatXuService.findAll(trangThai);
+        List<SizeQuanDTO> listDTO = sizeQuanService.findAll(trangThai);
         tbHienThi.clearAllRow();
-        for (XuatXuDTO dto : listDTO) {
+        for (SizeQuanDTO dto : listDTO) {
             tbHienThi.addRow(new Object[]{
                 dto.getId(),
                 dto.getMa(),
                 dto.getTen(),
-                dto.getTrangThaiXuatXu() == TrangThaiXuatXu.ACTIVE ? "ACTIVE" : "IN ACTIVE"
+                dto.getTrangThaiQuanAo() == TrangThaiQuanAo.ACTIVE ? "ACTIVE" : "IN ACTIVE"
             });
         }
     }
@@ -84,6 +87,18 @@ public class DialogXuatXu extends javax.swing.JDialog {
         tbHienThi = new view.swing.table.Table();
         jLabel5 = new javax.swing.JLabel();
         cbbHienThi = new javax.swing.JComboBox<>();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        txtEoMin = new javax.swing.JTextField();
+        txtEoMax = new javax.swing.JTextField();
+        txtMongMin = new javax.swing.JTextField();
+        txtMongMax = new javax.swing.JTextField();
+        txtCanNangMin = new javax.swing.JTextField();
+        txtCanNangMax = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -91,7 +106,7 @@ public class DialogXuatXu extends javax.swing.JDialog {
 
         jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 102, 255));
-        jLabel1.setText("QUẢN LÝ XUẤT XỨ");
+        jLabel1.setText("QUẢN LÝ SIZE QUẦN");
         jLabel1.setToolTipText("");
 
         btnThem.setBackground(new java.awt.Color(0, 102, 255));
@@ -163,10 +178,26 @@ public class DialogXuatXu extends javax.swing.JDialog {
             }
         });
 
+        jLabel6.setText("Eo");
+
+        jLabel7.setText("đến");
+
+        jLabel8.setText("Mông");
+
+        jLabel9.setText("đến");
+
+        jLabel10.setText("Cân nặng");
+
+        jLabel11.setText("đến");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(128, 128, 128))
             .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -183,15 +214,34 @@ public class DialogXuatXu extends javax.swing.JDialog {
                                     .addComponent(jLabel4)
                                     .addComponent(jLabel3)
                                     .addComponent(jLabel2)
-                                    .addComponent(jLabel5))
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel10))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txtMa, javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(txtTen, javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(cbbTrangThai, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(cbbHienThi, javax.swing.GroupLayout.Alignment.TRAILING, 0, 362, Short.MAX_VALUE)))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtMa, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(txtTen, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(cbbTrangThai, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cbbHienThi, javax.swing.GroupLayout.Alignment.TRAILING, 0, 362, Short.MAX_VALUE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(txtEoMin, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtEoMax, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(txtMongMin, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtMongMax, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(txtCanNangMin, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtCanNangMax, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGap(20, 20, 20))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -200,9 +250,9 @@ public class DialogXuatXu extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(14, 14, 14)
+                .addGap(15, 15, 15)
                 .addComponent(jLabel1)
-                .addGap(29, 29, 29)
+                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtMa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
@@ -210,6 +260,24 @@ public class DialogXuatXu extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtTen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7)
+                    .addComponent(txtEoMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtEoMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel9)
+                    .addComponent(txtMongMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtMongMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel11)
+                    .addComponent(txtCanNangMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCanNangMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbbTrangThai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -232,17 +300,30 @@ public class DialogXuatXu extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private XuatXuDTO getDTOFromInput() {
-        XuatXuDTO dto = new XuatXuDTO();
+    private SizeQuanDTO getDTOFromInput() {
+        SizeQuanDTO dto = new SizeQuanDTO();
         String ma = txtMa.getText();
         String ten = txtTen.getText();
-        TrangThaiXuatXu trangThai = TrangThaiXuatXu.IN_ACTIVE;
+        String eoMin = txtEoMin.getText();
+        String eoMax = txtEoMax.getText();
+        String mongMin = txtMongMin.getText();
+        String mongMax = txtMongMax.getText();
+        String canNangMin = txtCanNangMin.getText();
+        String canNangMax = txtCanNangMax.getText();
+        
+        TrangThaiQuanAo trangThai = TrangThaiQuanAo.IN_ACTIVE;
         if (cbbTrangThai.getSelectedIndex() == 0) {
-            trangThai = TrangThaiXuatXu.ACTIVE;
+            trangThai = TrangThaiQuanAo.ACTIVE;
         }
         dto.setMa(ma);
         dto.setTen(ten);
-        dto.setTrangThaiXuatXu(trangThai);
+        dto.setEoBeNhat(eoMin);
+        dto.setEoLonNhat(eoMax);
+        dto.setCanNangBeNhat(canNangMin);
+        dto.setCanNangLonNhat(canNangMax);
+        dto.setMongBeNhat(mongMin);
+        dto.setMongLonNhat(mongMax);
+        dto.setTrangThaiQuanAo(trangThai);
         return dto;
     }
 
@@ -259,11 +340,10 @@ public class DialogXuatXu extends javax.swing.JDialog {
         String selectedId = getSelectedIdFromTable();
         if (selectedId == null) {
             ShowMessage.show("Chưa chọn hàng");
-
             return;
         }
-        selectedXuatXu = getDTOFromInput();
-        selectedXuatXu.setId(selectedId);
+        selectedSizeQuan = getDTOFromInput();
+        selectedSizeQuan.setId(selectedId);
         this.dispose();
     }//GEN-LAST:event_btnChonActionPerformed
 
@@ -274,25 +354,32 @@ public class DialogXuatXu extends javax.swing.JDialog {
         }
         String selectedId = getSelectedIdFromTable();
         String ma = tbHienThi.getValueAt(selectedRow, 1).toString();
-        String ten = tbHienThi.getValueAt(selectedRow, 2).toString();
-        String trangThai = tbHienThi.getValueAt(selectedRow, 3).toString();
-        if (trangThai.equals("ACTIVE")) {
+        selectedSizeQuan = sizeQuanService.findByMa(ma);
+
+        if (selectedSizeQuan.getTrangThaiQuanAo() == TrangThaiQuanAo.ACTIVE) {
             cbbTrangThai.setSelectedIndex(0);
         } else {
             cbbTrangThai.setSelectedIndex(1);
         }
         txtMa.setText(ma);
-        txtTen.setText(ten);
+        txtTen.setText(selectedSizeQuan.getTen());
+        txtMongMax.setText(selectedSizeQuan.getMongLonNhat());
+        txtMongMin.setText(selectedSizeQuan.getMongBeNhat());
+        txtCanNangMax.setText(selectedSizeQuan.getCanNangLonNhat());
+        txtCanNangMin.setText(selectedSizeQuan.getCanNangBeNhat());
+        txtEoMax.setText(selectedSizeQuan.getEoLonNhat());
+        txtEoMin.setText(selectedSizeQuan.getEoBeNhat());
+
         if (evt.getClickCount() == 2) {
-            selectedXuatXu = getDTOFromInput();
-            selectedXuatXu.setId(selectedId);
+            selectedSizeQuan = getDTOFromInput();
+            selectedSizeQuan.setId(selectedId);
             this.dispose();
         }
     }//GEN-LAST:event_tbHienThiMouseClicked
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
-        XuatXuDTO dto = getDTOFromInput();
-        String result = xuatXuService.create(dto);
+        SizeQuanDTO dto = getDTOFromInput();
+        String result = sizeQuanService.create(dto);
         ShowMessage.show(result);
 
         loadDataTable();
@@ -307,9 +394,9 @@ public class DialogXuatXu extends javax.swing.JDialog {
         if (selectedId == null) {
             return;
         }
-        XuatXuDTO dto = getDTOFromInput();
+        SizeQuanDTO dto = getDTOFromInput();
         dto.setId(selectedId);
-        String result = xuatXuService.update(dto);
+        String result = sizeQuanService.update(dto);
         ShowMessage.show(result);
 
         loadDataTable();
@@ -323,13 +410,25 @@ public class DialogXuatXu extends javax.swing.JDialog {
     private javax.swing.JComboBox<String> cbbHienThi;
     private javax.swing.JComboBox<String> cbbTrangThai;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private view.swing.table.Table tbHienThi;
+    private javax.swing.JTextField txtCanNangMax;
+    private javax.swing.JTextField txtCanNangMin;
+    private javax.swing.JTextField txtEoMax;
+    private javax.swing.JTextField txtEoMin;
     private javax.swing.JTextField txtMa;
+    private javax.swing.JTextField txtMongMax;
+    private javax.swing.JTextField txtMongMin;
     private javax.swing.JTextField txtTen;
     // End of variables declaration//GEN-END:variables
 }

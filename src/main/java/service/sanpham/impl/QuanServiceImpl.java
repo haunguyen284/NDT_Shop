@@ -5,50 +5,50 @@
 package service.sanpham.impl;
 
 import comon.utilities.Mapper;
-import dto.sanpham.AoDTO;
-import dto.sanpham.SearchAoDTO;
+import dto.sanpham.QuanDTO;
+import dto.sanpham.SearchQuanDTO;
 import java.util.ArrayList;
 import java.util.List;
-import model.sanpham.Ao;
-import repository.sanpham.AoRepository;
-import service.sanpham.AoService;
+import model.sanpham.Quan;
+import repository.sanpham.QuanRepository;
+import service.sanpham.QuanService;
 
 /**
  *
  * @author nguyenth28
  */
-public class AoServiceImpl implements AoService {
+public class QuanServiceImpl implements QuanService{
 
-    private final AoRepository repository;
+    private final QuanRepository repository;
 
-    public AoServiceImpl() {
-        this.repository = new AoRepository();
+    public QuanServiceImpl() {
+        this.repository = new QuanRepository();
     }
 
     @Override
-    public List<AoDTO> findAll(int position, SearchAoDTO searchDTO) {
-        List<AoDTO> listDTO = new ArrayList<>();
-        List<Ao> listModel = repository.findAll(position, searchDTO);
-        for (Ao m : listModel) {
-            listDTO.add(Mapper.modelMapper().map(m, AoDTO.class));
+    public List<QuanDTO> findAll(int position, SearchQuanDTO searchDTO) {
+        List<QuanDTO> listDTO = new ArrayList<>();
+        List<Quan> listModel = repository.findAll(position, searchDTO);
+        for (Quan m : listModel) {
+            listDTO.add(Mapper.modelMapper().map(m, QuanDTO.class));
         }
         return listDTO;
     }
 
     @Override
-    public AoDTO findById(String id) {
+    public QuanDTO findById(String id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public AoDTO findByMa(String ma) {
-        return Mapper.modelMapper().map(repository.findByMa(ma), AoDTO.class);
+    public QuanDTO findByMa(String ma) {
+        return Mapper.modelMapper().map(repository.findByMa(ma), QuanDTO.class);
     }
 
     @Override
-    public String create(AoDTO dto) {
+    public String create(QuanDTO dto) {
         dto.setId(null);
-        Ao model = Mapper.modelMapper().map(dto, Ao.class);
+        Quan model = Mapper.modelMapper().map(dto, Quan.class);
         if (repository.findByMa(dto.getSanPham().getMaSP()) != null) {
             return "Mã đã tồn tại";
         }
@@ -63,9 +63,9 @@ public class AoServiceImpl implements AoService {
     }
 
     @Override
-    public String update(AoDTO dto) {
+    public String update(QuanDTO dto) {
         String result;
-        Ao model = Mapper.modelMapper().map(dto, Ao.class);
+        Quan model = Mapper.modelMapper().map(dto, Quan.class);
         if (repository.save(model) != null) {
             result = "Update thành công";
         } else {
@@ -78,5 +78,5 @@ public class AoServiceImpl implements AoService {
     public long totalCount() {
         return repository.totalCount();
     }
-
+    
 }

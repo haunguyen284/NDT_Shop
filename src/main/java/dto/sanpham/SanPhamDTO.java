@@ -34,11 +34,11 @@ public class SanPhamDTO extends AuditModelDTO {
     @NotBlank(message = "Tên sản phẩm - Không được để trống !")
     private String tenSP;
 
-    private float giaNhap;
+    private String giaNhap;
 
-    private float giaBan;
+    private String giaBan;
 
-    private int soLuongTon;
+    private String soLuongTon;
 
     private String moTa;
 

@@ -16,6 +16,7 @@ import view.event.EventShowPopupMenu;
 import view.form.thongke.ViewDoanhThu;
 import view.form.MainForm;
 import view.form.sanpham.ViewAo;
+import view.form.sanpham.ViewQuan;
 import view.swing.MenuItem;
 import view.swing.PopupMenu;
 import view.swing.icon.GoogleMaterialDesignIcons;
@@ -54,6 +55,9 @@ public class Main extends javax.swing.JFrame implements Runnable{
                 } else if (menuIndex == 2) {
                     if (subMenuIndex == 0) {
                         main.showForm(new ViewAo());
+                    }
+                    if (subMenuIndex == 1) {
+                        main.showForm(new ViewQuan());
                     }
                 } else if (menuIndex == 7) {
                     if (ShowMessage.show("Bạn chắc chắn muốn thoát ?")) {

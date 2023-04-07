@@ -4,17 +4,13 @@
  */
 package view.form.sanpham;
 
-import comon.constant.sanpham.TrangThaiMauSac;
 import comon.constant.sanpham.TrangThaiQuanAo;
-import comon.constant.sanpham.TrangThaiSanPham;
-import dto.sanpham.MauSacDTO;
 import dto.sanpham.SizeAoDTO;
 import java.util.List;
 import javax.swing.JOptionPane;
-import service.sanpham.MauSacService;
 import service.sanpham.SizeAoService;
-import service.sanpham.impl.MauSacServiceImpl;
 import service.sanpham.impl.SizeAoServiceImpl;
+import view.dialog.ShowMessage;
 
 /**
  *
@@ -28,18 +24,30 @@ public class DialogSizeAo extends javax.swing.JDialog {
     /**
      * Creates new form DialogMauSac
      */
-    public DialogSizeAo(java.awt.Frame parent, boolean modal) {
+    public DialogSizeAo(java.awt.Frame parent, boolean modal, SizeAoDTO dto) {
         super(parent, modal);
         initComponents();
         sizeAoService = new SizeAoServiceImpl();
         loadDataTable();
+        if (dto != null) fillPhanTu(dto);
+    }
+    
+    private void fillPhanTu(SizeAoDTO dto){
+        txtTen.setText(dto.getTen());
+        txtMa.setText(dto.getMa());
+        txtDaiMax.setText(dto.getDaiLonNhat());
+        txtDaiMin.setText(dto.getDaiBeNhat());
+        txtTayAoMax.setText(dto.getTayAoLonNhat());
+        txtTayAoMin.setText(dto.getTayAoBeNhat());
+        txtVaiMax.setText(dto.getRongVaiLonNhat());
+        txtVaiMin.setText(dto.getRongVaiBeNhat());
     }
 
     private void loadDataTable() {
         TrangThaiQuanAo trangThai = null;
-        if (cbbHienThi.getSelectedItem().toString().equals("ACTIVE")){
+        if (cbbHienThi.getSelectedItem().toString().equals("ACTIVE")) {
             trangThai = TrangThaiQuanAo.ACTIVE;
-        } else if (cbbHienThi.getSelectedItem().toString().equals("IN ACTIVE")){
+        } else if (cbbHienThi.getSelectedItem().toString().equals("IN ACTIVE")) {
             trangThai = TrangThaiQuanAo.IN_ACTIVE;
         }
         List<SizeAoDTO> listDTO = sizeAoService.findAll(trangThai);
@@ -78,17 +86,17 @@ public class DialogSizeAo extends javax.swing.JDialog {
         jLabel5 = new javax.swing.JLabel();
         cbbHienThi = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
-        spEoMin = new javax.swing.JSpinner();
-        spEoMax = new javax.swing.JSpinner();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        spMongMin = new javax.swing.JSpinner();
         jLabel9 = new javax.swing.JLabel();
-        spMongMax = new javax.swing.JSpinner();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jSpinner5 = new javax.swing.JSpinner();
-        jSpinner6 = new javax.swing.JSpinner();
+        txtVaiMin = new javax.swing.JTextField();
+        txtVaiMax = new javax.swing.JTextField();
+        txtDaiMin = new javax.swing.JTextField();
+        txtDaiMax = new javax.swing.JTextField();
+        txtTayAoMin = new javax.swing.JTextField();
+        txtTayAoMax = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -168,15 +176,15 @@ public class DialogSizeAo extends javax.swing.JDialog {
             }
         });
 
-        jLabel6.setText("Eo");
+        jLabel6.setText("Vai");
 
         jLabel7.setText("đến");
 
-        jLabel8.setText("Mông");
+        jLabel8.setText("Dài");
 
         jLabel9.setText("đến");
 
-        jLabel10.setText("Cân nặng");
+        jLabel10.setText("Tay áo");
 
         jLabel11.setText("đến");
 
@@ -215,23 +223,23 @@ public class DialogSizeAo extends javax.swing.JDialog {
                                     .addComponent(cbbTrangThai, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(cbbHienThi, javax.swing.GroupLayout.Alignment.TRAILING, 0, 362, Short.MAX_VALUE)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(spEoMin, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(txtVaiMin, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(spEoMax, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(txtVaiMax, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(spMongMin, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(txtDaiMin, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(spMongMax, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(txtDaiMax, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jSpinner5, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(txtTayAoMin, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jSpinner6, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addComponent(txtTayAoMax, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGap(20, 20, 20))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -253,21 +261,21 @@ public class DialogSizeAo extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(spEoMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spEoMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
+                    .addComponent(jLabel7)
+                    .addComponent(txtVaiMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtVaiMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(spMongMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spMongMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
+                    .addComponent(jLabel9)
+                    .addComponent(txtDaiMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDaiMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
-                    .addComponent(jSpinner5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSpinner6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11))
+                    .addComponent(jLabel11)
+                    .addComponent(txtTayAoMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTayAoMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbbTrangThai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -294,12 +302,24 @@ public class DialogSizeAo extends javax.swing.JDialog {
         SizeAoDTO dto = new SizeAoDTO();
         String ma = txtMa.getText();
         String ten = txtTen.getText();
+        String vaiMin = txtVaiMin.getText();
+        String vaiMax = txtVaiMax.getText();
+        String daiMin = txtDaiMin.getText();
+        String daiMax = txtDaiMax.getText();
+        String tayAoMin = txtTayAoMin.getText();
+        String tayAoMax = txtTayAoMax.getText();
         TrangThaiQuanAo trangThai = TrangThaiQuanAo.IN_ACTIVE;
         if (cbbTrangThai.getSelectedIndex() == 0) {
             trangThai = TrangThaiQuanAo.ACTIVE;
         }
         dto.setMa(ma);
         dto.setTen(ten);
+        dto.setDaiBeNhat(daiMin);
+        dto.setDaiLonNhat(daiMax);
+        dto.setRongVaiBeNhat(vaiMin);
+        dto.setRongVaiLonNhat(vaiMax);
+        dto.setTayAoBeNhat(tayAoMin);
+        dto.setTayAoLonNhat(tayAoMax);
         dto.setTrangThaiQuanAo(trangThai);
         return dto;
     }
@@ -316,11 +336,11 @@ public class DialogSizeAo extends javax.swing.JDialog {
     private void btnChonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChonActionPerformed
         String selectedId = getSelectedIdFromTable();
         if (selectedId == null) {
-            JOptionPane.showMessageDialog(this, "Chưa chọn hàng");
+            ShowMessage.show("Chưa chọn hàng");
             return;
         }
-        selectedMauSac = getDTOFromInput();
-        selectedMauSac.setId(selectedId);
+        selectedSizeAo = getDTOFromInput();
+        selectedSizeAo.setId(selectedId);
         this.dispose();
     }//GEN-LAST:event_btnChonActionPerformed
 
@@ -331,26 +351,34 @@ public class DialogSizeAo extends javax.swing.JDialog {
         }
         String selectedId = getSelectedIdFromTable();
         String ma = tbHienThi.getValueAt(selectedRow, 1).toString();
-        String ten = tbHienThi.getValueAt(selectedRow, 2).toString();
-        String trangThai = tbHienThi.getValueAt(selectedRow, 3).toString();
-        if (trangThai.equals("ACTIVE")) {
+        selectedSizeAo = sizeAoService.findByMa(ma);
+
+        if (selectedSizeAo.getTrangThaiQuanAo() == TrangThaiQuanAo.ACTIVE) {
             cbbTrangThai.setSelectedIndex(0);
         } else {
             cbbTrangThai.setSelectedIndex(1);
         }
         txtMa.setText(ma);
-        txtTen.setText(ten);
+        txtTen.setText(selectedSizeAo.getTen());
+        txtDaiMax.setText(selectedSizeAo.getDaiLonNhat());
+        txtDaiMin.setText(selectedSizeAo.getDaiBeNhat());
+        txtTayAoMax.setText(selectedSizeAo.getTayAoLonNhat());
+        txtTayAoMin.setText(selectedSizeAo.getTayAoBeNhat());
+        txtVaiMax.setText(selectedSizeAo.getRongVaiLonNhat());
+        txtVaiMin.setText(selectedSizeAo.getRongVaiBeNhat());
+
         if (evt.getClickCount() == 2) {
-            selectedMauSac = getDTOFromInput();
-            selectedMauSac.setId(selectedId);
+            selectedSizeAo = getDTOFromInput();
+            selectedSizeAo.setId(selectedId);
             this.dispose();
         }
     }//GEN-LAST:event_tbHienThiMouseClicked
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
-        MauSacDTO dto = getDTOFromInput();
-        String result = mauSacService.create(dto);
-        JOptionPane.showMessageDialog(this, result);
+        SizeAoDTO dto = getDTOFromInput();
+        String result = sizeAoService.create(dto);
+        ShowMessage.show(result);
+
         loadDataTable();
     }//GEN-LAST:event_btnThemActionPerformed
 
@@ -360,11 +388,14 @@ public class DialogSizeAo extends javax.swing.JDialog {
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         String selectedId = getSelectedIdFromTable();
-        if (selectedId == null) return;
-        MauSacDTO dto = getDTOFromInput();
+        if (selectedId == null) {
+            return;
+        }
+        SizeAoDTO dto = getDTOFromInput();
         dto.setId(selectedId);
-        String result = mauSacService.update(dto);
-        JOptionPane.showMessageDialog(this, result);
+        String result = sizeAoService.update(dto);
+        ShowMessage.show(result);
+
         loadDataTable();
     }//GEN-LAST:event_btnSuaActionPerformed
 
@@ -387,14 +418,14 @@ public class DialogSizeAo extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSpinner jSpinner5;
-    private javax.swing.JSpinner jSpinner6;
-    private javax.swing.JSpinner spEoMax;
-    private javax.swing.JSpinner spEoMin;
-    private javax.swing.JSpinner spMongMax;
-    private javax.swing.JSpinner spMongMin;
     private view.swing.table.Table tbHienThi;
+    private javax.swing.JTextField txtDaiMax;
+    private javax.swing.JTextField txtDaiMin;
     private javax.swing.JTextField txtMa;
+    private javax.swing.JTextField txtTayAoMax;
+    private javax.swing.JTextField txtTayAoMin;
     private javax.swing.JTextField txtTen;
+    private javax.swing.JTextField txtVaiMax;
+    private javax.swing.JTextField txtVaiMin;
     // End of variables declaration//GEN-END:variables
 }

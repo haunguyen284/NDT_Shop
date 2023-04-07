@@ -205,20 +205,24 @@ public class Migrator {
         SizeQuan s = new SizeQuan();
         s.setMa("Sq1");
         s.setTen("M");
-        s.setEo(58);
-        s.setMong(70);
-        s.setTen("Quần 1");
-        s.setCanNang(55);
+        s.setEoBeNhat(58);
+        s.setEoLonNhat(90);
+        s.setMongBeNhat(50);
+        s.setMongLonNhat(90);
+        s.setTen("Size Quần 1");
+        s.setCanNangBeNhat(55);
+        s.setCanNangLonNhat(500);
         s.setTrangThaiQuanAo(TrangThaiQuanAo.ACTIVE);
         session.save(s);
 
         SizeQuan s1 = new SizeQuan();
-        s1.setMa("Sq2");
-        s1.setTen("L");
-        s1.setEo(65);
-        s1.setMong(78);
-        s1.setTen("Quần 2");
-        s1.setCanNang(68);
+        s1.setEoBeNhat(58);
+        s1.setEoLonNhat(90);
+        s1.setMongBeNhat(50);
+        s1.setMongLonNhat(90);
+        s1.setTen("Size Quần 2");
+        s1.setCanNangBeNhat(55);
+        s1.setCanNangLonNhat(500);
         s1.setTrangThaiQuanAo(TrangThaiQuanAo.ACTIVE);
         session.save(s1);
 

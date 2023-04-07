@@ -9,16 +9,20 @@ import comon.constant.sanpham.TrangThaiSanPham;
 import dto.sanpham.AoDTO;
 import dto.sanpham.ChatLieuDTO;
 import dto.sanpham.MauSacDTO;
+import dto.sanpham.QuanDTO;
 import dto.sanpham.SanPhamDTO;
 import dto.sanpham.SizeAoDTO;
+import dto.sanpham.SizeQuanDTO;
 import dto.sanpham.ThuongHieuDTO;
 import dto.sanpham.XuatXuDTO;
 import java.awt.Frame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import service.sanpham.AoService;
+import service.sanpham.QuanService;
 import service.sanpham.SanPhamService;
 import service.sanpham.impl.AoServiceImpl;
+import service.sanpham.impl.QuanServiceImpl;
 import service.sanpham.impl.SanPhamServiceImpl;
 import view.dialog.ShowMessage;
 
@@ -26,50 +30,50 @@ import view.dialog.ShowMessage;
  *
  * @author nguyenth28
  */
-public class DialogAo extends javax.swing.JDialog {
+public class DialogQuan extends javax.swing.JDialog {
 
     private MauSacDTO selectedMau;
     private ChatLieuDTO selectedChatLieu;
     private ThuongHieuDTO selectedThuongHieu;
     private XuatXuDTO selectedXuatXu;
-    private SizeAoDTO selectedSizeAo;
-    private AoService aoService;
+    private SizeQuanDTO selectedSizeQuan;
+    private QuanService quanService;
     private SanPhamService sanPhamService;
     private boolean isUpdate;
-    private AoDTO updateDTO;
+    private QuanDTO updateDTO;
 
     /**
      * Creates new form DialogAo
      */
-    public DialogAo(java.awt.Frame parent, boolean modal) {
+    public DialogQuan(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        aoService = new AoServiceImpl();
+        quanService = new QuanServiceImpl();
         sanPhamService = new SanPhamServiceImpl();
         isUpdate = false;
-        lbTitle.setText("THÊM MỚI ÁO");
+        lbTitle.setText("THÊM MỚI QUẦN");
     }
 
-    public DialogAo(java.awt.Frame parent, boolean modal, AoDTO aoDTO) {
+    public DialogQuan(java.awt.Frame parent, boolean modal, QuanDTO quanDTO) {
         super(parent, modal);
         initComponents();
-        aoService = new AoServiceImpl();
+        quanService = new QuanServiceImpl();
         sanPhamService = new SanPhamServiceImpl();
-        selectedMau = aoDTO.getSanPham().getMauSac();
-        selectedChatLieu = aoDTO.getSanPham().getChatLieu();
-        selectedThuongHieu = aoDTO.getSanPham().getThuongHieu();
-        selectedXuatXu = aoDTO.getSanPham().getXuatXu();
-        selectedSizeAo = aoDTO.getSizeAo();
+        selectedMau = quanDTO.getSanPham().getMauSac();
+        selectedChatLieu = quanDTO.getSanPham().getChatLieu();
+        selectedThuongHieu = quanDTO.getSanPham().getThuongHieu();
+        selectedXuatXu = quanDTO.getSanPham().getXuatXu();
+        selectedSizeQuan = quanDTO.getSizeQuan();
         loadLabelSelected();
-        txtGiaBan.setText(aoDTO.getSanPham().getGiaBan());
-        txtGiaNhap.setText(aoDTO.getSanPham().getGiaNhap());
-        txtMa.setText(aoDTO.getSanPham().getMaSP());
-        txtMoTa.setText(aoDTO.getSanPham().getMoTa());
-        txtSoLuong.setText(aoDTO.getSanPham().getSoLuongTon());
-        txtTen.setText(aoDTO.getSanPham().getTenSP());
+        txtGiaBan.setText(quanDTO.getSanPham().getGiaBan());
+        txtGiaNhap.setText(quanDTO.getSanPham().getGiaNhap());
+        txtMa.setText(quanDTO.getSanPham().getMaSP());
+        txtMoTa.setText(quanDTO.getSanPham().getMoTa());
+        txtSoLuong.setText(quanDTO.getSanPham().getSoLuongTon());
+        txtTen.setText(quanDTO.getSanPham().getTenSP());
         isUpdate = true;
-        updateDTO = aoDTO;
-        lbTitle.setText("CẬP NHẬT ÁO");
+        updateDTO = quanDTO;
+        lbTitle.setText("CẬP NHẬT QUẦN");
     }
 
     /**
@@ -350,7 +354,7 @@ public class DialogAo extends javax.swing.JDialog {
     }//GEN-LAST:event_btnXuatXuActionPerformed
 
     private void btnLuuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuActionPerformed
-        AoDTO dto = new AoDTO();
+        QuanDTO dto = new QuanDTO();
         SanPhamDTO spDTO = new SanPhamDTO();
         String ma = txtMa.getText();
         String ten = txtTen.getText();
@@ -383,8 +387,8 @@ public class DialogAo extends javax.swing.JDialog {
             if (newSPDTO != null) {
                 dto.setId(updateDTO.getId());
                 dto.setSanPham(newSPDTO);
-                dto.setSizeAo(selectedSizeAo);
-                rs = aoService.update(dto);
+                dto.setSizeQuan(selectedSizeQuan);
+                rs = quanService.update(dto);
             } else {
                 rs = "Mã sản phẩm đã tồn tại";
             }
@@ -392,8 +396,8 @@ public class DialogAo extends javax.swing.JDialog {
             SanPhamDTO newSPDTO = sanPhamService.create(spDTO);
             if (newSPDTO != null) {
                 dto.setSanPham(newSPDTO);
-                dto.setSizeAo(selectedSizeAo);
-                rs = aoService.create(dto);
+                dto.setSizeQuan(selectedSizeQuan);
+                rs = quanService.create(dto);
             } else {
                 rs = "Mã sản phẩm đã tồn tại";
             }
@@ -403,9 +407,9 @@ public class DialogAo extends javax.swing.JDialog {
 
     private void btnKichCoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKichCoActionPerformed
         Frame parentWindow = (Frame) SwingUtilities.windowForComponent(this);
-        DialogSizeAo dialog = new DialogSizeAo(parentWindow, true, selectedSizeAo);
+        DialogSizeQuan dialog = new DialogSizeQuan(parentWindow, true, selectedSizeQuan);
         dialog.setVisible(true);
-        selectedSizeAo = dialog.selectedSizeAo;
+        selectedSizeQuan = dialog.selectedSizeQuan;
         loadLabelSelected();
     }//GEN-LAST:event_btnKichCoActionPerformed
 
@@ -418,7 +422,7 @@ public class DialogAo extends javax.swing.JDialog {
         lbChatLieu.setText(selectedChatLieu != null ? selectedChatLieu.getTen() : "");
         lbMau.setText(selectedMau != null ? selectedMau.getTen() : "");
         lbThuongHieu.setText(selectedThuongHieu != null ? selectedThuongHieu.getTen() : "");
-        lbKichCo.setText(selectedSizeAo != null ? selectedSizeAo.getTen() : "");
+        lbKichCo.setText(selectedSizeQuan != null ? selectedSizeQuan.getTen() : "");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

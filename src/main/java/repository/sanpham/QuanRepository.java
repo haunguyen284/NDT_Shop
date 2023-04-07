@@ -7,9 +7,11 @@ package repository.sanpham;
 import comon.constant.PaginationConstant;
 import comon.utilities.HibernateUtil;
 import dto.sanpham.SearchAoDTO;
+import dto.sanpham.SearchQuanDTO;
 import java.util.List;
 import javax.persistence.TypedQuery;
 import model.sanpham.Ao;
+import model.sanpham.Quan;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -18,23 +20,23 @@ import org.hibernate.query.Query;
  *
  * @author nguyenth28
  */
-public class AoRepository {
+public class QuanRepository {
 
-    public List<Ao> findAll(int position, SearchAoDTO searchDTO) {
-        List<Ao> listModel;
+    public List<Quan> findAll(int position, SearchQuanDTO searchDTO) {
+        List<Quan> listModel;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT x FROM Ao x WHERE "
-                    + "(:dai IS NULL OR :dai LIKE '' OR :dai BETWEEN x.sizeAo.rongVaiBeNhat AND x.sizeAo.rongVaiLonNhat) "
-                    + "AND (:tayAo IS NULL OR :tayAo LIKE '' OR :tayAo BETWEEN x.sizeAo.tayAoBeNhat AND x.sizeAo.tayAoLonNhat) "
-                    + "AND (:vai IS NULL OR :vai LIKE '' OR :vai BETWEEN x.sizeAo.rongVaiBeNhat AND x.sizeAo.rongVaiLonNhat) "
+            String hql = "SELECT x FROM Quan x WHERE "
+                    + "(:eo IS NULL OR :eo LIKE '' OR :eo BETWEEN x.sizeQuan.eoBeNhat AND x.sizeQuan.eoLonNhat) "
+                    + "AND (:canNang IS NULL OR :canNang LIKE '' OR :canNang BETWEEN x.sizeQuan.canNangBeNhat AND x.sizeQuan.canNangLonNhat) "
+                    + "AND (:mong IS NULL OR :mong LIKE '' OR :mong BETWEEN x.sizeQuan.mongBeNhat AND x.sizeQuan.mongLonNhat) "
                     + "AND (:mauSac IS NULL OR :mauSac LIKE '' OR x.sanPham.mauSac.ten LIKE '%' + :mauSac + '%') "
                     + "AND (:chatLieu IS NULL OR :chatLieu LIKE '' OR x.sanPham.chatLieu.ten LIKE '%' + :chatLieu + '%') "
                     + "AND (:thuongHieu IS NULL OR :thuongHieu LIKE '' OR x.sanPham.thuongHieu.ten LIKE '%' + :thuongHieu + '%') "
                     + "AND (:ma IS NULL OR :ma LIKE '' OR x.sanPham.maSP LIKE '%' + :ma + '%')";
-            TypedQuery<Ao> query = session.createQuery(hql, Ao.class);
-            query.setParameter("dai", searchDTO.getDai());
-            query.setParameter("tayAo", searchDTO.getTayAo());
-            query.setParameter("vai", searchDTO.getVai());
+            TypedQuery<Quan> query = session.createQuery(hql, Quan.class);
+            query.setParameter("canNang", searchDTO.getCanNang());
+            query.setParameter("eo", searchDTO.getEo());
+            query.setParameter("mong", searchDTO.getMong());
             query.setParameter("mauSac", searchDTO.getMauSac());
             query.setParameter("chatLieu", searchDTO.getChatLieu());
             query.setParameter("thuongHieu", searchDTO.getThuongHieu());
@@ -47,33 +49,33 @@ public class AoRepository {
         return listModel;
     }
 
-    public List<Ao> findAll() {
-        List<Ao> listModel;
+    public List<Quan> findAll() {
+        List<Quan> listModel;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT x FROM Ao x";
-            TypedQuery<Ao> query = session.createQuery(hql, Ao.class);
+            String hql = "SELECT x FROM Quan x";
+            TypedQuery<Quan> query = session.createQuery(hql, Quan.class);
             listModel = query.getResultList();
         }
         return listModel;
     }
 
-    public Ao findById(String id) {
-        Ao model;
+    public Quan findById(String id) {
+        Quan model;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT x FROM Ao x WHERE x.id = :id";
-            TypedQuery<Ao> query = session.createQuery(hql, Ao.class);
+            String hql = "SELECT x FROM Quan x WHERE x.id = :id";
+            TypedQuery<Quan> query = session.createQuery(hql, Quan.class);
             query.setParameter("id", id);
             model = query.getSingleResult();
         }
         return model;
     }
 
-    public Ao findByMa(String ma) {
-        Ao model = null;
-        List<Ao> listModel;
+    public Quan findByMa(String ma) {
+        Quan model = null;
+        List<Quan> listModel;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT x FROM Ao x JOIN SanPham y ON x.sanPham=y.id WHERE y.maSP = :ma";
-            TypedQuery<Ao> query = session.createQuery(hql, Ao.class);
+            String hql = "SELECT x FROM Quan x JOIN SanPham y ON x.sanPham=y.id WHERE y.maSP = :ma";
+            TypedQuery<Quan> query = session.createQuery(hql, Quan.class);
             query.setParameter("ma", ma);
             listModel = query.getResultList();
         }
@@ -83,7 +85,7 @@ public class AoRepository {
         return model;
     }
 
-    public Ao save(Ao model) {
+    public Quan save(Quan model) {
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.getTransaction();
             transaction.begin();
@@ -106,7 +108,7 @@ public class AoRepository {
             Transaction transaction = session.getTransaction();
             transaction.begin();
             try {
-                String hql = "DELETE Ao x WHERE x.id = :id";
+                String hql = "DELETE Quan x WHERE x.id = :id";
                 Query query = session.createQuery(hql);
                 query.setParameter("id", id);
                 result = query.executeUpdate();
@@ -120,7 +122,7 @@ public class AoRepository {
     public long totalCount() {
         long total = 0;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String statement = "SELECT COUNT(x.id) FROM Ao x";
+            String statement = "SELECT COUNT(x.id) FROM Quan x";
             TypedQuery<Long> query = session.createQuery(statement, Long.class);
             total = query.getSingleResult();
         }

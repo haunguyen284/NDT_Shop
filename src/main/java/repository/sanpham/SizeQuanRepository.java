@@ -53,7 +53,7 @@ public class SizeQuanRepository {
         SizeQuan model = null;
         List<SizeQuan> listModel;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT x FROM SizeAo x WHERE x.ma = :ma";
+            String hql = "SELECT x FROM SizeQuan x WHERE x.ma = :ma";
             TypedQuery<SizeQuan> query = session.createQuery(hql, SizeQuan.class);
             query.setParameter("ma", ma);
             listModel = query.getResultList();

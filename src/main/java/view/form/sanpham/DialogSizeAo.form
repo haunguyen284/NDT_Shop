@@ -57,25 +57,25 @@
                                   <Component id="cbbTrangThai" alignment="1" max="32767" attributes="0"/>
                                   <Component id="cbbHienThi" alignment="1" pref="362" max="32767" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="spEoMin" min="-2" pref="109" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="txtVaiMin" min="-2" pref="115" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jLabel7" min="-2" pref="39" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="spEoMax" min="-2" pref="103" max="-2" attributes="0"/>
+                                      <Component id="txtVaiMax" min="-2" pref="115" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
-                                      <Component id="spMongMin" min="-2" pref="109" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="txtDaiMin" min="-2" pref="115" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jLabel9" min="-2" pref="39" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="spMongMax" min="-2" pref="103" max="-2" attributes="0"/>
+                                      <Component id="txtDaiMax" min="-2" pref="115" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
-                                      <Component id="jSpinner5" min="-2" pref="109" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="txtTayAoMin" min="-2" pref="115" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jLabel11" min="-2" pref="39" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jSpinner6" min="-2" pref="103" max="-2" attributes="0"/>
+                                      <Component id="txtTayAoMax" min="-2" pref="115" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -108,23 +108,23 @@
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="spEoMin" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="spEoMax" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtVaiMin" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtVaiMax" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="spMongMin" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="spMongMax" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtDaiMin" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtDaiMax" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jSpinner5" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jSpinner6" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtTayAoMin" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtTayAoMax" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -312,12 +312,8 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Eo"/>
+        <Property name="text" type="java.lang.String" value="Vai"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JSpinner" name="spEoMin">
-    </Component>
-    <Component class="javax.swing.JSpinner" name="spEoMax">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel7">
       <Properties>
@@ -326,21 +322,17 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel8">
       <Properties>
-        <Property name="text" type="java.lang.String" value="M&#xf4;ng"/>
+        <Property name="text" type="java.lang.String" value="D&#xe0;i"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JSpinner" name="spMongMin">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel9">
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x111;&#x1ebf;n"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JSpinner" name="spMongMax">
-    </Component>
     <Component class="javax.swing.JLabel" name="jLabel10">
       <Properties>
-        <Property name="text" type="java.lang.String" value="C&#xe2;n n&#x1eb7;ng"/>
+        <Property name="text" type="java.lang.String" value="Tay &#xe1;o"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel11">
@@ -348,9 +340,17 @@
         <Property name="text" type="java.lang.String" value="&#x111;&#x1ebf;n"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JSpinner" name="jSpinner5">
+    <Component class="javax.swing.JTextField" name="txtVaiMin">
     </Component>
-    <Component class="javax.swing.JSpinner" name="jSpinner6">
+    <Component class="javax.swing.JTextField" name="txtVaiMax">
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtDaiMin">
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtDaiMax">
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtTayAoMin">
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtTayAoMax">
     </Component>
   </SubComponents>
 </Form>

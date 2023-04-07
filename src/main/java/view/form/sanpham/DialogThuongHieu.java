@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import service.sanpham.ThuongHieuService;
 import service.sanpham.impl.ThuongHieuServiceImpl;
+import view.dialog.ShowMessage;
 
 /**
  *
@@ -23,18 +24,30 @@ public class DialogThuongHieu extends javax.swing.JDialog {
     /**
      * Creates new form DialogMauSac
      */
-    public DialogThuongHieu(java.awt.Frame parent, boolean modal) {
+    public DialogThuongHieu(java.awt.Frame parent, boolean modal, ThuongHieuDTO dto) {
         super(parent, modal);
         initComponents();
         thuongHieuService = new ThuongHieuServiceImpl();
         loadDataTable();
+        selectedThuongHieu = dto;
+        if (dto != null) fillPhanTu(dto);
+    }
+    
+    private void fillPhanTu(ThuongHieuDTO dto) {
+        if (dto.getTrangThaiThuongHieu()== TrangThaiThuongHieu.ACTIVE) {
+            cbbTrangThai.setSelectedIndex(0);
+        } else {
+            cbbTrangThai.setSelectedIndex(1);
+        }
+        txtMa.setText(dto.getMa());
+        txtTen.setText(dto.getTen());
     }
 
     private void loadDataTable() {
         TrangThaiThuongHieu trangThai = null;
-        if (cbbHienThi.getSelectedItem().toString().equals("ACTIVE")){
+        if (cbbHienThi.getSelectedItem().toString().equals("ACTIVE")) {
             trangThai = TrangThaiThuongHieu.ACTIVE;
-        } else if (cbbHienThi.getSelectedItem().toString().equals("IN ACTIVE")){
+        } else if (cbbHienThi.getSelectedItem().toString().equals("IN ACTIVE")) {
             trangThai = TrangThaiThuongHieu.IN_ACTIVE;
         }
         List<ThuongHieuDTO> listDTO = thuongHieuService.findAll(trangThai);
@@ -248,7 +261,8 @@ public class DialogThuongHieu extends javax.swing.JDialog {
     private void btnChonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChonActionPerformed
         String selectedId = getSelectedIdFromTable();
         if (selectedId == null) {
-            JOptionPane.showMessageDialog(this, "Chưa chọn hàng");
+            ShowMessage.show("Chưa chọn hàng");
+
             return;
         }
         selectedThuongHieu = getDTOFromInput();
@@ -282,7 +296,8 @@ public class DialogThuongHieu extends javax.swing.JDialog {
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         ThuongHieuDTO dto = getDTOFromInput();
         String result = thuongHieuService.create(dto);
-        JOptionPane.showMessageDialog(this, result);
+        ShowMessage.show(result);
+
         loadDataTable();
     }//GEN-LAST:event_btnThemActionPerformed
 
@@ -292,11 +307,13 @@ public class DialogThuongHieu extends javax.swing.JDialog {
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         String selectedId = getSelectedIdFromTable();
-        if (selectedId == null) return;
+        if (selectedId == null) {
+            return;
+        }
         ThuongHieuDTO dto = getDTOFromInput();
         dto.setId(selectedId);
         String result = thuongHieuService.update(dto);
-        JOptionPane.showMessageDialog(this, result);
+        ShowMessage.show(result);
         loadDataTable();
     }//GEN-LAST:event_btnSuaActionPerformed
 

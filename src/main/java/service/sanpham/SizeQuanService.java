@@ -6,19 +6,20 @@ package service.sanpham;
 
 import comon.constant.sanpham.TrangThaiQuanAo;
 import dto.sanpham.SizeAoDTO;
+import dto.sanpham.SizeQuanDTO;
 import java.util.List;
 
 /**
  *
  * @author nguyenth28
  */
-public interface SizeAoService {
+public interface SizeQuanService {
 
-    List<SizeAoDTO> findAll(TrangThaiQuanAo trangThai);
+    List<SizeQuanDTO> findAll(TrangThaiQuanAo trangThai);
 
-    String create(SizeAoDTO dto);
+    String create(SizeQuanDTO dto);
 
-    String update(SizeAoDTO dto);
+    String update(SizeQuanDTO dto);
     
-    SizeAoDTO findByMa(String ma);
+    SizeQuanDTO findByMa(String ma);
 }

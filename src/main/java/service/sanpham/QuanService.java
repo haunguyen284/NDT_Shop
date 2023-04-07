@@ -5,18 +5,20 @@
 package service.sanpham;
 
 import dto.sanpham.AoDTO;
+import dto.sanpham.QuanDTO;
 import dto.sanpham.SearchAoDTO;
+import dto.sanpham.SearchQuanDTO;
 import java.util.List;
 
 /**
  *
  * @author nguyenth28
  */
-public interface AoService {
-    List<AoDTO> findAll(int position, SearchAoDTO searchDTO);
-    AoDTO findById(String id);
-    AoDTO findByMa(String ma);
-    String create(AoDTO dto);
-    String update(AoDTO dto);
+public interface QuanService {
+    List<QuanDTO> findAll(int position, SearchQuanDTO searchDTO);
+    QuanDTO findById(String id);
+    QuanDTO findByMa(String ma);
+    String create(QuanDTO dto);
+    String update(QuanDTO dto);
     long totalCount();
 }

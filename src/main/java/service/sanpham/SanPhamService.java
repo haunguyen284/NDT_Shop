@@ -4,10 +4,15 @@
  */
 package service.sanpham;
 
+import dto.sanpham.AoDTO;
+import dto.sanpham.SanPhamDTO;
+import java.util.List;
+
 /**
  *
  * @author ADMIN KH
  */
 public interface SanPhamService {
-    
+    SanPhamDTO create(SanPhamDTO dto);
+    SanPhamDTO update(SanPhamDTO dto);
 }

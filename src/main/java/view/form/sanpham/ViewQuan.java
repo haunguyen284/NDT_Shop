@@ -4,9 +4,8 @@ import comon.constant.PaginationConstant;
 import comon.constant.sanpham.TrangThaiChatLieu;
 import comon.constant.sanpham.TrangThaiMauSac;
 import comon.constant.sanpham.TrangThaiThuongHieu;
-import dto.sanpham.AoDTO;
-import dto.sanpham.MauSacDTO;
-import dto.sanpham.SearchAoDTO;
+import dto.sanpham.QuanDTO;
+import dto.sanpham.SearchQuanDTO;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -17,19 +16,18 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
-import model.sanpham.MauSac;
-import service.sanpham.AoService;
 import service.sanpham.ChatLieuService;
 import service.sanpham.MauSacService;
+import service.sanpham.QuanService;
 import service.sanpham.ThuongHieuService;
-import service.sanpham.impl.AoServiceImpl;
 import service.sanpham.impl.ChatLieuServiceImpl;
 import service.sanpham.impl.MauSacServiceImpl;
+import service.sanpham.impl.QuanServiceImpl;
 import service.sanpham.impl.ThuongHieuServiceImpl;
 
-public class ViewAo extends javax.swing.JPanel {
+public class ViewQuan extends javax.swing.JPanel {
 
-    private final AoService aoService;
+    private final QuanService quanService;
     private final MauSacService mauSacService;
     private final ChatLieuService chatLieuService;
     private final ThuongHieuService thuongHieuService;
@@ -37,13 +35,13 @@ public class ViewAo extends javax.swing.JPanel {
     private int totalPages;
     private long totalRecords;
 
-    public ViewAo() {
+    public ViewQuan() {
         initComponents();
         tbHienThi.fixTable(jScrollPane1);
         setOpaque(false);
 
         currentPage = PaginationConstant.DEFAULT_PAGE;
-        aoService = new AoServiceImpl();
+        quanService = new QuanServiceImpl();
         mauSacService = new MauSacServiceImpl();
         chatLieuService = new ChatLieuServiceImpl();
         thuongHieuService = new ThuongHieuServiceImpl();
@@ -81,9 +79,9 @@ public class ViewAo extends javax.swing.JPanel {
                 if (ma == null) {
                     return;
                 }
-                AoDTO dto = aoService.findByMa(ma);
+                QuanDTO dto = quanService.findByMa(ma);
                 Frame parentWindow = (Frame) SwingUtilities.windowForComponent(this);
-                new DialogAo(parentWindow, true, dto).setVisible(true);
+                new DialogQuan(parentWindow, true, dto).setVisible(true);
                 loadDataTable();
 
             }
@@ -104,27 +102,29 @@ public class ViewAo extends javax.swing.JPanel {
     }
 
     private void loadDataTable() {
-        SearchAoDTO searchDTO = new SearchAoDTO();
-        String vai = txtRongVai.getText();
-        if (!vai.equals("")) {
-            searchDTO.setVai(vai);
+        SearchQuanDTO searchDTO = new SearchQuanDTO();
+        String eo = txtEo.getText();
+        if (!eo.equals("")){
+            searchDTO.setEo(eo);
         }
-        String dai = txtDai.getText();
-        if (!dai.equals("")) {
-            searchDTO.setDai(dai);
+        
+        String canNang = txtCanNang.getText();
+        if (!canNang.equals("")){
+            searchDTO.setCanNang(eo);
         }
-        String tayAo = txtTayAo.getText();
-        if (!tayAo.equals("")) {
-            searchDTO.setTayAo(tayAo);
+        
+        String mong = txtMong.getText();
+        if (!mong.equals("")){
+            searchDTO.setMong(eo);
         }
         searchDTO.setMa(txtMa.getText());
         searchDTO.setMauSac(cbbMauSac.getSelectedItem().toString());
         searchDTO.setChatLieu(cbbChatLieu.getSelectedItem().toString());
         searchDTO.setThuongHieu(cbbThuongHieu.getSelectedItem().toString());
-        List<AoDTO> listDTO = aoService.findAll(currentPage - 1, searchDTO);
+        List<QuanDTO> listDTO = quanService.findAll(currentPage - 1, searchDTO);
         tbHienThi.clearAllRow();
         DecimalFormat df = new DecimalFormat("#,##0.##");
-        for (AoDTO dto : listDTO) {
+        for (QuanDTO dto : listDTO) {
             tbHienThi.addRow(new Object[]{
                 dto.getSanPham().getMaSP(),
                 dto.getSanPham().getTenSP(),
@@ -132,13 +132,13 @@ public class ViewAo extends javax.swing.JPanel {
                 df.format(Float.valueOf(dto.getSanPham().getSoLuongTon())),
                 dto.getSanPham().getMauSac().getTen(),
                 dto.getSanPham().getChatLieu().getTen(),
-                dto.getSizeAo().getTen(),
+                dto.getSizeQuan().getTen(),
                 dto.getSanPham().getThuongHieu().getTen(),
                 dto.getSanPham().getXuatXu().getTen()
             });
         }
 
-        totalRecords = aoService.totalCount();
+        totalRecords = quanService.totalCount();
         lbTotalChucVu.setText("Total: " + totalRecords);
         totalPages = (int) (totalRecords / PaginationConstant.DEFAULT_SIZE) + 1;
         setStatePagination();
@@ -189,22 +189,22 @@ public class ViewAo extends javax.swing.JPanel {
         jLabel7 = new javax.swing.JLabel();
         cbbThuongHieu = new javax.swing.JComboBox<>();
         btnClearLoc = new view.swing.Button();
-        txtRongVai = new javax.swing.JTextField();
-        txtDai = new javax.swing.JTextField();
-        txtTayAo = new javax.swing.JTextField();
+        txtEo = new javax.swing.JTextField();
+        txtCanNang = new javax.swing.JTextField();
+        txtMong = new javax.swing.JTextField();
         btnLoc = new view.swing.Button();
         button5 = new view.swing.Button();
         button6 = new view.swing.Button();
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(4, 72, 210));
-        jLabel1.setText("Sản phẩm / Áo");
+        jLabel1.setText("Sản phẩm / Quần");
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel5.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(76, 76, 76));
-        jLabel5.setText("Danh sách áo");
+        jLabel5.setText("Danh sách quần");
         jLabel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
 
         tbHienThi.setModel(new javax.swing.table.DefaultTableModel(
@@ -320,19 +320,19 @@ public class ViewAo extends javax.swing.JPanel {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Lọc"));
 
-        jLabel2.setText("Rộng vai");
+        jLabel2.setText("Eo");
 
         jLabel3.setText("Màu sắc");
 
         cbbMauSac.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLabel6.setText("Dài");
+        jLabel6.setText("Cân nặng");
 
         jLabel4.setText("Chất liệu");
 
         cbbChatLieu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLabel8.setText("Tay áo");
+        jLabel8.setText("Mông");
 
         jLabel7.setText("Thương hiệu");
 
@@ -367,32 +367,32 @@ public class ViewAo extends javax.swing.JPanel {
                         .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
                         .addGap(20, 20, 20)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(cbbMauSac, 0, 154, Short.MAX_VALUE)
-                    .addComponent(txtRongVai))
+                    .addComponent(txtEo))
                 .addGap(76, 76, 76)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(32, 32, 32)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(cbbChatLieu, 0, 158, Short.MAX_VALUE)
-                    .addComponent(txtDai))
+                    .addComponent(txtCanNang))
                 .addGap(76, 76, 76)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(37, 37, 37))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
                         .addGap(2, 2, 2)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(cbbThuongHieu, 0, 151, Short.MAX_VALUE)
-                    .addComponent(txtTayAo))
+                    .addComponent(txtMong))
                 .addGap(37, 37, 37)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnClearLoc, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -407,7 +407,7 @@ public class ViewAo extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
-                            .addComponent(txtTayAo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtMong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
@@ -416,7 +416,7 @@ public class ViewAo extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel6)
-                                .addComponent(txtDai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtCanNang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGap(18, 18, 18)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel4)
@@ -424,7 +424,7 @@ public class ViewAo extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel2)
-                                .addComponent(txtRongVai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtEo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGap(18, 18, 18)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel3)
@@ -504,14 +504,14 @@ public class ViewAo extends javax.swing.JPanel {
 
     private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
         Frame parentWindow = (Frame) SwingUtilities.windowForComponent(this);
-        new DialogAo(parentWindow, true).setVisible(true);
+        new DialogQuan(parentWindow, true).setVisible(true);
         loadDataTable();
     }//GEN-LAST:event_button1ActionPerformed
 
     private void clearBoLoc(){
-        txtDai.setText("");
-        txtRongVai.setText("");
-        txtTayAo.setText("");
+        txtCanNang.setText("");
+        txtEo.setText("");
+        txtMong.setText("");
         cbbChatLieu.setSelectedIndex(0);
         cbbMauSac.setSelectedIndex(0);
         cbbThuongHieu.setSelectedIndex(0);
@@ -560,9 +560,9 @@ public class ViewAo extends javax.swing.JPanel {
     private javax.swing.JLabel lbPagination;
     private javax.swing.JLabel lbTotalChucVu;
     private view.swing.table.Table tbHienThi;
-    private javax.swing.JTextField txtDai;
+    private javax.swing.JTextField txtCanNang;
+    private javax.swing.JTextField txtEo;
     private javax.swing.JTextPane txtMa;
-    private javax.swing.JTextField txtRongVai;
-    private javax.swing.JTextField txtTayAo;
+    private javax.swing.JTextField txtMong;
     // End of variables declaration//GEN-END:variables
 }

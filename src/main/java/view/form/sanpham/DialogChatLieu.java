@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import service.sanpham.ChatLieuService;
 import service.sanpham.impl.ChatLieuServiceImpl;
+import view.dialog.ShowMessage;
 
 /**
  *
@@ -23,18 +24,30 @@ public class DialogChatLieu extends javax.swing.JDialog {
     /**
      * Creates new form DialogMauSac
      */
-    public DialogChatLieu(java.awt.Frame parent, boolean modal) {
+    public DialogChatLieu(java.awt.Frame parent, boolean modal, ChatLieuDTO dto) {
         super(parent, modal);
         initComponents();
         chatLieuService = new ChatLieuServiceImpl();
         loadDataTable();
+        selectedChatLieu = dto;
+        if (dto != null) fillPhanTu(dto);
+    }
+    
+    private void fillPhanTu(ChatLieuDTO dto){
+        if (dto.getTrangThaiChatLieu()== TrangThaiChatLieu.ACTIVE) {
+            cbbTrangThai.setSelectedIndex(0);
+        } else {
+            cbbTrangThai.setSelectedIndex(1);
+        }
+        txtMa.setText(dto.getMa());
+        txtTen.setText(dto.getTen());
     }
 
     private void loadDataTable() {
         TrangThaiChatLieu trangThai = null;
-        if (cbbHienThi.getSelectedItem().toString().equals("ACTIVE")){
+        if (cbbHienThi.getSelectedItem().toString().equals("ACTIVE")) {
             trangThai = TrangThaiChatLieu.ACTIVE;
-        } else if (cbbHienThi.getSelectedItem().toString().equals("IN ACTIVE")){
+        } else if (cbbHienThi.getSelectedItem().toString().equals("IN ACTIVE")) {
             trangThai = TrangThaiChatLieu.IN_ACTIVE;
         }
         List<ChatLieuDTO> listDTO = chatLieuService.findAll(trangThai);
@@ -44,7 +57,7 @@ public class DialogChatLieu extends javax.swing.JDialog {
                 dto.getId(),
                 dto.getMa(),
                 dto.getTen(),
-                dto.getTrangThaiChatLieu()== TrangThaiChatLieu.ACTIVE ? "ACTIVE" : "IN ACTIVE"
+                dto.getTrangThaiChatLieu() == TrangThaiChatLieu.ACTIVE ? "ACTIVE" : "IN ACTIVE"
             });
         }
     }
@@ -248,7 +261,7 @@ public class DialogChatLieu extends javax.swing.JDialog {
     private void btnChonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChonActionPerformed
         String selectedId = getSelectedIdFromTable();
         if (selectedId == null) {
-            JOptionPane.showMessageDialog(this, "Chưa chọn hàng");
+            ShowMessage.show("Chưa chọn hàng");
             return;
         }
         selectedChatLieu = getDTOFromInput();
@@ -282,7 +295,7 @@ public class DialogChatLieu extends javax.swing.JDialog {
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         ChatLieuDTO dto = getDTOFromInput();
         String result = chatLieuService.create(dto);
-        JOptionPane.showMessageDialog(this, result);
+        ShowMessage.show(result);
         loadDataTable();
     }//GEN-LAST:event_btnThemActionPerformed
 
@@ -292,11 +305,13 @@ public class DialogChatLieu extends javax.swing.JDialog {
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         String selectedId = getSelectedIdFromTable();
-        if (selectedId == null) return;
+        if (selectedId == null) {
+            return;
+        }
         ChatLieuDTO dto = getDTOFromInput();
         dto.setId(selectedId);
         String result = chatLieuService.update(dto);
-        JOptionPane.showMessageDialog(this, result);
+        ShowMessage.show(result);
         loadDataTable();
     }//GEN-LAST:event_btnSuaActionPerformed
 

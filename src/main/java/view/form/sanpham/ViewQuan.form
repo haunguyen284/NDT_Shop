@@ -72,7 +72,7 @@
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="d2" green="48" red="4" type="rgb"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="S&#x1ea3;n ph&#x1ea9;m / &#xc1;o"/>
+        <Property name="text" type="java.lang.String" value="S&#x1ea3;n ph&#x1ea9;m / Qu&#x1ea7;n"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JPanel" name="jPanel2">
@@ -149,7 +149,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="4c" green="4c" red="4c" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Danh s&#xe1;ch &#xe1;o"/>
+            <Property name="text" type="java.lang.String" value="Danh s&#xe1;ch qu&#x1ea7;n"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder bottom="1" left="10" right="1" top="1"/>
@@ -345,17 +345,17 @@
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
-                          <Component id="jLabel2" pref="65" max="32767" attributes="0"/>
+                          <Component id="jLabel2" pref="56" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="cbbMauSac" pref="154" max="32767" attributes="0"/>
-                      <Component id="txtRongVai" max="32767" attributes="0"/>
+                      <Component id="txtEo" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jLabel4" alignment="0" pref="70" max="32767" attributes="0"/>
+                      <Component id="jLabel4" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabel6" max="32767" attributes="0"/>
                           <EmptySpace min="32" pref="32" max="-2" attributes="0"/>
@@ -364,7 +364,7 @@
                   <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="cbbChatLieu" pref="158" max="32767" attributes="0"/>
-                      <Component id="txtDai" max="32767" attributes="0"/>
+                      <Component id="txtCanNang" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -373,13 +373,13 @@
                           <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
-                          <Component id="jLabel7" pref="88" max="32767" attributes="0"/>
+                          <Component id="jLabel7" pref="80" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="cbbThuongHieu" pref="151" max="32767" attributes="0"/>
-                      <Component id="txtTayAo" max="32767" attributes="0"/>
+                      <Component id="txtMong" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -398,7 +398,7 @@
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtTayAo" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtMong" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -410,7 +410,7 @@
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="txtDai" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtCanNang" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -421,7 +421,7 @@
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="txtRongVai" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtEo" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -446,7 +446,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
-            <Property name="text" type="java.lang.String" value="R&#x1ed9;ng vai"/>
+            <Property name="text" type="java.lang.String" value="Eo"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
@@ -471,7 +471,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
-            <Property name="text" type="java.lang.String" value="D&#xe0;i"/>
+            <Property name="text" type="java.lang.String" value="C&#xe2;n n&#x1eb7;ng"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
@@ -496,7 +496,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Tay &#xe1;o"/>
+            <Property name="text" type="java.lang.String" value="M&#xf4;ng"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel7">
@@ -533,11 +533,11 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnClearLocActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtRongVai">
+        <Component class="javax.swing.JTextField" name="txtEo">
         </Component>
-        <Component class="javax.swing.JTextField" name="txtDai">
+        <Component class="javax.swing.JTextField" name="txtCanNang">
         </Component>
-        <Component class="javax.swing.JTextField" name="txtTayAo">
+        <Component class="javax.swing.JTextField" name="txtMong">
         </Component>
         <Component class="view.swing.Button" name="btnLoc">
           <Properties>

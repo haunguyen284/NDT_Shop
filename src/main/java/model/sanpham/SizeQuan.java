@@ -33,13 +33,23 @@ public class SizeQuan extends PrimaryModel implements Serializable {
     private String ten;
 
     @Column
-    private float eo;
+    private float eoBeNhat;
+    
+    @Column
+    private float eoLonNhat;
 
     @Column
-    private float mong;
+    private float mongBeNhat;
+    
+    @Column
+    private float mongLonNhat;
 
     @Column
-    private float canNang;
+    private float canNangBeNhat;
+    
+    @Column
+    private float canNangLonNhat;
+
 
     @Column(length = ModelProperties.LENGTH_DESCRIPTION)
     @Nationalized

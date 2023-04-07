@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import service.sanpham.MauSacService;
 import service.sanpham.impl.MauSacServiceImpl;
+import view.dialog.ShowMessage;
 
 /**
  *
@@ -22,19 +23,26 @@ public class DialogMauSac extends javax.swing.JDialog {
 
     /**
      * Creates new form DialogMauSac
+     * @param parent
+     * @param modal
+     * @param mauSacDTO
      */
-    public DialogMauSac(java.awt.Frame parent, boolean modal) {
+    public DialogMauSac(java.awt.Frame parent, boolean modal, MauSacDTO mauSacDTO) {
         super(parent, modal);
         initComponents();
         mauSacService = new MauSacServiceImpl();
         loadDataTable();
+        selectedMauSac = mauSacDTO;
+        if (mauSacDTO != null) {
+            fillPhanTu(mauSacDTO);
+        }
     }
 
     private void loadDataTable() {
         TrangThaiMauSac trangThai = null;
-        if (cbbHienThi.getSelectedItem().toString().equals("ACTIVE")){
+        if (cbbHienThi.getSelectedItem().toString().equals("ACTIVE")) {
             trangThai = TrangThaiMauSac.ACTIVE;
-        } else if (cbbHienThi.getSelectedItem().toString().equals("IN ACTIVE")){
+        } else if (cbbHienThi.getSelectedItem().toString().equals("IN ACTIVE")) {
             trangThai = TrangThaiMauSac.IN_ACTIVE;
         }
         List<MauSacDTO> listDTO = mauSacService.findAll(trangThai);
@@ -236,6 +244,16 @@ public class DialogMauSac extends javax.swing.JDialog {
         return dto;
     }
 
+    private void fillPhanTu(MauSacDTO dto) {
+        if (dto.getTrangThaiMauSac() == TrangThaiMauSac.ACTIVE) {
+            cbbTrangThai.setSelectedIndex(0);
+        } else {
+            cbbTrangThai.setSelectedIndex(1);
+        }
+        txtMa.setText(dto.getMa());
+        txtTen.setText(dto.getTen());
+    }
+
     private String getSelectedIdFromTable() {
         int selectedRow = tbHienThi.getSelectedRow();
         if (selectedRow == -1) {
@@ -248,7 +266,7 @@ public class DialogMauSac extends javax.swing.JDialog {
     private void btnChonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChonActionPerformed
         String selectedId = getSelectedIdFromTable();
         if (selectedId == null) {
-            JOptionPane.showMessageDialog(this, "Chưa chọn hàng");
+            ShowMessage.show("Chưa chọn hàng");
             return;
         }
         selectedMauSac = getDTOFromInput();
@@ -265,13 +283,15 @@ public class DialogMauSac extends javax.swing.JDialog {
         String ma = tbHienThi.getValueAt(selectedRow, 1).toString();
         String ten = tbHienThi.getValueAt(selectedRow, 2).toString();
         String trangThai = tbHienThi.getValueAt(selectedRow, 3).toString();
+        MauSacDTO dto = new MauSacDTO();
+        dto.setMa(ma);
+        dto.setTen(ten);
         if (trangThai.equals("ACTIVE")) {
-            cbbTrangThai.setSelectedIndex(0);
+            dto.setTrangThaiMauSac(TrangThaiMauSac.ACTIVE);
         } else {
-            cbbTrangThai.setSelectedIndex(1);
+            dto.setTrangThaiMauSac(TrangThaiMauSac.IN_ACTIVE);
         }
-        txtMa.setText(ma);
-        txtTen.setText(ten);
+        fillPhanTu(dto);
         if (evt.getClickCount() == 2) {
             selectedMauSac = getDTOFromInput();
             selectedMauSac.setId(selectedId);
@@ -282,7 +302,7 @@ public class DialogMauSac extends javax.swing.JDialog {
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         MauSacDTO dto = getDTOFromInput();
         String result = mauSacService.create(dto);
-        JOptionPane.showMessageDialog(this, result);
+        ShowMessage.show(result);
         loadDataTable();
     }//GEN-LAST:event_btnThemActionPerformed
 
@@ -292,11 +312,13 @@ public class DialogMauSac extends javax.swing.JDialog {
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         String selectedId = getSelectedIdFromTable();
-        if (selectedId == null) return;
+        if (selectedId == null) {
+            return;
+        }
         MauSacDTO dto = getDTOFromInput();
         dto.setId(selectedId);
         String result = mauSacService.update(dto);
-        JOptionPane.showMessageDialog(this, result);
+        ShowMessage.show(result);
         loadDataTable();
     }//GEN-LAST:event_btnSuaActionPerformed
 
