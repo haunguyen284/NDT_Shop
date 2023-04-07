@@ -5,6 +5,7 @@
 package service.giamgia;
 
 import dto.giamgia.GiamGiaDTO;
+import dto.giamgia.SanPhamGiamGiaDTO;
 import dto.sanpham.SanPhamDTO;
 import java.util.List;
 import java.util.Optional;
@@ -13,13 +14,13 @@ import java.util.Optional;
  *
  * @author ADMIN KH
  */
-public interface GiamGiaService {
+public interface SanPhamGiamGiaService {
 
-    List<GiamGiaDTO> getAll(int currentPage);
+    List<SanPhamGiamGiaDTO> getAll(int currentPage);
 
-    Optional<GiamGiaDTO> findById(String id);
+    Optional<SanPhamGiamGiaDTO> findById(String id);
 
-    String saveOrUpdate(String action, GiamGiaDTO x);
+    String saveOrUpdate(String action, GiamGiaDTO giamGiaDTO, List<SanPhamDTO> listSPDTO);
 
     String delete(String id);
 

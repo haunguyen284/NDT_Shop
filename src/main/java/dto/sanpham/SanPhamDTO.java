@@ -7,6 +7,7 @@ package dto.sanpham;
 import comon.constant.sanpham.LoaiSanPham;
 import comon.constant.sanpham.TrangThaiSanPham;
 import comon.model.AuditModelDTO;
+import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
@@ -17,10 +18,9 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Getter
 @Setter
-public class SanPhamDTO extends AuditModelDTO {
+public class SanPhamDTO extends AuditModelDTO{
 
     private XuatXuDTO xuatXu;
-
 
     private ChatLieuDTO chatLieu;
 
@@ -45,4 +45,34 @@ public class SanPhamDTO extends AuditModelDTO {
     private LoaiSanPham loaiSp;
 
     private TrangThaiSanPham trangThaiSanPham;
+
+    public String convertSanPham() {
+        switch (trangThaiSanPham) {
+            case TRANG_THAI_1 -> {
+                return "Đang hoạt động";
+            }
+            case TRANG_THAI_2 -> {
+                return "Ngừng hoạt động";
+            }
+            default ->
+                throw new AssertionError();
+        }
+    }
+
+    public String convertLoaiSanPham() {
+        switch (loaiSp) {
+            case AO -> {
+                return "Aó";
+            }
+            case QUAN -> {
+                return "Quần";
+            }
+            default ->
+                throw new AssertionError();
+        }
+    }
+
+    public Object[] toDataRowSanPham() {
+        return new Object[]{getId(), tenSP, giaBan, soLuongTon, convertLoaiSanPham(), convertSanPham()};
+    }
 }

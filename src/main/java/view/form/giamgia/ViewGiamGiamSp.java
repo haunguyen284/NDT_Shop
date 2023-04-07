@@ -4,6 +4,7 @@ import comon.constant.ModelProperties;
 import comon.constant.PaginationConstant;
 import comon.validator.NDTValidator;
 import dto.giamgia.GiamGiaDTO;
+import dto.giamgia.SanPhamGiamGiaDTO;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -16,12 +17,13 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import lombok.Getter;
 import lombok.Setter;
-import model.giamgia.GiamGia;
 import raven.cell.TableActionCellEditor;
 import raven.cell.TableActionCellRender;
 import raven.cell.TableActionEvent;
 import service.giamgia.GiamGiaService;
+import service.giamgia.SanPhamGiamGiaService;
 import service.giamgia.impl.GiamGiaImpl;
+import service.giamgia.impl.SanPhamGiamGiaImpl;
 import view.dialog.Message;
 import view.dialog.ShowMessage;
 import view.dialog.ShowMessageSuccessful;
@@ -35,10 +37,11 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
 
     private final DefaultTableModel dtm;
     private final GiamGiaService service;
+      private final SanPhamGiamGiaService sanPhamGiamGiaService;
     private final Validator validator;
     private int currentPage = 1;
     private int totalPage = 1;
-    private ViewModal viewModal;
+    private ViewModal1 viewModal1;
 
     public ViewGiamGiamSp() {
         initComponents();
@@ -47,8 +50,9 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
         initData();
         this.dtm = new DefaultTableModel();
         this.service = new GiamGiaImpl();
+        this.sanPhamGiamGiaService = new SanPhamGiamGiaImpl();
         this.validator = NDTValidator.getValidator();
-        this.viewModal = new ViewModal(null, true);
+        this.viewModal1 = new ViewModal1(null, true);
         loadData();
         createbutton();
     }
@@ -57,9 +61,9 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
         TableActionEvent event = new TableActionEvent() {
             @Override
             public void onEdit(int row) {
-                viewModal.getBtnSave().setVisible(true);
-                viewModal.getTxtSave().setVisible(true);
-                viewModal.getBtnSave().setText("Update");
+                viewModal1.getBtnSave().setVisible(true);
+                viewModal1.getTxtSave().setVisible(true);
+                viewModal1.getBtnSave().setText("Update");
 
                 row = tblGiamGia.getSelectedRow();
                 if (row < 0) {
@@ -68,8 +72,8 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
                 String id = tblGiamGia.getValueAt(row, 0).toString();
                 Optional<GiamGiaDTO> optional = service.findById(id);
                 if (optional.isPresent()) {
-                    viewModal.fill(optional.get());
-                    viewModal.setVisible(true);
+//                    viewModal.fill(optional.get());
+                    viewModal1.setVisible(true);
                 }
             }
 
@@ -90,8 +94,8 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
 
             @Override
             public void onView(int row) {
-                viewModal.getBtnSave().setVisible(false);
-                viewModal.getTxtSave().setVisible(false);
+                viewModal1.getBtnSave().setVisible(false);
+                viewModal1.getTxtSave().setVisible(false);
                 row = tblGiamGia.getSelectedRow();
                 if (row < 0) {
                     return;
@@ -99,13 +103,13 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
                 String id = tblGiamGia.getValueAt(row, 0).toString();
                 Optional<GiamGiaDTO> optional = service.findById(id);
                 if (optional.isPresent()) {
-                    viewModal.fill(optional.get());
-                    viewModal.setVisible(true);
+//                    viewModal.fill(optional.get());
+                    viewModal1.setVisible(true);
                 }
             }
         };
-        tblGiamGia.getColumnModel().getColumn(9).setCellRenderer(new TableActionCellRender());
-        tblGiamGia.getColumnModel().getColumn(9).setCellEditor(new TableActionCellEditor(event));
+        tblGiamGia.getColumnModel().getColumn(8).setCellRenderer(new TableActionCellRender());
+        tblGiamGia.getColumnModel().getColumn(8).setCellEditor(new TableActionCellEditor(event));
     }
 
     private void initData() {
@@ -113,12 +117,12 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
     }
 
     public void loadData() {
-        String[] columns = {"ID", "TÊN", "GIÁ TRỊ MỨC GIAM GIÁ ", "ĐIỀU KIỆN ", "LOẠI GIẢM GIÁ", "TRẠNG THÁI", "NGÀY BẮT ĐẦU", "NGÀY KẾT THÚC", "MÔ TẢ", "FUNCTION"};
+        String[] columns = {"MÃ", "TÊN GIẢM GIÁ", "GIÁ TRỊ MỨC GIAM GIÁ ", "NGÀY BẮT ĐẦU ", "NGÀY KẾT THÚC", "TÊN SẢN PHẨM", "LOẠI SẢN PHẨM", "TRẠNG THÁI","CHỨC NĂNG"};
         dtm.setColumnIdentifiers(columns);
         tblGiamGia.setModel(dtm);
-        List<GiamGiaDTO> listData = service.getAll(currentPage);
+        List<SanPhamGiamGiaDTO> listData = sanPhamGiamGiaService.getAll(currentPage);
         dtm.setRowCount(0);
-        for (GiamGiaDTO x : listData) {
+        for (SanPhamGiamGiaDTO x : listData) {
             dtm.addRow(x.toDataRow());
         }
         showPaganation();
@@ -126,7 +130,7 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
     }
 
     public void showPaganation() {
-        long countTotalRow = service.count();
+        long countTotalRow = sanPhamGiamGiaService.count();
         totalPage = (int) Math.ceil(Double.valueOf(countTotalRow) / Double.valueOf(PaginationConstant.DEFAULT_SIZE));
         if (totalPage == 1) {
             currentPage = 1;
@@ -182,7 +186,6 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
         tblGiamGia = new view.swing.table.Table();
         lblPage = new javax.swing.JLabel();
         lblCount = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         button3 = new view.swing.Button();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
@@ -201,8 +204,6 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
         jSpinner2 = new javax.swing.JSpinner();
         jSpinner3 = new javax.swing.JSpinner();
         button2 = new view.swing.Button();
-        button5 = new view.swing.Button();
-        button6 = new view.swing.Button();
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(4, 72, 210));
@@ -212,7 +213,7 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
 
         jLabel5.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(76, 76, 76));
-        jLabel5.setText("Danh sách giảm giá");
+        jLabel5.setText("Danh sách sản phẩm giảm giá");
         jLabel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
 
         tblGiamGia.setModel(new javax.swing.table.DefaultTableModel(
@@ -238,10 +239,6 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
         lblPage.setText("1/1");
 
         lblCount.setText("Total: 0");
-
-        jButton1.setBackground(new java.awt.Color(0, 102, 255));
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Hiển thị sản phẩm ẩn");
 
         button3.setBackground(new java.awt.Color(0, 102, 255));
         button3.setBorder(null);
@@ -299,12 +296,10 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnLast, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addGap(40, 40, 40)
                         .addComponent(lblCount))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 704, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 628, Short.MAX_VALUE)
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -323,14 +318,12 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(button3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblCount)
-                            .addComponent(jButton1))
-                        .addGap(11, 11, 11))
+                        .addComponent(lblCount)
+                        .addGap(14, 14, 14))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnFirst)
@@ -343,7 +336,7 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
 
         btnAdd.setBackground(new java.awt.Color(0, 102, 255));
         btnAdd.setForeground(new java.awt.Color(255, 255, 255));
-        btnAdd.setText("Thêm mới");
+        btnAdd.setText("Tạo sản phẩm giảm  giá");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
@@ -412,14 +405,6 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        button5.setBackground(new java.awt.Color(0, 102, 255));
-        button5.setForeground(new java.awt.Color(255, 255, 255));
-        button5.setText("Nhập Excel");
-
-        button6.setBackground(new java.awt.Color(0, 102, 255));
-        button6.setForeground(new java.awt.Color(255, 255, 255));
-        button6.setText("Xuất Excel");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -435,13 +420,8 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(51, 51, 51)
                         .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
-                        .addGap(320, 320, 320)
-                        .addComponent(button5, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
-                        .addGap(69, 69, 69)
-                        .addComponent(button6, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
-                        .addGap(112, 112, 112))
+                        .addGap(983, 983, 983))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
@@ -450,10 +430,7 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(32, 32, 32)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(button5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(button6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -503,12 +480,12 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-        viewModal.clearForm();
-        viewModal.getBtnSave().setVisible(true);
-        viewModal.getTxtSave().setVisible(true);
-        viewModal.getBtnSave().setText("Save");
-        viewModal.setVisible(true);
-        viewModal.addWindowListener(new WindowAdapter() {
+//        viewModal.clearForm();
+        viewModal1.getBtnSave().setVisible(true);
+        viewModal1.getTxtSave().setVisible(true);
+        viewModal1.getBtnSave().setText("Save");
+        viewModal1.setVisible(true);
+        viewModal1.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
                 loadData();
@@ -537,9 +514,6 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
     private javax.swing.JButton btnPrevious;
     private view.swing.Button button2;
     private view.swing.Button button3;
-    private view.swing.Button button5;
-    private view.swing.Button button6;
-    private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;

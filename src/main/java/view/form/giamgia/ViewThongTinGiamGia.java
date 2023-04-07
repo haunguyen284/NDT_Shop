@@ -4,19 +4,26 @@
  */
 package view.form.giamgia;
 
+import comon.constant.PaginationConstant;
 import comon.constant.giamgia.LoaiGiamGia;
 import comon.constant.giamgia.TrangThaiGiamGia;
 import comon.validator.NDTValidator;
 import dto.giamgia.GiamGiaDTO;
 import java.awt.Color;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import lombok.Getter;
 import lombok.Setter;
+import raven.cell.TableActionCellEditor;
+import raven.cell.TableActionCellRender;
+import raven.cell.TableActionEvent;
 import service.giamgia.GiamGiaService;
 import service.giamgia.impl.GiamGiaImpl;
 import view.dialog.ShowMessage;
@@ -28,17 +35,16 @@ import view.dialog.ShowMessageSuccessful;
  */
 @Getter
 @Setter
-public class ViewModal extends javax.swing.JDialog {
+public class ViewThongTinGiamGia extends javax.swing.JDialog {
 
     private final GiamGiaService service;
     private final Validator validator;
     private DefaultComboBoxModel cbb;
-//    private final GiamGiaDTO giamGiaDTO;
 
     /**
      * Creates new form ViewModal
      */
-    public ViewModal(java.awt.Frame parent, boolean modal) {
+    public ViewThongTinGiamGia(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
@@ -46,7 +52,6 @@ public class ViewModal extends javax.swing.JDialog {
         this.validator = NDTValidator.getValidator();
         this.cbb = new DefaultComboBoxModel();
         loadCbb();
-//        this.giamGiaDTO = giamGiaDTO;
     }
 
     private void loadCbb() {
@@ -59,12 +64,12 @@ public class ViewModal extends javax.swing.JDialog {
         txtID.setText(x.getId());
         txtKetThuc.setDate(new Date(x.getNgayKetThuc()));
         txtBatDau.setDate(new Date(x.getNgayBatDau()));
-        txtTen.setText(x.getTen());
-        txtDieuKien.setText("" + x.getDieuKienGiamGia());
+        txtMa.setText(x.getMaGg());
+        txtGiaTri.setText("" + x.getGiaTriGiamGia());
         cboLoai.setSelectedItem(x.getLoaiGiamGia());
         lblMoTa.setText(x.getMoTa());
         cboTrangThai.setSelectedItem(x.getLoaiGiamGia());
-        txtGiaTri.setText(x.getGiaTriGiamGia() + "");
+        txtTen.setText(x.getTen());
     }
 
     public GiamGiaDTO form() {
@@ -72,10 +77,10 @@ public class ViewModal extends javax.swing.JDialog {
         x.setId(txtID.getText());
         x.setNgayBatDau(txtBatDau.getDate().getTime());
         x.setNgayKetThuc(txtKetThuc.getDate().getTime());
-        x.setDieuKienGiamGia(Float.parseFloat(txtDieuKien.getText()));
-        x.setTen(txtTen.getText());
-        x.setMoTa(lblMoTa.getText());
         x.setGiaTriGiamGia(Float.parseFloat(txtGiaTri.getText()));
+        x.setMaGg(txtMa.getText());
+        x.setMoTa(lblMoTa.getText());
+        x.setTen(txtTen.getText());
         switch (cboTrangThai.getSelectedItem().toString()) {
             case "Đang hoạt động" ->
                 x.setTrangThaiGiamGia(TrangThaiGiamGia.DANG_HOAT_DONG);
@@ -91,13 +96,14 @@ public class ViewModal extends javax.swing.JDialog {
         return x;
     }
 
+
     public void clearForm() {
         txtBatDau.setDate(new Date());
         txtKetThuc.setDate(new Date());
-        txtDieuKien.setText("");
-        txtTen.setText("");
-        txtID.setText("");
         txtGiaTri.setText("");
+        txtMa.setText("");
+        txtID.setText("");
+        txtTen.setText("");
         lblMoTa.setText("");
     }
 
@@ -109,20 +115,12 @@ public class ViewModal extends javax.swing.JDialog {
             for (ConstraintViolation<GiamGiaDTO> x : violations) {
                 errors += x.getMessage() + "\n";
             }
-           ShowMessage.show(errors);
+            ShowMessage.show(errors);
             return;
         }
         if (action.equals("add")) {
             qLGiamGia.setId(null);
         }
-//        if (action.equals("add")) {
-//            for (GiamGiaDTO x : service.getAll(currentPage)) {
-//                if (x.getMaGg().equals(qLGiamGia.getMaGg())) {
-//                    JOptionPane.showMessageDialog(this, "Mã - này đã tồn tại !");
-//                    return;
-//                }
-//            }
-//        }
         String result = service.saveOrUpdate(action, qLGiamGia);
         ShowMessageSuccessful.showSuccessful(result);
         new ViewGiamGiamSp().loadData();
@@ -136,18 +134,18 @@ public class ViewModal extends javax.swing.JDialog {
         citybg1 = new javax.swing.JLabel();
         favicon1 = new javax.swing.JLabel();
         userLabel6 = new javax.swing.JLabel();
-        txtDieuKien = new javax.swing.JTextField();
+        txtGiaTri = new javax.swing.JTextField();
         jSeparator5 = new javax.swing.JSeparator();
         passLabel1 = new javax.swing.JLabel();
         jSeparator6 = new javax.swing.JSeparator();
         txtSave = new javax.swing.JPanel();
         btnSave = new javax.swing.JLabel();
         jSeparator7 = new javax.swing.JSeparator();
-        txtGiaTri = new javax.swing.JTextField();
+        txtTen = new javax.swing.JTextField();
         userLabel7 = new javax.swing.JLabel();
         userLabel8 = new javax.swing.JLabel();
         userLabel9 = new javax.swing.JLabel();
-        txtTen = new javax.swing.JTextField();
+        txtMa = new javax.swing.JTextField();
         txtID = new javax.swing.JTextField();
         jSeparator8 = new javax.swing.JSeparator();
         cboTrangThai = new javax.swing.JComboBox<>();
@@ -179,22 +177,22 @@ public class ViewModal extends javax.swing.JDialog {
         userLabel6.setText("ID");
         bg1.add(userLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 80, -1, -1));
 
-        txtDieuKien.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
-        txtDieuKien.setForeground(new java.awt.Color(204, 204, 204));
-        txtDieuKien.setText("Vui lòng điền vào điều kiện giảm giá...");
-        txtDieuKien.setBorder(null);
-        txtDieuKien.addMouseListener(new java.awt.event.MouseAdapter() {
+        txtGiaTri.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        txtGiaTri.setForeground(new java.awt.Color(204, 204, 204));
+        txtGiaTri.setText("Vui lòng điền vào điều kiện giảm giá...");
+        txtGiaTri.setBorder(null);
+        txtGiaTri.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                txtDieuKienMousePressed(evt);
+                txtGiaTriMousePressed(evt);
             }
         });
-        bg1.add(txtDieuKien, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 350, 290, 30));
+        bg1.add(txtGiaTri, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 350, 290, 30));
 
         jSeparator5.setForeground(new java.awt.Color(153, 153, 153));
         bg1.add(jSeparator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 380, 290, 20));
 
         passLabel1.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
-        passLabel1.setText("Giá trị giảm giá");
+        passLabel1.setText("Tên giảm giá");
         bg1.add(passLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 240, -1, -1));
 
         jSeparator6.setForeground(new java.awt.Color(153, 153, 153));
@@ -234,49 +232,49 @@ public class ViewModal extends javax.swing.JDialog {
                 .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        bg1.add(txtSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 550, 130, 40));
+        bg1.add(txtSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 540, 130, 40));
 
         jSeparator7.setForeground(new java.awt.Color(153, 153, 153));
         bg1.add(jSeparator7, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 290, 20));
 
-        txtGiaTri.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
-        txtGiaTri.setForeground(new java.awt.Color(204, 204, 204));
-        txtGiaTri.setText("Vui lòng điền vào giá trị giảm giá....");
-        txtGiaTri.setBorder(null);
-        txtGiaTri.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                txtGiaTriMousePressed(evt);
-            }
-        });
-        txtGiaTri.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtGiaTriActionPerformed(evt);
-            }
-        });
-        bg1.add(txtGiaTri, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 260, 290, 30));
-
-        userLabel7.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
-        userLabel7.setText("Tên giảm giá");
-        bg1.add(userLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 150, -1, -1));
-
-        userLabel8.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
-        userLabel8.setText("Điều kiện");
-        bg1.add(userLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 330, -1, -1));
-
-        userLabel9.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
-        userLabel9.setText("Ngày kết thúc");
-        bg1.add(userLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 330, -1, -1));
-
         txtTen.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         txtTen.setForeground(new java.awt.Color(204, 204, 204));
-        txtTen.setText("Vui lòng điền vào tên giảm giá....");
+        txtTen.setText("Vui lòng điền vào giá trị giảm giá....");
         txtTen.setBorder(null);
         txtTen.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 txtTenMousePressed(evt);
             }
         });
-        bg1.add(txtTen, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 170, 290, 30));
+        txtTen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTenActionPerformed(evt);
+            }
+        });
+        bg1.add(txtTen, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 260, 290, 30));
+
+        userLabel7.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        userLabel7.setText("Mã giảm giá");
+        bg1.add(userLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 150, -1, -1));
+
+        userLabel8.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        userLabel8.setText("Giá trị giảm giá");
+        bg1.add(userLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 330, -1, -1));
+
+        userLabel9.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        userLabel9.setText("Ngày kết thúc");
+        bg1.add(userLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 330, -1, -1));
+
+        txtMa.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        txtMa.setForeground(new java.awt.Color(204, 204, 204));
+        txtMa.setText("Vui lòng điền vào tên giảm giá....");
+        txtMa.setBorder(null);
+        txtMa.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                txtMaMousePressed(evt);
+            }
+        });
+        bg1.add(txtMa, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 170, 290, 30));
 
         txtID.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         txtID.setForeground(new java.awt.Color(204, 204, 204));
@@ -316,7 +314,7 @@ public class ViewModal extends javax.swing.JDialog {
         lblMoTa.setBorder(javax.swing.BorderFactory.createTitledBorder("Mô tả"));
         jScrollPane1.setViewportView(lblMoTa);
 
-        bg1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 420, 720, 110));
+        bg1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 420, 710, 90));
 
         txtClose.setBackground(new java.awt.Color(51, 102, 255));
 
@@ -353,7 +351,7 @@ public class ViewModal extends javax.swing.JDialog {
                 .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        bg1.add(txtClose, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 550, -1, 40));
+        bg1.add(txtClose, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 540, -1, 40));
 
         txtBatDau.setBackground(new java.awt.Color(255, 255, 255));
         txtBatDau.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -369,23 +367,19 @@ public class ViewModal extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(bg1, javax.swing.GroupLayout.PREFERRED_SIZE, 830, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(bg1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 801, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(bg1, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(bg1, javax.swing.GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtDieuKienMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtDieuKienMousePressed
+    private void txtGiaTriMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtGiaTriMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtDieuKienMousePressed
+    }//GEN-LAST:event_txtGiaTriMousePressed
 
     private void btnSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseClicked
         if (ShowMessage.show("Bạn muốn lưu giảm giá này chứ ?")) {
@@ -407,13 +401,13 @@ public class ViewModal extends javax.swing.JDialog {
         btnSave.setForeground(Color.WHITE);
     }//GEN-LAST:event_btnSaveMouseExited
 
-    private void txtGiaTriMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtGiaTriMousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtGiaTriMousePressed
-
     private void txtTenMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtTenMousePressed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTenMousePressed
+
+    private void txtMaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtMaMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMaMousePressed
 
     private void txtIDMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtIDMousePressed
         // TODO add your handling code here:
@@ -434,9 +428,9 @@ public class ViewModal extends javax.swing.JDialog {
         btnClose.setForeground(Color.WHITE);
     }//GEN-LAST:event_btnCloseMouseExited
 
-    private void txtGiaTriActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGiaTriActionPerformed
+    private void txtTenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTenActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtGiaTriActionPerformed
+    }//GEN-LAST:event_txtTenActionPerformed
 
     /**
      * @param args the command line arguments
@@ -459,10 +453,10 @@ public class ViewModal extends javax.swing.JDialog {
     private javax.swing.JLabel passLabel1;
     private com.toedter.calendar.JDateChooser txtBatDau;
     private javax.swing.JPanel txtClose;
-    private javax.swing.JTextField txtDieuKien;
     private javax.swing.JTextField txtGiaTri;
     private javax.swing.JTextField txtID;
     private com.toedter.calendar.JDateChooser txtKetThuc;
+    private javax.swing.JTextField txtMa;
     private javax.swing.JPanel txtSave;
     private javax.swing.JTextField txtTen;
     private javax.swing.JLabel userLabel10;

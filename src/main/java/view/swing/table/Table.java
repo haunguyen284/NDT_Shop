@@ -53,7 +53,7 @@ public class Table extends JTable {
                     Component com = super.getTableCellRendererComponent(jtable, o, selected, focus, i, i1);
                     setBorder(noFocusBorder);
                     com.setForeground(new Color(102, 102, 102));
-                    if (selected ==false&& i%2==0) {
+                    if (selected) {
                         com.setBackground(new Color(239, 244, 255));
                     } else {
                         com.setBackground(Color.white);
