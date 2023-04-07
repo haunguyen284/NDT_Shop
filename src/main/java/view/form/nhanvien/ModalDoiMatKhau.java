@@ -142,8 +142,6 @@ public class ModalDoiMatKhau extends javax.swing.JDialog {
 
         jLabel5.setText("Địa chỉ");
 
-        txtXacNhan.setText("myPasswordField2");
-
         javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
         bg.setLayout(bgLayout);
         bgLayout.setHorizontalGroup(

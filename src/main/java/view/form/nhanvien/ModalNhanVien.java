@@ -26,8 +26,8 @@ import view.main.Main;
  */
 public class ModalNhanVien extends javax.swing.JDialog {
 
-
     private final NhanVienService nhanVienService;
+
     /**
      * Creates new form ModalKhachHang
      */
@@ -37,7 +37,7 @@ public class ModalNhanVien extends javax.swing.JDialog {
         nhanVienService = new NhanVienServiceImpl();
         initComponents();
     }
-    
+
     private boolean showMessage(String message) {
         Message obj = new Message(Main.getFrames()[0], true);
         obj.showMessage(message);
@@ -53,6 +53,7 @@ public class ModalNhanVien extends javax.swing.JDialog {
         txtDiaChi.setText(dTO.getDiaChi());
         cbxGioiTinh.setSelectedItem(dTO.getGioiTinh());
     }
+
     public void clear() {
         lbMaNV.setText("");
         txtHoTen.setText("");
@@ -62,11 +63,11 @@ public class ModalNhanVien extends javax.swing.JDialog {
         txtDiaChi.setText("");
         cbxGioiTinh.setSelectedIndex(0);
     }
-    
+
     public String generateCustomerId(NhanVienDTO khachHang) {
         String hoTen = khachHang.getTen();
         Date ngaySinh = new Date(khachHang.getNgaySinh());
-         LocalDate localDate = ngaySinh.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localDate = ngaySinh.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
         String maKH = "";
         if (hoTen.contains(" ")) {
@@ -104,7 +105,6 @@ public class ModalNhanVien extends javax.swing.JDialog {
         String diaChi = txtDiaChi.getText();
         String gioiTinh = cbxGioiTinh.getSelectedItem().toString();
 
-        
         dTO.setTen(ten);
         dTO.setSdt(sdt);
         dTO.setEmail(email);
@@ -121,14 +121,14 @@ public class ModalNhanVien extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, errorMessages);
             return null;
         }
-        if(lbMaNV.getText().isBlank()){
+        if (lbMaNV.getText().isBlank()) {
             dTO.setMaNV(generateCustomerId(dTO));
-        }else{
+        } else {
             dTO.setMaNV(lbMaNV.getText());
         }
-       
+
         dTO.setId(nhanVienService.findId(dTO.getMaNV()));
-       
+
         return dTO;
     }
 

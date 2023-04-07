@@ -72,7 +72,7 @@ public class Main extends javax.swing.JFrame implements Runnable {
                     }
                 } else if (menuIndex == 4) {
                     if (role.equals("STAFF")) {
-                        showMessage("Chỉ ADMin mới có quyền quản lý nhân viên");
+                        showMessage("Chỉ ADMIN mới có quyền quản lý nhân viên");
                         return;
                     }
                     main.showForm(new ViewNhanVien());

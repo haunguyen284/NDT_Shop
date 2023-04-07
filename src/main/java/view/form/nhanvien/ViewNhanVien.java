@@ -85,7 +85,6 @@ public class ViewNhanVien extends javax.swing.JPanel {
         btnNext = new javax.swing.JButton();
         lbPagination = new javax.swing.JLabel();
         lbTotal = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         button3 = new view.swing.Button();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
@@ -102,7 +101,7 @@ public class ViewNhanVien extends javax.swing.JPanel {
 
         jLabel5.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(76, 76, 76));
-        jLabel5.setText("Danh sách Nhan Viên");
+        jLabel5.setText("Danh sách Nhân Viên");
         jLabel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
 
         tbNhanVien.setModel(new javax.swing.table.DefaultTableModel(
@@ -147,10 +146,6 @@ public class ViewNhanVien extends javax.swing.JPanel {
 
         lbTotal.setText("Total: 0");
 
-        jButton1.setBackground(new java.awt.Color(0, 102, 255));
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Hiển thị sản phẩm ẩn");
-
         button3.setBackground(new java.awt.Color(0, 102, 255));
         button3.setBorder(null);
         button3.setForeground(new java.awt.Color(255, 255, 255));
@@ -175,8 +170,6 @@ public class ViewNhanVien extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(lbPagination)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addGap(40, 40, 40)
                         .addComponent(lbTotal))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel5)
@@ -205,8 +198,7 @@ public class ViewNhanVien extends javax.swing.JPanel {
                     .addComponent(btnPrevious)
                     .addComponent(btnNext)
                     .addComponent(lbPagination)
-                    .addComponent(lbTotal)
-                    .addComponent(jButton1))
+                    .addComponent(lbTotal))
                 .addGap(11, 11, 11))
         );
 
@@ -366,7 +358,6 @@ public class ViewNhanVien extends javax.swing.JPanel {
     private view.swing.Button button3;
     private view.swing.Button button5;
     private view.swing.Button button6;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel9;

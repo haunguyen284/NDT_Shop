@@ -292,9 +292,6 @@
         <Component class="view.swing.MyPasswordField" name="txtMatKhauMoi">
         </Component>
         <Component class="view.swing.MyPasswordField" name="txtXacNhan">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="myPasswordField2"/>
-          </Properties>
         </Component>
       </SubComponents>
     </Container>
