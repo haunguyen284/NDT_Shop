@@ -27,9 +27,6 @@ import lombok.Setter;
 @Table(name = "Ao")
 @Entity
 public class Ao extends PrimaryModel implements Serializable {
-    
-    @Column(length = ModelProperties.LENGTH_CODE)
-    private String ma;
 
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "san_pham_id", referencedColumnName = "id")

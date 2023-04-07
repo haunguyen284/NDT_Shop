@@ -150,99 +150,88 @@ public class Migrator {
         ThuongHieu th = new ThuongHieu();
         th.setMa("TH01");
         th.setTen("Tên thương hiệu 1");
-        th.setTrangThaiThuongHieu(TrangThaiThuongHieu.TRANG_THAI_1);
+        th.setTrangThaiThuongHieu(TrangThaiThuongHieu.ACTIVE);
         session.save(th);
 
         ThuongHieu th1 = new ThuongHieu();
         th1.setMa("TH02");
         th1.setTen("Tên thương hiệu 2");
-        th1.setTrangThaiThuongHieu(TrangThaiThuongHieu.TRANG_THAI_1);
+        th1.setTrangThaiThuongHieu(TrangThaiThuongHieu.IN_ACTIVE);
         session.save(th1);
 
         ThuongHieu th2 = new ThuongHieu();
         th2.setMa("TH03");
         th2.setTen("Tên thương hiệu 3");
-        th2.setTrangThaiThuongHieu(TrangThaiThuongHieu.TRANG_THAI_2);
+        th2.setTrangThaiThuongHieu(TrangThaiThuongHieu.ACTIVE);
         session.save(th2);
 
         ChatLieu cl = new ChatLieu();
         cl.setMa("CL1");
         cl.setTen("Nilong");
-        cl.setTrangThaiChatLieu(TrangThaiChatLieu.TRANG_THAI_1);
+        cl.setTrangThaiChatLieu(TrangThaiChatLieu.ACTIVE);
         session.save(cl);
 
         ChatLieu cl1 = new ChatLieu();
         cl1.setMa("CL10322");
         cl1.setTen("N7 + cốt tông");
-        cl1.setTrangThaiChatLieu(TrangThaiChatLieu.TRANG_THAI_2);
+        cl1.setTrangThaiChatLieu(TrangThaiChatLieu.IN_ACTIVE);
         session.save(cl1);
 
         MauSac ms = new MauSac();
         ms.setMa("MS1");
         ms.setTen("Blue");
-        ms.setTrangThaiMauSac(TrangThaiMauSac.TRANG_THAI_1);
+        ms.setTrangThaiMauSac(TrangThaiMauSac.ACTIVE);
         session.save(ms);
 
         MauSac ms1 = new MauSac();
         ms1.setMa("MS2");
         ms1.setTen("Yellow");
-        ms1.setTrangThaiMauSac(TrangThaiMauSac.TRANG_THAI_2);
+        ms1.setTrangThaiMauSac(TrangThaiMauSac.IN_ACTIVE);
         session.save(ms1);
 
         XuatXu x = new XuatXu();
         x.setMa("X01");
-        x.setDiaChi("Hà Nội");
-        x.setEmail("nhaCungCap@gamil.com");
-        x.setSdt("0973207405");
         x.setTen("Xuất xứ 1");
         session.save(x);
 
         XuatXu x2 = new XuatXu();
         x2.setMa("X02");
-        x2.setDiaChi("Tokyo");
-        x2.setEmail("nhaCungCap2@gamil.com");
-        x2.setSdt("080003333");
         x2.setTen("Xuất xứ 2");
         session.save(x2);
 
         SizeQuan s = new SizeQuan();
         s.setMa("Sq1");
         s.setTen("M");
-        s.setEo(58);
-        s.setMong(70);
         s.setTen("Quần 1");
-        s.setCanNang(55);
-        s.setTrangThaiQuanAo(TrangThaiQuanAo.TRANG_THAI_1);
+        s.setTrangThaiQuanAo(TrangThaiQuanAo.ACTIVE);
         session.save(s);
 
         SizeQuan s1 = new SizeQuan();
         s1.setMa("Sq2");
         s1.setTen("L");
-        s1.setEo(65);
-        s1.setMong(78);
+        s1.setEoBeNhat(65);
+        s1.setMongBeNhat(78);
         s1.setTen("Quần 2");
-        s1.setCanNang(68);
-        s1.setTrangThaiQuanAo(TrangThaiQuanAo.TRANG_THAI_2);
+        s1.setCanNangBeNhat(68);
+        s1.setTrangThaiQuanAo(TrangThaiQuanAo.ACTIVE);
         session.save(s1);
 
         SizeAo s3 = new SizeAo();
         s3.setMa("Sa3");
         s3.setTen("L");
-        s3.setRongVai(57);
-        s3.setDai(47);
+        s3.setRongVaiBeNhat(57);
         s3.setTen("Aó 2");
-        s3.setTayAo(48);
-        s3.setTrangThaiQuanAo(TrangThaiQuanAo.TRANG_THAI_2);
+        s3.setTrangThaiQuanAo(TrangThaiQuanAo.ACTIVE);
         session.save(s3);
 
         SizeAo s4 = new SizeAo();
         s4.setMa("Sa4");
         s4.setTen("L");
-        s4.setRongVai(57);
-        s4.setDai(47);
+        s4.setRongVaiBeNhat(23);
+        s4.setTayAoBeNhat(47);
         s4.setTen("Aó 4");
-        s4.setTayAo(48);
-        s4.setTrangThaiQuanAo(TrangThaiQuanAo.TRANG_THAI_1);
+        s4.setTayAoBeNhat(48);
+        s4.setTrangThaiQuanAo(TrangThaiQuanAo.IN_ACTIVE);
         session.save(s4);
 
         SanPham sp = new SanPham();
@@ -257,7 +246,7 @@ public class Migrator {
         sp.setChatLieu(cl1);
         sp.setMauSac(ms1);
         sp.setThuongHieu(th2);
-        sp.setTrangThaiSanPham(TrangThaiSanPham.TRANG_THAI_1);
+        sp.setTrangThaiSanPham(TrangThaiSanPham.IN_ACTIVE);
         session.save(sp);
 
         SanPham sp1 = new SanPham();
@@ -272,7 +261,7 @@ public class Migrator {
         sp1.setChatLieu(cl);
         sp1.setMauSac(ms);
         sp1.setThuongHieu(th);
-        sp1.setTrangThaiSanPham(TrangThaiSanPham.TRANG_THAI_2);
+        sp1.setTrangThaiSanPham(TrangThaiSanPham.ACTIVE);
         session.save(sp1);
 
         SanPham sp2 = new SanPham();
@@ -287,7 +276,7 @@ public class Migrator {
         sp2.setChatLieu(cl);
         sp2.setMauSac(ms1);
         sp2.setThuongHieu(th);
-        sp2.setTrangThaiSanPham(TrangThaiSanPham.TRANG_THAI_1);
+        sp2.setTrangThaiSanPham(TrangThaiSanPham.IN_ACTIVE);
         session.save(sp2);
 
         SanPham sp3 = new SanPham();
@@ -302,29 +291,25 @@ public class Migrator {
         sp3.setChatLieu(cl);
         sp3.setMauSac(ms1);
         sp3.setThuongHieu(th);
-        sp3.setTrangThaiSanPham(TrangThaiSanPham.TRANG_THAI_1);
+        sp3.setTrangThaiSanPham(TrangThaiSanPham.IN_ACTIVE);
         session.save(sp3);
 
         Ao a = new Ao();
-        a.setMa("A01");
         a.setSanPham(sp1);
         a.setSizeAo(s4);
         session.save(a);
 
         Ao a1 = new Ao();
-        a1.setMa("A02");
         a1.setSanPham(sp);
         a1.setSizeAo(s3);
         session.save(a1);
 
         Quan q = new Quan();
-        q.setMa("Q01");
         q.setSanPham(sp3);
         q.setSizeQuan(s1);
         session.save(q);
 
         Quan q1 = new Quan();
-        q1.setMa("Q02");
         q1.setSanPham(sp2);
         q1.setSizeQuan(s);
         session.save(q1);
@@ -332,27 +317,23 @@ public class Migrator {
 //        Giam giá
         GiamGia g = new GiamGia();
         g.setMaGg("G01");
-        g.setMucGiamGiaPhanTram(5);
-        g.setMucGiamGiaTienMat(300);
         g.setNgayBatDau(Long.MIN_VALUE);
         g.setNgayKetThuc(Long.MAX_VALUE);
         g.setTen("Tên giảm giá 1");
         g.setMoTa("Khuyến mãi giảm giá nhân dịp sinh nhất chủ của hàng Lê Duy");
-        g.setTrangThaiGiamGia(TrangThaiGiamGia.TRANG_THAI_1);
-        g.setLoaiGiamGia(LoaiGiamGia.LOAI_1);
+        g.setTrangThaiGiamGia(TrangThaiGiamGia.DANG_HOAT_DONG);
+        g.setLoaiGiamGia(LoaiGiamGia.GIAM_GIA_THEO_PHAN_TRAM);
         g.setDieuKienGiamGia(1200);
         session.save(g);
 
         GiamGia g1 = new GiamGia();
         g1.setMaGg("G02");
-        g1.setMucGiamGiaPhanTram(10);
-        g1.setMucGiamGiaTienMat(600);
         g1.setNgayBatDau(Long.MIN_VALUE);
         g1.setNgayKetThuc(Long.MAX_VALUE);
         g1.setTen("Tên giảm giá 2");
         g1.setMoTa("Khuyến mãi giảm giá nhân dịp pass môn dự án 1");
-        g1.setTrangThaiGiamGia(TrangThaiGiamGia.TRANG_THAI_2);
-        g1.setLoaiGiamGia(LoaiGiamGia.LOAI_2);
+        g1.setTrangThaiGiamGia(TrangThaiGiamGia.DANG_HOAT_DONG);
+        g1.setLoaiGiamGia(LoaiGiamGia.GIAM_GIA_THEO_TIEN_MAT);
         g1.setDieuKienGiamGia(3000);
         session.save(g1);
 

@@ -16,10 +16,12 @@ import view.event.EventMenuSelected;
 import view.event.EventShowPopupMenu;
 import view.form.thongke.ViewDoanhThu;
 import view.form.MainForm;
+import view.form.giamgia.ViewGiamGiamSp;
 import view.form.hoadon.ViewHoaDon;
 import view.form.khachhang.ViewKhachHang;
 import view.form.khachhang.ViewTheThanhVien;
 import view.form.sanpham.ViewAo;
+import view.form.sanpham.ViewQuan;
 import view.swing.MenuItem;
 import view.swing.PopupMenu;
 import view.swing.icon.GoogleMaterialDesignIcons;
@@ -64,13 +66,20 @@ public class Main extends javax.swing.JFrame implements Runnable {
                     if (subMenuIndex == 0) {
                         main.showForm(new ViewAo());
                     }
+                    if (subMenuIndex == 1) {
+                        main.showForm(new ViewQuan());
+                    }
+                } else if (menuIndex == 3) {
+                    main.showForm(new ViewGiamGiamSp());
                 } else if (menuIndex == 5) {
                     if (subMenuIndex == 0) {
                         main.showForm(new ViewKhachHang());
-                    }else if (subMenuIndex == 1){
+                    } else if (subMenuIndex == 1) {
                         main.showForm(new ViewTheThanhVien(main));
                     }
                 } else if (menuIndex == 7) {
+                    main.showForm(new ViewGiamGiamSp());
+                } else if (menuIndex == 8) {
                     if (ShowMessage.show("Bạn chắc chắn muốn thoát ?")) {
                         System.exit(0);
                     }

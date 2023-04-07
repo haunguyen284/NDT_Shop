@@ -21,7 +21,6 @@ public class SanPhamDTO extends AuditModelDTO {
 
     private XuatXuDTO xuatXu;
 
-
     private ChatLieuDTO chatLieu;
 
     private MauSacDTO mauSac;
@@ -34,15 +33,45 @@ public class SanPhamDTO extends AuditModelDTO {
     @NotBlank(message = "Tên sản phẩm - Không được để trống !")
     private String tenSP;
 
-    private float giaNhap;
+    private String giaNhap;
 
-    private float giaBan;
+    private String giaBan;
 
-    private int soLuongTon;
+    private String soLuongTon;
 
     private String moTa;
 
     private LoaiSanPham loaiSp;
 
     private TrangThaiSanPham trangThaiSanPham;
+
+    public String convertSanPham() {
+        switch (trangThaiSanPham) {
+            case ACTIVE -> {
+                return "Đang hoạt động";
+            }
+            case IN_ACTIVE -> {
+                return "Ngừng hoạt động";
+            }
+            default ->
+                throw new AssertionError();
+        }
+    }
+
+    public String convertLoaiSanPham() {
+        switch (loaiSp) {
+            case AO -> {
+                return "Aó";
+            }
+            case QUAN -> {
+                return "Quần";
+            }
+            default ->
+                throw new AssertionError();
+        }
+    }
+
+    public Object[] toDataRowSanPham() {
+        return new Object[]{getId(), tenSP, giaBan, soLuongTon, convertLoaiSanPham(), convertSanPham()};
+    }
 }

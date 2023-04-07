@@ -24,7 +24,7 @@ import org.hibernate.annotations.Nationalized;
 @Getter
 @Setter
 @Entity
-@Table(name = "SanPhamGiamGia")
+@Table(name = "GiamGia")
 public class GiamGia extends PrimaryModel implements Serializable {
 
     @Column(length = ModelProperties.LENGTH_CODE)
@@ -41,10 +41,7 @@ public class GiamGia extends PrimaryModel implements Serializable {
     private Long ngayKetThuc;
 
     @Column
-    private float mucGiamGiaPhanTram;
-
-    @Column
-    private float mucGiamGiaTienMat;
+    private float giaTriGiamGia;
 
     @Column
     private float dieuKienGiamGia;

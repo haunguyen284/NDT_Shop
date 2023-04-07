@@ -25,15 +25,16 @@ import org.hibernate.annotations.Nationalized;
 @Setter
 @Table(name = "ThuongHieu")
 @Entity
-public class ThuongHieu extends PrimaryModel implements Serializable{
-    
+public class ThuongHieu extends PrimaryModel implements Serializable {
+
     @Column(length = ModelProperties.LENGTH_CODE, unique = true)
     private String ma;
-    
+
     @Column(length = ModelProperties.LENGTH_NAME)
     @Nationalized
     private String ten;
-      @Column(length = ModelProperties.LENGTH_DESCRIPTION)
+    
+    @Column(length = ModelProperties.LENGTH_DESCRIPTION)
     @Nationalized
     private TrangThaiThuongHieu trangThaiThuongHieu;
 }

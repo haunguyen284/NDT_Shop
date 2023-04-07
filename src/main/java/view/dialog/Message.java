@@ -1,12 +1,15 @@
 package view.dialog;
 
 import java.awt.Color;
+import lombok.Getter;
+import lombok.Setter;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import view.swing.icon.GoogleMaterialDesignIcons;
 import view.swing.icon.IconFontSwing;
-
+@Getter
+@Setter
 public class Message extends javax.swing.JDialog {
 
     public boolean isOk() {
@@ -76,6 +79,7 @@ public class Message extends javax.swing.JDialog {
         lbMessage.setForeground(new java.awt.Color(82, 82, 82));
         lbMessage.setText("Message");
 
+        lbIcon.setBackground(new java.awt.Color(255, 255, 51));
         lbIcon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         button2.setText("OK");

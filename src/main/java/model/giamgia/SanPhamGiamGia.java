@@ -40,4 +40,5 @@ public class SanPhamGiamGia extends PrimaryModel implements Serializable {
     @Column
     private float soTienConLai;
     
+    
 }

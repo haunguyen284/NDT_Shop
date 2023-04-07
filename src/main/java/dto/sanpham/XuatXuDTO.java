@@ -4,7 +4,9 @@
  */
 package dto.sanpham;
 
+import comon.constant.sanpham.TrangThaiXuatXu;
 import comon.model.AuditModelDTO;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
@@ -22,14 +24,8 @@ public class XuatXuDTO extends AuditModelDTO {
 
     @NotBlank(message = "Tên xuất xứ - Không được để trống !")
     private String ten;
-
-    @NotBlank(message = "Số điện thoại xuất xứ - Không được để trống !")
-    private String sdt;
-
-    @NotBlank(message = "Email xuất xứ - Không được để trống !")
-    private String email;
-
-    @NotBlank(message = "Địa chỉ xuất xứ - Không được để trống !")
-    private String diaChi;
+    
+    @NotNull(message = "Trạng thái không được trống")
+    private TrangThaiXuatXu trangThaiXuatXu;
 
 }

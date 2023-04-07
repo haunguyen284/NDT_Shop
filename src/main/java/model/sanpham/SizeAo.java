@@ -33,13 +33,22 @@ public class SizeAo extends PrimaryModel implements Serializable {
     private String ten;
 
     @Column
-    private float rongVai;
+    private float rongVaiBeNhat;
+    
+    @Column
+    private float rongVaiLonNhat;
 
     @Column
-    private float dai;
+    private float daiBeNhat;
+    
+    @Column
+    private float daiLonNhat;
 
     @Column
-    private float tayAo;
+    private float tayAoBeNhat;
+    
+    @Column
+    private float tayAoLonNhat;
 
     @Column(length = ModelProperties.LENGTH_DESCRIPTION)
     @Nationalized
