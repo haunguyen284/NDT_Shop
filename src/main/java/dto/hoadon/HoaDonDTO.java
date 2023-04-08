@@ -10,6 +10,7 @@ import dto.khachhang.KhachHangDTO;
 import dto.giamgia.GiamGiaDTO;
 import dto.nhanvien.NhanVienDTO;
 import java.util.Date;
+import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -48,4 +49,24 @@ public class HoaDonDTO extends AuditModelDTO {
     private int soDiemQuyDoi;
 
     private TinhTrangHoaDon tinhTrangHoaDon;
+    
+    private String convertTrangThai(){
+        String converted = "";
+        switch(this.tinhTrangHoaDon){
+            case CHUA_THANH_TOAN:
+                converted = "Chưa thanh toán";
+                break;
+            case DA_HUY:
+                converted = "Đã huỷ";
+                break;
+            case DA_THANH_TOAN:
+                converted = "Đã thanh toán";
+                break;
+        }
+        return converted;
+    }
+    
+    public Object[] toDataRow(){
+        return new Object[]{getId(), Objects.isNull(nhanVien) ? "Null" : nhanVien.getMaNV(), Objects.isNull(khachHang) ? "Null" : khachHang.getMaKH(), tongTien, convertTrangThai()};
+    }
 }

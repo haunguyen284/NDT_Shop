@@ -55,7 +55,7 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public Optional<SanPhamDTO> findById(String id) {
+    public Optional<SanPhamDTO> findByID(String id) {
         Optional<SanPham> optional = repository.finByID(id);
         SanPham x = null;
         if (optional.isPresent()) {
@@ -80,5 +80,12 @@ public class SanPhamServiceImpl implements SanPhamService {
     public long count() {
         return repository.count();
     }
+
+    @Override
+    public SanPhamDTO findById(String id) {
+        SanPham model = repository.findById(id);
+        return mapper.map(model, SanPhamDTO.class);
+    }
+
 
 }

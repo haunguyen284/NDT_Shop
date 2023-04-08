@@ -199,7 +199,7 @@ public class ViewModal1 extends javax.swing.JDialog {
         int[] listRowSp = tblSanPham.getSelectedRows();
         for (int rowSP : listRowSp) {
             String idSP = tblSanPham.getValueAt(rowSP, 0).toString();
-            Optional<SanPhamDTO> otp = serviceSp.findById(idSP);
+            Optional<SanPhamDTO> otp = serviceSp.findByID(idSP);
             if (otp.isPresent()) {
                 listSp.add(otp.get());
             }

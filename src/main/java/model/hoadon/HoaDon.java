@@ -5,8 +5,6 @@
 package model.hoadon;
 
 import comon.constant.ModelProperties;
-import model.giamgia.GiamGia;
-import model.dongiao.DonGiao;
 import model.nhanvien.NhanVien;
 import model.khachhang.KhachHang;
 import comon.constant.TinhTrangHoaDon;
@@ -21,7 +19,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import model.khachhang.LichSuTieuDiem;
 import org.hibernate.annotations.Nationalized;
 
 /**

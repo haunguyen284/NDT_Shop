@@ -61,7 +61,7 @@ public class SanPhamDTO extends AuditModelDTO {
     public String convertLoaiSanPham() {
         switch (loaiSp) {
             case AO -> {
-                return "Aó";
+                return "Áo";
             }
             case QUAN -> {
                 return "Quần";
@@ -73,5 +73,9 @@ public class SanPhamDTO extends AuditModelDTO {
 
     public Object[] toDataRowSanPham() {
         return new Object[]{getId(), tenSP, giaBan, soLuongTon, convertLoaiSanPham(), convertSanPham()};
+    }
+    
+    public Object[] toDataRow(){
+        return new Object[]{getId(),maSP,tenSP,giaBan,soLuongTon,convertLoaiSanPham(), mauSac.getTen(), chatLieu.getTen(), thuongHieu.getTen(), xuatXu.getTen()};
     }
 }

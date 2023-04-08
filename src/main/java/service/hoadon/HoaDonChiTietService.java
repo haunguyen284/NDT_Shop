@@ -2,24 +2,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package service.hoaDon;
+package service.hoadon;
 
-import dto.hoadon.HoaDonDTO;
+import dto.hoadon.HoaDonChiTietDTO;
 import java.util.List;
 
 /**
  *
  * @author Admin
  */
-public interface HoaDonService {
+public interface HoaDonChiTietService {
 
-    List<HoaDonDTO> findAll(int position, int pageSize);
+    List<HoaDonChiTietDTO> findAll(int position, int pageSize);
     
-    HoaDonDTO findById(String id);
+    HoaDonChiTietDTO findById(String id);
     
-    String findId(String maKH);
-
-    HoaDonDTO save(HoaDonDTO dTO);
+    HoaDonChiTietDTO save(HoaDonChiTietDTO dTO);
 
     boolean delete(String id);
 

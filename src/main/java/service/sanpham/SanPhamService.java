@@ -19,7 +19,9 @@ public interface SanPhamService {
 
     SanPhamDTO update(SanPhamDTO dto);
 
-    Optional<SanPhamDTO> findById(String id);
+    Optional<SanPhamDTO> findByID(String id);
+    
+    SanPhamDTO findById(String id);
 
     List<SanPhamDTO> getAll(int currentPage);
 

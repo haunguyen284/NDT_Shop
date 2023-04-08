@@ -9,6 +9,7 @@ import comon.validator.NDTValidator;
 import dto.hoadon.HoaDonDTO;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import model.hoadon.HoaDon;
@@ -50,12 +51,14 @@ public class HoaDonServiceImpl implements HoaDonService{
     }
 
     @Override
-    public String save(HoaDonDTO dTO) {
+    public HoaDonDTO save(HoaDonDTO dTO) {
         HoaDon model = mapper.map(dTO, HoaDon.class);
-        if(HoaDonRepository.save(model)!=null){
-            return "Cập nhật thành công";
+        model = HoaDonRepository.save(model);
+        HoaDonDTO hoaDonDTO = mapper.map(model, HoaDonDTO.class);
+        if(!Objects.isNull(hoaDonDTO)){
+            return hoaDonDTO;
         }else{
-            return "Cập nhật thất bại";
+            return null;
         }
     }
 
