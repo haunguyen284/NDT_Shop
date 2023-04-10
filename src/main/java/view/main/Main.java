@@ -17,6 +17,7 @@ import view.form.thongke.ViewDoanhThu;
 import view.form.MainForm;
 import view.form.sanpham.ViewAo;
 import view.form.sanpham.ViewQuan;
+import view.form.thongke.ViewTKSanPham;
 import view.swing.MenuItem;
 import view.swing.PopupMenu;
 import view.swing.icon.GoogleMaterialDesignIcons;
@@ -49,8 +50,8 @@ public class Main extends javax.swing.JFrame implements Runnable{
                 if (menuIndex == 0) {
                     if (subMenuIndex == 0) {
                         main.showForm(new ViewDoanhThu());
-//                    } else if (subMenuIndex == 1) {
-//                        main.showForm(new Form1());
+                    } else if (subMenuIndex == 1) {
+                        main.showForm(new ViewTKSanPham());
                     }
                 } else if (menuIndex == 2) {
                     if (subMenuIndex == 0) {
