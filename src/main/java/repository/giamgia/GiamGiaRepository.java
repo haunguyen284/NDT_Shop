@@ -9,7 +9,9 @@ import comon.utilities.HibernateUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.TypedQuery;
 import model.giamgia.GiamGia;
+import model.sanpham.SanPham;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -105,6 +107,42 @@ public class GiamGiaRepository {
             e.printStackTrace();
         }
         return count;
+    }
+
+    public List<GiamGia> searchByMaGG(int currentPage, String searchByMa) {
+        List<GiamGia> listModel;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT x FROM GiamGia x WHERE x.maGg LIKE '%' + :maGG +'%'";
+            TypedQuery<GiamGia> query = session.createQuery(hql, GiamGia.class);
+            query.setParameter("maGG", searchByMa);
+            query.setFirstResult((currentPage - 1) * PaginationConstant.DEFAULT_SIZE);
+            query.setMaxResults(PaginationConstant.DEFAULT_SIZE);
+            listModel = query.getResultList();
+        }
+        return listModel;
+    }
+
+    public boolean updateTrangThai(Long ngayHienTai) {
+        int check;
+        String hql = "UPDATE GiamGia x SET x.trangThaiGiamGia =1 "
+                + "WHERE x.trangThaiGiamGia = 0 "
+                + "AND :ngayHienTai > x.ngayKetThuc "
+                + "OR :ngayHienTai< x.ngayBatDau";
+        Transaction tx = null;
+        try ( Session s = factory.openSession()) {
+            tx = s.beginTransaction();
+            Query q = s.createQuery(hql);
+            q.setParameter("ngayHienTai", ngayHienTai);
+            check = q.executeUpdate();
+            tx.commit();
+            return check > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null) {
+                tx.rollback();
+            }
+        }
+        return false;
     }
 
 }

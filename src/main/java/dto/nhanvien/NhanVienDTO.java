@@ -6,8 +6,9 @@ package dto.nhanvien;
 
 import comon.constant.ModelProperties;
 import comon.model.AuditModelDTO;
-import dto.hoadon.HoaDonDTO;
-import java.util.Set;
+import comon.utilities.DateTimeUtil;
+import java.util.Date;
+import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import lombok.Getter;
@@ -22,7 +23,6 @@ import org.hibernate.validator.constraints.NotBlank;
 @Setter
 public class NhanVienDTO extends AuditModelDTO {
 
-    @NotBlank(message = "Mã nhân viên - Không được để trống !")
     private String maNV;
 
     @NotBlank(message = "Tên nhân viên - Không được để trống !")
@@ -39,9 +39,12 @@ public class NhanVienDTO extends AuditModelDTO {
 
     @NotBlank(message = "Địa chỉ - Không được để trống !")
     private String diaChi;
-
+    
     @NotBlank(message = "Email - Không được để trống !")
     @Pattern(regexp = ModelProperties.REGEX_EMAIL)
     private String email;
+    public Object[] toDataRow(){
+        return new Object[] {maNV,ten,sdt,gioiTinh,ngaySinh == null? "cc" : DateTimeUtil.formatDate(new Date(ngaySinh)),diaChi,email};
+    }
 
 }

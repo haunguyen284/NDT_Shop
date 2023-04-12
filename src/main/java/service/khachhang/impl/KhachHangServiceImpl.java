@@ -4,6 +4,7 @@
  */
 package service.khachhang.impl;
 
+import comon.constant.khachhang.TrangThaiKhachHang;
 import comon.utilities.Mapper;
 import comon.validator.NDTValidator;
 import dto.khachhang.KhachHangDTO;
@@ -38,6 +39,16 @@ public class KhachHangServiceImpl implements KhachHangService{
     public List<KhachHangDTO> findAll(int position, int pageSize) {
         List<KhachHangDTO> listDTO = new ArrayList<>();
         List<KhachHang> listModel = khachHangRepository.findAll(position, pageSize);
+        for (KhachHang khachHang : listModel) {
+            listDTO.add(mapper.map(khachHang, KhachHangDTO.class));
+        }
+        return listDTO;
+    }
+    
+    @Override
+    public List<KhachHangDTO> findByTrangThai(TrangThaiKhachHang trangThaiKhachHang) {
+        List<KhachHangDTO> listDTO = new ArrayList<>();
+        List<KhachHang> listModel = khachHangRepository.findByTrangThai(trangThaiKhachHang);
         for (KhachHang khachHang : listModel) {
             listDTO.add(mapper.map(khachHang, KhachHangDTO.class));
         }

@@ -47,6 +47,15 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         HoaDonChiTiet model = HoaDonChiTietRepository.findById(id);
         return mapper.map(model, HoaDonChiTietDTO.class);
     }
+    @Override
+    public List<HoaDonChiTietDTO> findByMaHoaDon(String ma) {
+        List<HoaDonChiTietDTO> listDTO = new ArrayList<>();
+        List<HoaDonChiTiet> listModel = HoaDonChiTietRepository.findByMaHoaDon(ma);
+        for (HoaDonChiTiet HoaDon : listModel) {
+            listDTO.add(mapper.map(HoaDon, HoaDonChiTietDTO.class));
+        }
+        return listDTO;
+    }
 
     @Override
     public HoaDonChiTietDTO save(HoaDonChiTietDTO dTO) {
@@ -70,4 +79,20 @@ public class HoaDonChiTietServiceImpl implements HoaDonChiTietService {
         return HoaDonChiTietRepository.totalCount();
     }
 
+    @Override
+    public HoaDonChiTietDTO findCreatedAt(Long createdAt) {
+        HoaDonChiTiet model = HoaDonChiTietRepository.findByCreatedAt(createdAt);
+        return mapper.map(model, HoaDonChiTietDTO.class);
+    }
+
+    @Override
+    public List<HoaDonChiTietDTO> findByHoaDon(String idHD) {
+        List<HoaDonChiTietDTO> listDTO = new ArrayList<>();
+        List<HoaDonChiTiet> listModel = HoaDonChiTietRepository.findByHoaDon(idHD);
+        for (HoaDonChiTiet HoaDon : listModel) {
+            listDTO.add(mapper.map(HoaDon, HoaDonChiTietDTO.class));
+        }
+        return listDTO;
+    }
+    
 }

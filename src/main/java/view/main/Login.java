@@ -1,22 +1,31 @@
 package view.main;
 
+import dto.nhanvien.TaiKhoanDTO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import java.util.Objects;
 import javax.swing.JLayeredPane;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
+import lombok.Getter;
+import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import service.nhanvien.TaiKhoanService;
 import service.nhanvien.impl.TaiKhoanServiceImpl;
+import view.component.Header;
 import view.component.Message;
 import view.component.PanelCover;
 import view.component.PanelLoading;
 import view.component.PanelLogin;
 
+@Getter
+@Setter
 public class Login extends javax.swing.JFrame {
 
     private final DecimalFormat df = new DecimalFormat("##0.###", DecimalFormatSymbols.getInstance(Locale.US));
@@ -29,6 +38,8 @@ public class Login extends javax.swing.JFrame {
     private final double coverSize = 40;
     private final double loginSize = 60;
     private TaiKhoanService taiKhoanService;
+    private Main main;
+    private Header header;
 
     public Login() {
         initComponents();
@@ -109,31 +120,67 @@ public class Login extends javax.swing.JFrame {
         });
     }
 
-
-    private void login() {
+//    public void login() {
+//        loading.setVisible(true);
+//        String user = loginPanel.getUser();
+//        String pass = loginPanel.getPass();
+//        try {
+//            TaiKhoanDTO dTO = taiKhoanService.login(user, pass);
+//            if (!Objects.isNull(dTO)) {
+//                loading.setVisible(false);
+//                main = new Main(user, dTO.getRole().toString());
+//                this.dispose();
+//                main.setVisible(true);
+//            }
+//        } catch (Exception e) {
+//            loading.setVisible(false);
+//            e.printStackTrace();
+//            showMessage(Message.MessageType.ERROR, "Tài khoản hoặc mật khẩu không chính xác");
+//
+//        }
+//    }
+    public void login() {
         String user = loginPanel.getUser();
         String pass = loginPanel.getPass();
-        if(user.equals("admin")&&pass.equals("123")){
-            this.dispose();
-            new Main().setVisible(true);
-        }else{
-            showMessage(Message.MessageType.ERROR, "Tài khoản hoặc mật khẩu không chính xác");
-        }
-//        ModelLogin data = loginPanel.getDataLogin();
-//        try {
-//            ModelUser user = service.login(data);
-//            if (user != null) {
-//                this.dispose();
-//                MainSystem.main(user);
-//            } else {
-//                showMessage(Message.MessageType.ERROR, "Email and Password incorrect");
-//            }
-//
-//        } catch (SQLException e) {
-//            showMessage(Message.MessageType.ERROR, "Error Login");
-//        }
-    }
 
+        // Tạo một SwingWorker để thực hiện đăng nhập
+        SwingWorker<TaiKhoanDTO, Void> worker = new SwingWorker<TaiKhoanDTO, Void>() {
+            @Override
+            protected TaiKhoanDTO doInBackground() throws Exception {
+                // Hiển thị panelLoading
+                SwingUtilities.invokeLater(() -> loading.setVisible(true));
+
+                TaiKhoanDTO dTO = taiKhoanService.login(user, pass);
+                return dTO;
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    TaiKhoanDTO dTO = taiKhoanService.login(user, pass);
+                    if (!Objects.isNull(dTO)) {
+                        // Ẩn panelLoading và hiển thị giao diện chính
+                        SwingUtilities.invokeLater(() -> {
+                            loading.setVisible(false);
+                            main = new Main(user, dTO.getRole().toString());
+                            dispose();
+                            main.setVisible(true);
+                        });
+                    }
+                } catch (Exception e) {
+                    // Xử lý lỗi và ẩn panelLoading
+                    SwingUtilities.invokeLater(() -> {
+                        loading.setVisible(false);
+                        e.printStackTrace();
+                        showMessage(Message.MessageType.ERROR, "Tài khoản hoặc mật khẩu không chính xác");
+                    });
+                }
+            }
+        };
+
+        // Thực hiện đăng nhập trong luồng mới
+        worker.execute();
+    }
 
     private void showMessage(Message.MessageType messageType, String message) {
         Message ms = new Message();
@@ -250,6 +297,8 @@ public class Login extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 

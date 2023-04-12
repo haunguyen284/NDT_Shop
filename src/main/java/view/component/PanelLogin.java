@@ -47,9 +47,13 @@ public class PanelLogin extends javax.swing.JLayeredPane {
         label.setForeground(new Color(0,102,255));
         login.add(label);
         MyTextField txtUser = new MyTextField();
+        txtUser.setBackground(new Color(204,229,240));
+        txtUser.setForeground(Color.black);
         txtUser.setHint("Tài khoản");
         login.add(txtUser, "w 60%");
         MyPasswordField txtPass = new MyPasswordField();
+        txtPass.setBackground(new Color(204,229,240));
+        txtPass.setForeground(Color.black);
         txtPass.setHint("Mật khẩu");
         login.add(txtPass, "w 60%");
         JButton cmdForget = new JButton("Quên mật khẩu?");

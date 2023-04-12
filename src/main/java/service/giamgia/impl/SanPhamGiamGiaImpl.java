@@ -16,7 +16,9 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import model.giamgia.GiamGia;
 import model.giamgia.SanPhamGiamGia;
+import model.sanpham.SanPham;
 import org.modelmapper.ModelMapper;
 import repository.giamgia.SanPhamGiamGiaRepository;
 import service.giamgia.SanPhamGiamGiaService;
@@ -58,13 +60,13 @@ public class SanPhamGiamGiaImpl implements SanPhamGiamGiaService {
     }
 
     @Override
-    public String saveOrUpdate(String action, GiamGiaDTO giamGiaDTO, List<SanPhamDTO> listSPDTO) {
+    public String saveOrUpdate(String action, GiamGiaDTO giamGiaDTO, List<SanPhamDTO> listSPDTO, SanPhamGiamGiaDTO dto) {
         String result;
         List<SanPhamGiamGia> listSPGG = new ArrayList<>();
         for (SanPhamDTO sanPhamDTO : listSPDTO) {
-            SanPhamGiamGiaDTO dto = new SanPhamGiamGiaDTO();
             dto.setGiamGia(giamGiaDTO);
             dto.setSanPham(sanPhamDTO);
+
             listSPGG.add(mapper.map(dto, SanPhamGiamGia.class));
         }
         switch (action) {
@@ -100,6 +102,25 @@ public class SanPhamGiamGiaImpl implements SanPhamGiamGiaService {
     @Override
     public long count() {
         return repository.count();
+    }
+
+    @Override
+    public String deleteSanPhamByIdGiamGia(String id) {
+        if (repository.deleteSanPhamByIdGiamGia(id)) {
+            return "Delete successful !";
+        } else {
+            return "Delete Fail !";
+        }
+    }
+
+    @Override
+    public List<SanPhamGiamGiaDTO> searchByMa(int currentPage, String searchByMa) {
+        List<SanPhamGiamGia> listModel = repository.searchByMaSpGG(currentPage, searchByMa);
+        List<SanPhamGiamGiaDTO> listDTO = new ArrayList<>();
+        for (SanPhamGiamGia x : listModel) {
+            listDTO.add(mapper.map(x, SanPhamGiamGiaDTO.class));
+        }
+        return listDTO;
     }
 
 }

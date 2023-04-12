@@ -4,6 +4,7 @@
  */
 package service.HoaDon.impl;
 
+import comon.constant.TinhTrangHoaDon;
 import comon.utilities.Mapper;
 import comon.validator.NDTValidator;
 import dto.hoadon.HoaDonDTO;
@@ -35,9 +36,9 @@ public class HoaDonServiceImpl implements HoaDonService{
     
 
     @Override
-    public List<HoaDonDTO> findAll(int position, int pageSize) {
+    public List<HoaDonDTO> findByTinhTrang(TinhTrangHoaDon tinhTrangHoaDon) {
         List<HoaDonDTO> listDTO = new ArrayList<>();
-        List<HoaDon> listModel = HoaDonRepository.findAll(position, pageSize);
+        List<HoaDon> listModel = HoaDonRepository.findByTinhTrang(tinhTrangHoaDon);
         for (HoaDon HoaDon : listModel) {
             listDTO.add(mapper.map(HoaDon, HoaDonDTO.class));
         }
@@ -76,5 +77,24 @@ public class HoaDonServiceImpl implements HoaDonService{
     public String findId(String maKH) {
         return HoaDonRepository.findId(maKH);
     }
+    
+    @Override
+    public List<HoaDonDTO> getAllLichSuHoaDon(int currentPage) {
+        List<HoaDon> listModel = HoaDonRepository.getAllLichSuHoaDon(currentPage);
+        List<HoaDonDTO> listDTO = new ArrayList<>();
+        for (HoaDon x : listModel) {
+            listDTO.add(mapper.map(x, HoaDonDTO.class));
+        }
+        return listDTO;
+    }
 
+    @Override
+    public List<HoaDonDTO> searchByMa(int currentPage, String searchByMa) {
+        List<HoaDon> listModel = HoaDonRepository.searchByMaHoaDon(currentPage, searchByMa);
+        List<HoaDonDTO> listDTO = new ArrayList<>();
+        for (HoaDon x : listModel) {
+            listDTO.add(mapper.map(x, HoaDonDTO.class));
+        }
+        return listDTO;
+    }
 }

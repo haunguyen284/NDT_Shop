@@ -43,7 +43,7 @@ public class SanPhamGiamGiaDTO extends AuditModelDTO {
     }
 
     public Object[] toDataRow() {
-        return new Object[]{giamGia.getMaGg(), giamGia.getTen(), giamGia.getGiaTriGiamGia(),
+        return new Object[]{getId(),giamGia.getMaGg(), giamGia.getTen(), giamGia.getGiaTriGiamGia(),
             new Date(giamGia.getNgayBatDau()),new Date(giamGia.getNgayKetThuc()) , sanPham.getTenSP(),
             convertLoaiSanPham(), giamGia.convertGiamGia()};
     }

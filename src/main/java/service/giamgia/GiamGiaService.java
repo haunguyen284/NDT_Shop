@@ -23,6 +23,10 @@ public interface GiamGiaService {
 
     String delete(String id);
 
+    List<GiamGiaDTO> searchByMa(int currentPage, String searchByMa);
+
+    String checkTrangThai(Long ngayHienTai);
+
     long count();
 
 }

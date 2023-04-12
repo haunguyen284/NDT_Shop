@@ -16,6 +16,8 @@ public interface LichSuTieuDiemService {
     List<LichSuTieuDiemDTO> findAll(int position, int pageSize);
     
     List<LichSuTieuDiemDTO> findAll();
+    
+    List<LichSuTieuDiemDTO> findAllByViDiem(String viDiemId);
 
     LichSuTieuDiemDTO findById(String id);
     

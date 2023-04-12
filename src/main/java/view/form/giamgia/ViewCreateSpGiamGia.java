@@ -7,6 +7,7 @@ package view.form.giamgia;
 import comon.constant.PaginationConstant;
 import comon.validator.NDTValidator;
 import dto.giamgia.GiamGiaDTO;
+import dto.giamgia.SanPhamGiamGiaDTO;
 import dto.sanpham.SanPhamDTO;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
@@ -39,8 +40,8 @@ import view.dialog.ShowMessageSuccessful;
  */
 @Getter
 @Setter
-public class ViewModal1 extends javax.swing.JDialog {
-
+public class ViewCreateSpGiamGia extends javax.swing.JDialog {
+    
     private final GiamGiaService service;
     private final SanPhamService serviceSp;
     private final Validator validator;
@@ -54,7 +55,7 @@ public class ViewModal1 extends javax.swing.JDialog {
     /**
      * Creates new form ViewModal
      */
-    public ViewModal1(java.awt.Frame parent, boolean modal) {
+    public ViewCreateSpGiamGia(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
@@ -69,6 +70,7 @@ public class ViewModal1 extends javax.swing.JDialog {
         loadDataSanPham();
     }
 
+    // Load dữ liệu cho bảng Giam giá
     public void loadData() {
         String[] columns = {"ID", "TÊN", "GIÁ TRỊ MỨC GIAM GIÁ ", "ĐIỀU KIỆN ", "LOẠI GIẢM GIÁ", "TRẠNG THÁI", "NGÀY BẮT ĐẦU", "NGÀY KẾT THÚC", "MÔ TẢ", "FUNCTION"};
         dtm.setColumnIdentifiers(columns);
@@ -79,9 +81,10 @@ public class ViewModal1 extends javax.swing.JDialog {
             dtm.addRow(x.toDataRow());
         }
         showPaganation();
-        createbutton();
+        createButton();
     }
 
+    // Load dữ liệu cho bảng sản phẩm
     public void loadDataSanPham() {
         List<SanPhamDTO> listData = serviceSp.getAll(currentPage);
         DefaultTableModel dtmSp = (DefaultTableModel) tblSanPham.getModel();
@@ -91,16 +94,18 @@ public class ViewModal1 extends javax.swing.JDialog {
             dtmSp.addRow(x.toDataRowSanPham());
         }
         showPaganationSp();
+        createButtonSanPham();
     }
+    // Tạo nút button cho hàng
 
-    private void createbutton() {
+    private void createButton() {
         TableActionEvent event = new TableActionEvent() {
             @Override
             public void onEdit(int row) {
                 viewThongTin.getBtnSave().setVisible(true);
                 viewThongTin.getTxtSave().setVisible(true);
                 viewThongTin.getBtnSave().setText("Update");
-
+                
                 row = tblGiamGia.getSelectedRow();
                 if (row < 0) {
                     return;
@@ -109,10 +114,11 @@ public class ViewModal1 extends javax.swing.JDialog {
                 Optional<GiamGiaDTO> optional = service.findById(id);
                 if (optional.isPresent()) {
                     viewThongTin.fill(optional.get());
+                    viewThongTin.getGiamGiaDTO().setId(id);
                     viewThongTin.setVisible(true);
                 }
             }
-
+            
             @Override
             public void onDelete(int row) {
                 row = tblGiamGia.getSelectedRow();
@@ -125,9 +131,9 @@ public class ViewModal1 extends javax.swing.JDialog {
                     ShowMessageSuccessful.showSuccessful(result);
                     loadData();
                 }
-
+                
             }
-
+            
             @Override
             public void onView(int row) {
                 viewThongTin.getBtnSave().setVisible(false);
@@ -146,8 +152,66 @@ public class ViewModal1 extends javax.swing.JDialog {
         };
         tblGiamGia.getColumnModel().getColumn(9).setCellRenderer(new TableActionCellRender());
         tblGiamGia.getColumnModel().getColumn(9).setCellEditor(new TableActionCellEditor(event));
+        
     }
 
+    // Tạo button cho table San phẩm trong View
+    private void createButtonSanPham() {
+        TableActionEvent event = new TableActionEvent() {
+            @Override
+            public void onEdit(int row) {
+                row = tblSanPham.getSelectedRow();
+                if (row < 0) {
+                    return;
+                }
+                String idSp = tblSanPham.getValueAt(row, 0).toString();
+                Optional<SanPhamDTO> modelSpGG = serviceSp.findByID(idSp);
+                if (modelSpGG.isPresent()) {
+                    if (ShowMessage.show("Bạn muốn xóa giảm giá này chứ ?")) {
+//                        String result = sanPhamGiamGiaService.deleteSanPhamByIdGiamGia(giamGiaDTO.getId());
+//                        ShowMessageSuccessful.showSuccessful(result);
+                        loadData();
+                    }
+                }
+            }
+            
+            @Override
+            public void onDelete(int row) {
+                row = tblGiamGia.getSelectedRow();
+                if (row < 0) {
+                    return;
+                }
+                if (ShowMessage.show("Bạn muốn xóa giảm giá này chứ ?")) {
+                    String id = tblGiamGia.getValueAt(row, 0).toString();
+                    String result = service.delete(id);
+                    ShowMessageSuccessful.showSuccessful(result);
+                    loadData();
+                }
+                
+            }
+            
+            @Override
+            public void onView(int row) {
+                viewThongTin.getBtnSave().setVisible(false);
+                viewThongTin.getTxtSave().setVisible(false);
+                row = tblGiamGia.getSelectedRow();
+                if (row < 0) {
+                    return;
+                }
+                String id = tblGiamGia.getValueAt(row, 0).toString();
+                Optional<GiamGiaDTO> optional = service.findById(id);
+                if (optional.isPresent()) {
+                    viewThongTin.fill(optional.get());
+                    viewThongTin.setVisible(true);
+                }
+            }
+        };
+        
+        tblSanPham.getColumnModel().getColumn(6).setCellRenderer(new TableActionCellRender());
+        tblSanPham.getColumnModel().getColumn(6).setCellEditor(new TableActionCellEditor(event));
+    }
+
+    // Phân trang cho giảm giá
     public void showPaganation() {
         long countTotalRow = service.count();
         totalPage = (int) Math.ceil(Double.valueOf(countTotalRow) / Double.valueOf(PaginationConstant.DEFAULT_SIZE));
@@ -165,6 +229,7 @@ public class ViewModal1 extends javax.swing.JDialog {
         lblCount.setText("Total " + countTotalRow);
     }
 
+    // Phân trang cho sản phẩm
     public void showPaganationSp() {
         long countTotalRow = serviceSp.count();
         totalPage = (int) Math.ceil(Double.valueOf(countTotalRow) / Double.valueOf(PaginationConstant.DEFAULT_SIZE));
@@ -182,45 +247,75 @@ public class ViewModal1 extends javax.swing.JDialog {
         lblSp.setText("Total " + countTotalRow);
     }
 
+    // add sản phẩm + giảm giá => sản phẩm giảm giá
     public GiamGiaDTO formGiamGia() {
         GiamGiaDTO x = new GiamGiaDTO();
         int row = tblGiamGia.getSelectedRow();
         String idGG = tblGiamGia.getValueAt(row, 0).toString();
-        Optional<GiamGiaDTO> otp2 = service.findById(idGG);
-        if (otp2.isPresent()) {
-            x = otp2.get();
+        Optional<GiamGiaDTO> modelGiamGia = service.findById(idGG);
+        if (modelGiamGia.isPresent()) {
+            x = modelGiamGia.get();
         }
         return x;
     }
-
+    
     public List<SanPhamDTO> listsSP() {
         tblSanPham.setRowSelectionAllowed(true);
         List<SanPhamDTO> listSp = new ArrayList<>();
         int[] listRowSp = tblSanPham.getSelectedRows();
         for (int rowSP : listRowSp) {
             String idSP = tblSanPham.getValueAt(rowSP, 0).toString();
-            Optional<SanPhamDTO> otp = serviceSp.findByID(idSP);
-            if (otp.isPresent()) {
-                listSp.add(otp.get());
+            Optional<SanPhamDTO> modelSanPham = serviceSp.findByID(idSP);
+            if (modelSanPham.isPresent()) {
+                listSp.add(modelSanPham.get());
             }
         }
         return listSp;
     }
-
+    
     public void saveOrUpdate(String action) {
         int rowSp = tblSanPham.getSelectedRow();
         int rowGiamGia = tblGiamGia.getSelectedRow();
         if (rowSp < 0 || rowGiamGia < 0) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn vào Sản Phẩm và Khuyến Mãi mà  bạn muốn thêm !", "ERROR", JOptionPane.ERROR_MESSAGE);
+            ShowMessage.show("Vui lòng chọn vào Sản phẩm và Giảm giá bạn muốn tạo !");
             return;
         }
         GiamGiaDTO ggDTO = formGiamGia();
-        List<SanPhamDTO> list = listsSP();
-        String result = sanPhamGiamGiaService.saveOrUpdate(action, ggDTO, list);
+        List<SanPhamDTO> listSanPham = listsSP();
+        SanPhamGiamGiaDTO sanPhamGiamGiaDTO = new SanPhamGiamGiaDTO();
+        for (SanPhamDTO x : listSanPham) {
+            if (ggDTO.convertLoaiGiamGia().equals("Giảm giá theo %")) {
+                sanPhamGiamGiaDTO.setSoTienConLai(Float.parseFloat(x.getGiaBan()) - (Float.parseFloat(x.getGiaBan()) * ggDTO.getGiaTriGiamGia() / 100));
+            } else {
+                sanPhamGiamGiaDTO.setSoTienConLai(Float.parseFloat(x.getGiaBan()) - ggDTO.getGiaTriGiamGia());
+            }
+        }
+        String result = sanPhamGiamGiaService.saveOrUpdate(action, ggDTO, listSanPham, sanPhamGiamGiaDTO);
         ShowMessageSuccessful.showSuccessful(result);
         new ViewGiamGiamSp().loadData();
+        this.dispose();
     }
 
+    // end
+    // load dữ liệu tìm kiếm theo điều kiện giảm giá table Sản phẩm
+    public void loadSearch(List<SanPhamDTO> listSearch) {
+        DefaultTableModel dtmSp = (DefaultTableModel) tblSanPham.getModel();
+        dtmSp.setRowCount(0);
+        for (SanPhamDTO x : listSearch) {
+            dtmSp.addRow(x.toDataRowSanPham());
+        }
+        showPaganationSp();
+    }
+
+    // load dữ liệu tìm kiếm theo điều kiện giảm giá table Sản phẩm
+    public void loadSearchGiamGia(List<GiamGiaDTO> listSearch) {
+        dtm.setRowCount(0);
+        for (GiamGiaDTO x : listSearch) {
+            dtm.addRow(x.toDataRow());
+        }
+        showPaganationSp();
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -235,9 +330,9 @@ public class ViewModal1 extends javax.swing.JDialog {
         tblGiamGia = new view.swing.table.Table();
         lblPage = new javax.swing.JLabel();
         lblCount = new javax.swing.JLabel();
-        button3 = new view.swing.Button();
+        btnSearchByMaGg = new view.swing.Button();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
+        txtSearchByMaGg = new javax.swing.JTextPane();
         jLabel9 = new javax.swing.JLabel();
         btnFirst = new javax.swing.JButton();
         btnPrevious = new javax.swing.JButton();
@@ -249,9 +344,9 @@ public class ViewModal1 extends javax.swing.JDialog {
         tblSanPham = new view.swing.table.Table();
         lblPageSp = new javax.swing.JLabel();
         lblSp = new javax.swing.JLabel();
-        button4 = new view.swing.Button();
+        btnSearchByMaSp = new view.swing.Button();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTextPane2 = new javax.swing.JTextPane();
+        txtSearchByMaSp = new javax.swing.JTextPane();
         jLabel10 = new javax.swing.JLabel();
         btnFirstSp = new javax.swing.JButton();
         btnPreviouSp = new javax.swing.JButton();
@@ -271,20 +366,19 @@ public class ViewModal1 extends javax.swing.JDialog {
         bg1.add(citybg1, new org.netbeans.lib.awtextra.AbsoluteConstraints(548, 0, -1, 500));
 
         favicon1.setFont(new java.awt.Font("Roboto Black", 1, 24)); // NOI18N
-        favicon1.setIcon(new javax.swing.ImageIcon("D:\\DuAnMot\\NDT_Shop\\src\\main\\resources\\icon\\logo.png")); // NOI18N
         favicon1.setText("NDT_Shop");
         bg1.add(favicon1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 0, -1, -1));
 
         btnAdd.setBackground(new java.awt.Color(0, 102, 255));
         btnAdd.setForeground(new java.awt.Color(255, 255, 255));
         btnAdd.setText("Tạo giảm giá");
-        btnAdd.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
+        btnAdd.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
             }
         });
-        bg1.add(btnAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 10, 120, -1));
+        bg1.add(btnAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 10, 220, -1));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -313,14 +407,19 @@ public class ViewModal1 extends javax.swing.JDialog {
 
         lblCount.setText("Total: 0");
 
-        button3.setBackground(new java.awt.Color(0, 102, 255));
-        button3.setBorder(null);
-        button3.setForeground(new java.awt.Color(255, 255, 255));
-        button3.setText("Tìm kiếm");
+        btnSearchByMaGg.setBackground(new java.awt.Color(0, 102, 255));
+        btnSearchByMaGg.setBorder(null);
+        btnSearchByMaGg.setForeground(new java.awt.Color(255, 255, 255));
+        btnSearchByMaGg.setText("Tìm kiếm");
+        btnSearchByMaGg.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSearchByMaGgMouseClicked(evt);
+            }
+        });
 
-        jScrollPane2.setViewportView(jTextPane1);
+        jScrollPane2.setViewportView(txtSearchByMaGg);
 
-        jLabel9.setText("Tên");
+        jLabel9.setText("Mã");
 
         btnFirst.setText("|<");
         btnFirst.addActionListener(new java.awt.event.ActionListener() {
@@ -380,7 +479,7 @@ public class ViewModal1 extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(button3, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSearchByMaGg, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(9, 9, 9)))
                 .addContainerGap())
         );
@@ -393,7 +492,7 @@ public class ViewModal1 extends javax.swing.JDialog {
                         .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel5))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(button3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnSearchByMaGg, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -422,11 +521,11 @@ public class ViewModal1 extends javax.swing.JDialog {
 
         tblSanPham.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "TÊN SP", "Giá bán", "SỐ LƯỢNG TỒN", "LOẠI ", "TRẠNG THÁI"
+                "ID", "TÊN SP", "Giá bán", "SỐ LƯỢNG TỒN", "LOẠI ", "TRẠNG THÁI", "CHỨC NĂNG"
             }
         ));
         tblSanPham.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -441,14 +540,19 @@ public class ViewModal1 extends javax.swing.JDialog {
 
         lblSp.setText("Total: 0");
 
-        button4.setBackground(new java.awt.Color(0, 102, 255));
-        button4.setBorder(null);
-        button4.setForeground(new java.awt.Color(255, 255, 255));
-        button4.setText("Tìm kiếm");
+        btnSearchByMaSp.setBackground(new java.awt.Color(0, 102, 255));
+        btnSearchByMaSp.setBorder(null);
+        btnSearchByMaSp.setForeground(new java.awt.Color(255, 255, 255));
+        btnSearchByMaSp.setText("Tìm kiếm");
+        btnSearchByMaSp.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSearchByMaSpMouseClicked(evt);
+            }
+        });
 
-        jScrollPane4.setViewportView(jTextPane2);
+        jScrollPane4.setViewportView(txtSearchByMaSp);
 
-        jLabel10.setText("Tên");
+        jLabel10.setText("Mã");
 
         btnFirstSp.setText("|<");
         btnFirstSp.addActionListener(new java.awt.event.ActionListener() {
@@ -508,7 +612,7 @@ public class ViewModal1 extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(button4, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSearchByMaSp, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(9, 9, 9)))
                 .addContainerGap())
         );
@@ -521,7 +625,7 @@ public class ViewModal1 extends javax.swing.JDialog {
                         .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel6))
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(button4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnSearchByMaSp, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -636,7 +740,7 @@ public class ViewModal1 extends javax.swing.JDialog {
     }//GEN-LAST:event_btnSaveMouseClicked
 
     private void btnSaveMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseEntered
-        
+
     }//GEN-LAST:event_btnSaveMouseEntered
 
     private void btnSaveMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseExited
@@ -649,11 +753,11 @@ public class ViewModal1 extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCloseMouseClicked
 
     private void btnCloseMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCloseMouseEntered
-  
+
     }//GEN-LAST:event_btnCloseMouseEntered
 
     private void btnCloseMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCloseMouseExited
- 
+
     }//GEN-LAST:event_btnCloseMouseExited
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
@@ -672,7 +776,10 @@ public class ViewModal1 extends javax.swing.JDialog {
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void tblGiamGiaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblGiamGiaMouseClicked
-
+        int row = tblGiamGia.getSelectedRow();
+        float dieuKien = (float) tblGiamGia.getValueAt(row, 3);
+        List<SanPhamDTO> listSearch = serviceSp.searchByGiaBan(currentPage, dieuKien);
+        loadSearch(listSearch);
     }//GEN-LAST:event_tblGiamGiaMouseClicked
 
     private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
@@ -751,6 +858,18 @@ public class ViewModal1 extends javax.swing.JDialog {
         loadDataSanPham();
     }//GEN-LAST:event_btnLastSpActionPerformed
 
+    private void btnSearchByMaGgMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSearchByMaGgMouseClicked
+        String maGg = txtSearchByMaGg.getText();
+        List<GiamGiaDTO> list = service.searchByMa(currentPage, maGg);
+        loadSearchGiamGia(list);
+    }//GEN-LAST:event_btnSearchByMaGgMouseClicked
+
+    private void btnSearchByMaSpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSearchByMaSpMouseClicked
+        String maSp = txtSearchByMaSp.getText();
+        List<SanPhamDTO> list = serviceSp.searchByMa(currentPage, maSp);
+        loadSearch(list);
+    }//GEN-LAST:event_btnSearchByMaSpMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -768,8 +887,8 @@ public class ViewModal1 extends javax.swing.JDialog {
     private javax.swing.JButton btnPreviouSp;
     private javax.swing.JButton btnPrevious;
     private javax.swing.JLabel btnSave;
-    private view.swing.Button button3;
-    private view.swing.Button button4;
+    private view.swing.Button btnSearchByMaGg;
+    private view.swing.Button btnSearchByMaSp;
     private javax.swing.JLabel citybg1;
     private javax.swing.JLabel favicon1;
     private javax.swing.JLabel jLabel10;
@@ -782,8 +901,6 @@ public class ViewModal1 extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTextPane jTextPane1;
-    private javax.swing.JTextPane jTextPane2;
     private javax.swing.JLabel lblCount;
     private javax.swing.JLabel lblPage;
     private javax.swing.JLabel lblPageSp;
@@ -792,5 +909,7 @@ public class ViewModal1 extends javax.swing.JDialog {
     private view.swing.table.Table tblSanPham;
     private javax.swing.JPanel txtClose;
     private javax.swing.JPanel txtSave;
+    private javax.swing.JTextPane txtSearchByMaGg;
+    private javax.swing.JTextPane txtSearchByMaSp;
     // End of variables declaration//GEN-END:variables
 }

@@ -29,12 +29,23 @@ public class LichSuTieuDiemRepository {
         }
         return listModel;
     }
-    
+
     public List<LichSuTieuDiem> findAll() {
         List<LichSuTieuDiem> listModel;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT n FROM LichSuTieuDiem n";
             TypedQuery<LichSuTieuDiem> query = session.createQuery(hql, LichSuTieuDiem.class);
+            listModel = query.getResultList();
+        }
+        return listModel;
+    }
+
+    public List<LichSuTieuDiem> findAllByViDiem(String idViDiem) {
+        List<LichSuTieuDiem> listModel;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT n FROM LichSuTieuDiem n where n.viDiem.id =:idViDiem";
+            TypedQuery<LichSuTieuDiem> query = session.createQuery(hql, LichSuTieuDiem.class);
+            query.setParameter("idViDiem", idViDiem);
             listModel = query.getResultList();
         }
         return listModel;
@@ -84,17 +95,17 @@ public class LichSuTieuDiemRepository {
         }
         return affectedRows > 0;
     }
-    
-    public long totalCount(){
+
+    public long totalCount() {
         long total = 0;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()){
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT COUNT(n.id) FROM LichSuTieuDiem n";
             TypedQuery<Long> query = session.createQuery(hql, Long.class);
             total = query.getSingleResult();
         }
         return total;
     }
-    
+
     public LichSuTieuDiem findByTen(String ten) {
         LichSuTieuDiem model;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {

@@ -4,6 +4,7 @@
  */
 package service.hoaDon;
 
+import comon.constant.TinhTrangHoaDon;
 import dto.hoadon.HoaDonDTO;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public interface HoaDonService {
 
-    List<HoaDonDTO> findAll(int position, int pageSize);
+    List<HoaDonDTO> findByTinhTrang(TinhTrangHoaDon tinhTrangHoaDon);
     
     HoaDonDTO findById(String id);
     
@@ -24,4 +25,8 @@ public interface HoaDonService {
     boolean delete(String id);
 
     long totalCount();
+    
+    List<HoaDonDTO> getAllLichSuHoaDon(int currentPage);
+
+    List<HoaDonDTO> searchByMa(int currentPage, String searchByMa);
 }

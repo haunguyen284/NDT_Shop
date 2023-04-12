@@ -22,11 +22,11 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace pref="33" max="32767" attributes="0"/>
+              <EmptySpace pref="24" max="32767" attributes="0"/>
               <Component id="btnAdd" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="btnUpdate" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="64" max="32767" attributes="0"/>
+              <EmptySpace pref="55" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -50,7 +50,7 @@
           <Color blue="66" green="ff" red="66" type="rgb"/>
         </Property>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="D:\DuAnMot\NDT_Shop\src\main\resources\icon\view.png"/>
+          <Image iconType="2" name="C:\Users\Admin\Documents\GitHub\NDT_Shop\src\main\resources\icon\view.png"/>
         </Property>
       </Properties>
     </Component>
@@ -63,7 +63,7 @@
           <Color blue="ff" green="33" red="33" type="rgb"/>
         </Property>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="D:\DuAnMot\NDT_Shop\src\main\resources\icon\edit.png"/>
+          <Image iconType="2" name="C:\Users\Admin\Documents\GitHub\NDT_Shop\src\main\resources\icon\edit.png"/>
         </Property>
       </Properties>
     </Component>

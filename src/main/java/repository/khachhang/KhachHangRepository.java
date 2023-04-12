@@ -4,6 +4,7 @@
  */
 package repository.khachhang;
 
+import comon.constant.khachhang.TrangThaiKhachHang;
 import comon.utilities.HibernateUtil;
 import java.util.List;
 import javax.persistence.NoResultException;
@@ -26,6 +27,17 @@ public class KhachHangRepository {
             TypedQuery<KhachHang> query = session.createQuery(hql, KhachHang.class);
             query.setFirstResult(position);
             query.setMaxResults(pageSize);
+            listModel = query.getResultList();
+        }
+        return listModel;
+    }
+    
+    public List<KhachHang> findByTrangThai(TrangThaiKhachHang trangThaiKhachHang) {
+        List<KhachHang> listModel;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT n FROM KhachHang n Where n.trangThaiKhachHang =:trangThaiKhachHang";
+            TypedQuery<KhachHang> query = session.createQuery(hql, KhachHang.class);
+            query.setParameter("trangThaiKhachHang", trangThaiKhachHang);
             listModel = query.getResultList();
         }
         return listModel;

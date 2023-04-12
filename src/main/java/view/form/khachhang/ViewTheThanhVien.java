@@ -57,7 +57,8 @@ public class ViewTheThanhVien extends javax.swing.JPanel {
         for (TheThanhVienDTO dto : listDTOs) {
             dtm.addRow(dto.toDataRow());
         }
-        lbTotal.setText("Total: " + theThanhVienService.totalCount());
+        total = theThanhVienService.totalCount();
+        lbTotal.setText("Total: " + total);
         totalPages = (int) (total / pageSize) + 1;
         setStatePagination();
     }
@@ -97,12 +98,11 @@ public class ViewTheThanhVien extends javax.swing.JPanel {
         btnNext = new javax.swing.JButton();
         lbPagination = new javax.swing.JLabel();
         lbTotal = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        button3 = new view.swing.Button();
+        btnTimKiem = new view.swing.Button();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
+        txtTimKiem = new javax.swing.JTextPane();
         jLabel9 = new javax.swing.JLabel();
-        button1 = new view.swing.Button();
+        btnQuetMa = new view.swing.Button();
         jPanel3 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -142,10 +142,6 @@ public class ViewTheThanhVien extends javax.swing.JPanel {
             }
         });
         jScrollPane1.setViewportView(tbTheThanhVien);
-        if (tbTheThanhVien.getColumnModel().getColumnCount() > 0) {
-            tbTheThanhVien.getColumnModel().getColumn(4).setHeaderValue("Ví điểm");
-            tbTheThanhVien.getColumnModel().getColumn(5).setHeaderValue("Trạng thái");
-        }
 
         btnPrevious.setText("<");
         btnPrevious.addActionListener(new java.awt.event.ActionListener() {
@@ -165,25 +161,26 @@ public class ViewTheThanhVien extends javax.swing.JPanel {
 
         lbTotal.setText("Total: 0");
 
-        jButton1.setBackground(new java.awt.Color(0, 102, 255));
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Hiển thị sản phẩm ẩn");
+        btnTimKiem.setBackground(new java.awt.Color(0, 102, 255));
+        btnTimKiem.setBorder(null);
+        btnTimKiem.setForeground(new java.awt.Color(255, 255, 255));
+        btnTimKiem.setText("Tìm kiếm");
+        btnTimKiem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimKiemActionPerformed(evt);
+            }
+        });
 
-        button3.setBackground(new java.awt.Color(0, 102, 255));
-        button3.setBorder(null);
-        button3.setForeground(new java.awt.Color(255, 255, 255));
-        button3.setText("Tìm kiếm");
-
-        jScrollPane2.setViewportView(jTextPane1);
+        jScrollPane2.setViewportView(txtTimKiem);
 
         jLabel9.setText("Mã ");
 
-        button1.setBackground(new java.awt.Color(0, 102, 255));
-        button1.setForeground(new java.awt.Color(255, 255, 255));
-        button1.setText("Loz Duy");
-        button1.addActionListener(new java.awt.event.ActionListener() {
+        btnQuetMa.setBackground(new java.awt.Color(0, 102, 255));
+        btnQuetMa.setForeground(new java.awt.Color(255, 255, 255));
+        btnQuetMa.setText("Quét");
+        btnQuetMa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                button1ActionPerformed(evt);
+                btnQuetMaActionPerformed(evt);
             }
         });
 
@@ -202,33 +199,34 @@ public class ViewTheThanhVien extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(lbPagination)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addGap(40, 40, 40)
                         .addComponent(lbTotal))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(48, 48, 48)
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(button3, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(9, 9, 9)))
+                        .addComponent(btnTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnQuetMa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)))
                 .addContainerGap())
         );
+
+        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnQuetMa, btnTimKiem});
+
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(2, 2, 2)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jLabel5)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(button3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnTimKiem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnQuetMa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -236,10 +234,11 @@ public class ViewTheThanhVien extends javax.swing.JPanel {
                     .addComponent(btnPrevious)
                     .addComponent(btnNext)
                     .addComponent(lbPagination)
-                    .addComponent(lbTotal)
-                    .addComponent(jButton1))
+                    .addComponent(lbTotal))
                 .addGap(11, 11, 11))
         );
+
+        jPanel2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnQuetMa, btnTimKiem});
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -352,7 +351,7 @@ public class ViewTheThanhVien extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_tbLoaiTheMouseClicked
 
-    private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
+    private void btnQuetMaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuetMaActionPerformed
         QrScanner qrScanner = new QrScanner(null, true);
         qrScanner.setVisible(true);
         qrScanner.addWindowListener(new WindowAdapter() {
@@ -361,7 +360,16 @@ public class ViewTheThanhVien extends javax.swing.JPanel {
                 main.showForm(new ViewTheThanhVienChiTiet(qrScanner.getQrString()));
             }
         });
-    }//GEN-LAST:event_button1ActionPerformed
+    }//GEN-LAST:event_btnQuetMaActionPerformed
+
+    private void btnTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiemActionPerformed
+        try {
+            TheThanhVienDTO dTO = theThanhVienService.findByMaTTV(txtTimKiem.getText());
+            main.showForm(new ViewTheThanhVienChiTiet(dTO.getMaTTV()));
+        } catch (Exception e) {
+            showMessage("Không tìm thấy khách hàng");
+        }
+    }//GEN-LAST:event_btnTimKiemActionPerformed
 
     private TheThanhVienDTO getObjectsFromTable(int row) throws NumberFormatException {
         String maTTV = this.tbTheThanhVien.getValueAt(row, 0).toString();
@@ -390,9 +398,8 @@ public class ViewTheThanhVien extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnPrevious;
-    private view.swing.Button button1;
-    private view.swing.Button button3;
-    private javax.swing.JButton jButton1;
+    private view.swing.Button btnQuetMa;
+    private view.swing.Button btnTimKiem;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel5;
@@ -402,10 +409,10 @@ public class ViewTheThanhVien extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLabel lbPagination;
     private javax.swing.JLabel lbTotal;
     private view.swing.table.Table tbLoaiThe;
     private view.swing.table.Table tbTheThanhVien;
+    private javax.swing.JTextPane txtTimKiem;
     // End of variables declaration//GEN-END:variables
 }

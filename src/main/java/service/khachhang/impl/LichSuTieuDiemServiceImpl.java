@@ -39,6 +39,15 @@ public class LichSuTieuDiemServiceImpl implements LichSuTieuDiemService{
         }
         return listDTO;
     }
+    @Override
+    public List<LichSuTieuDiemDTO> findAllByViDiem(String idViDiem) {
+        List<LichSuTieuDiemDTO> listDTO = new ArrayList<>();
+        List<LichSuTieuDiem> listModel = LichSuTieuDiemRepository.findAllByViDiem(idViDiem);
+        for (LichSuTieuDiem LichSuTieuDiem : listModel) {
+            listDTO.add(mapper.map(LichSuTieuDiem, LichSuTieuDiemDTO.class));
+        }
+        return listDTO;
+    }
 
     @Override
     public LichSuTieuDiemDTO findById(String id) {

@@ -4,6 +4,7 @@
  */
 package service.khachhang;
 
+import comon.constant.khachhang.TrangThaiKhachHang;
 import dto.khachhang.KhachHangDTO;
 import java.util.List;
 
@@ -14,6 +15,8 @@ import java.util.List;
 public interface KhachHangService {
 
     List<KhachHangDTO> findAll(int position, int pageSize);
+    
+    List<KhachHangDTO> findByTrangThai(TrangThaiKhachHang trangThaiKhachHang);
     
     List<KhachHangDTO> findByName(String ten, int position, int pageSize);
 

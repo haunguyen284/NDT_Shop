@@ -30,4 +30,15 @@ public class ViDiemDTO extends AuditModelDTO {
 
     @NotNull(message = "Trạng thái - Không được để trống !")
     private TrangThaiViDiem trangThaiViDiem;
+    
+    public String convertTrangThai(){
+        switch (trangThaiViDiem) {
+            case TRANG_THAI_1:
+                return "Đang hoạt động";
+            case TRANG_THAI_2:
+                return "Dừng hoạt động";
+            default:
+                throw new AssertionError();
+        }
+    }
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import model.hoadon.HoaDonChiTiet;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -52,6 +53,28 @@ public class HoaDonChiTietRepository {
         return model;
     }
     
+    public List<HoaDonChiTiet> findByHoaDon(String idHD) {
+        List<HoaDonChiTiet> listModel;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT n FROM HoaDonChiTiet n Where n.hoaDon.id=:idHD";
+            TypedQuery<HoaDonChiTiet> query = session.createQuery(hql, HoaDonChiTiet.class);
+            query.setParameter("idHD", idHD);
+            listModel = query.getResultList();
+        }
+        return listModel;
+    }
+    
+    public HoaDonChiTiet findByCreatedAt(Long createdAt) {
+        HoaDonChiTiet model;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT n FROM HoaDonChiTiet n Where n.createdAt=:createdAt";
+            TypedQuery<HoaDonChiTiet> query = session.createQuery(hql, HoaDonChiTiet.class);
+            query.setParameter("createdAt", createdAt);
+            model = query.getSingleResult();
+        }
+        return model;
+    }
+
     public HoaDonChiTiet save(HoaDonChiTiet model) {
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.getTransaction();
@@ -59,7 +82,7 @@ public class HoaDonChiTietRepository {
             try {
                 session.saveOrUpdate(model);
                 transaction.commit();
-            } catch (Exception e) {
+            } catch (HibernateException e) {
                 e.printStackTrace();
                 transaction.rollback();
                 model = null;
@@ -94,5 +117,16 @@ public class HoaDonChiTietRepository {
             total = query.getSingleResult();
         }
         return total;
+    }
+    
+    public List<HoaDonChiTiet> findByMaHoaDon(String maHD) {
+        List<HoaDonChiTiet> listModel;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT n FROM HoaDonChiTiet n Where n.hoaDon.maHD=:maHD";
+            TypedQuery<HoaDonChiTiet> query = session.createQuery(hql, HoaDonChiTiet.class);
+            query.setParameter("maHD", maHD);
+            listModel = query.getResultList();
+        }
+        return listModel;
     }
 }

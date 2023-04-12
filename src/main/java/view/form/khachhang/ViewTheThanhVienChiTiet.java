@@ -62,24 +62,22 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
     }
 
     public final void loadDataTable() {
-        List<LichSuTieuDiemDTO> listDTOs = lichSuTieuDiemService.findAll(currentPage - 1, pageSize);
+        TheThanhVienDTO theThanhVienDTO = theThanhVienService.findByMaTTV(maTheTV);
+        ViDiemDTO viDiemDTO = viDiemService.findById(theThanhVienDTO.getViDiem().getId());
+        List<LichSuTieuDiemDTO> listDTOs = lichSuTieuDiemService.findAllByViDiem(viDiemDTO.getId());
         DefaultTableModel dtm = (DefaultTableModel) tbLichSuTieuDiem.getModel();
         tbLichSuTieuDiem.setModel(dtm);
         dtm.setRowCount(0);
         for (LichSuTieuDiemDTO dto : listDTOs) {
             dtm.addRow(dto.toDataRow());
         }
-        total = lichSuTieuDiemService.totalCount();
-        lbTotal.setText("Total: " + total);
-        totalPages = (int) (total / pageSize) + 1;
-        setStatePagination();
     }
-    
-    public final void loadQuyDoiDiem(){
-        QuyDoiDiemDTO dTO = quyDoiDiemService.findById("7bdd597b-1baf-404b-8be7-7ff51c4425bc");
+
+    public final void loadQuyDoiDiem() {
+        QuyDoiDiemDTO dTO = quyDoiDiemService.findById("340EB4DB-4EDE-4F34-87B8-E3DE0F418091");
         modalQuyDoiDiem = new ModalQuyDoiDiem(null, true, dTO);
-        lbTien.setText(dTO.getTienTichDiem()+"");
-        lbDiem.setText("= "+dTO.getTienTieuDiem());
+        lbTien.setText(dTO.getTienTichDiem() + "");
+        lbDiem.setText("= " + dTO.getTienTieuDiem());
     }
 
     public final void loadLabel() {
@@ -101,22 +99,16 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
 //        label panelPreview
 
 //        front
-        lbCardFront_id.setText("ID "+maTheTV);
+        lbCardFront_id.setText("ID " + maTheTV);
 //        back
         lbCardBack_loaiThe.setText(theThanhVienDTO.getLoaiThe().getTen());
         lbCardBack_ngayPhatHanh.setText(DateTimeUtil.formatDate(new Date(theThanhVienDTO.getNgayPhatHanh())));
         lbCardBack_ngayHetHan.setText(DateTimeUtil.formatDate(new Date(theThanhVienDTO.getNgayHetHan())));
         lbCardBack_maKH.setText(khachHangDTO.getMaKH());
-        lbCardBack_id.setText("ID "+maTheTV);
+        lbCardBack_id.setText("ID " + maTheTV);
         lbCardBack_ten.setText(khachHangDTO.getTen());
         ImageIcon icon = new QRCodeGenerator().generateQRCode(lbCardBack_id.getText(), 60, 60);
         lbCardBack_maQR.setIcon(icon);
-    }
-
-    private void setStatePagination() {
-        btnPrevious.setEnabled(currentPage > 1);
-        btnNext.setEnabled(currentPage < totalPages);
-        lbPagination.setText(currentPage + "/" + totalPages);
     }
 
     private boolean showMessage(String message) {
@@ -134,14 +126,6 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbLichSuTieuDiem = new view.swing.table.Table();
-        btnPrevious = new javax.swing.JButton();
-        btnNext = new javax.swing.JButton();
-        lbPagination = new javax.swing.JLabel();
-        lbTotal = new javax.swing.JLabel();
-        button3 = new view.swing.Button();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
-        jLabel9 = new javax.swing.JLabel();
         panelThongTinKH = new javax.swing.JPanel();
         btnDoi = new view.swing.ButtonOutLine();
         jLabel2 = new javax.swing.JLabel();
@@ -192,8 +176,6 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
         lbCardFront_id = new javax.swing.JLabel();
         lbBgFront = new javax.swing.JLabel();
         lbPreview = new javax.swing.JLabel();
-        btnPNG = new view.swing.ButtonOutLine();
-        btnPDF = new view.swing.ButtonOutLine();
 
         lbHeading.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         lbHeading.setForeground(new java.awt.Color(4, 72, 210));
@@ -230,33 +212,6 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tbLichSuTieuDiem);
 
-        btnPrevious.setText("<");
-        btnPrevious.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPreviousActionPerformed(evt);
-            }
-        });
-
-        btnNext.setText(">");
-        btnNext.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNextActionPerformed(evt);
-            }
-        });
-
-        lbPagination.setText("1/1");
-
-        lbTotal.setText("Total: 0");
-
-        button3.setBackground(new java.awt.Color(0, 102, 255));
-        button3.setBorder(null);
-        button3.setForeground(new java.awt.Color(255, 255, 255));
-        button3.setText("Tìm kiếm");
-
-        jScrollPane2.setViewportView(jTextPane1);
-
-        jLabel9.setText("Mã ");
-
         javax.swing.GroupLayout panelLichSuTieuDiemLayout = new javax.swing.GroupLayout(panelLichSuTieuDiem);
         panelLichSuTieuDiem.setLayout(panelLichSuTieuDiemLayout);
         panelLichSuTieuDiemLayout.setHorizontalGroup(
@@ -264,46 +219,18 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
             .addGroup(panelLichSuTieuDiemLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelLichSuTieuDiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelLichSuTieuDiemLayout.createSequentialGroup()
-                        .addComponent(btnPrevious)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnNext)
-                        .addGap(18, 18, 18)
-                        .addComponent(lbPagination)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lbTotal))
-                    .addGroup(panelLichSuTieuDiemLayout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(button3, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(9, 9, 9))
-                    .addGroup(panelLichSuTieuDiemLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 499, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addComponent(jLabel5)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 499, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelLichSuTieuDiemLayout.setVerticalGroup(
             panelLichSuTieuDiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelLichSuTieuDiemLayout.createSequentialGroup()
                 .addGap(4, 4, 4)
-                .addGroup(panelLichSuTieuDiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(button3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelLichSuTieuDiemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnPrevious)
-                    .addComponent(btnNext)
-                    .addComponent(lbPagination)
-                    .addComponent(lbTotal))
-                .addGap(11, 11, 11))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         panelThongTinKH.setBackground(new java.awt.Color(255, 255, 255));
@@ -753,28 +680,6 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
         lbPreview.setText("Preview");
         panelPreview.add(lbPreview, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, -1, -1));
 
-        btnPNG.setBackground(new java.awt.Color(0, 102, 255));
-        btnPNG.setForeground(new java.awt.Color(0, 0, 0));
-        btnPNG.setText("In PNG");
-        btnPNG.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
-        btnPNG.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPNGActionPerformed(evt);
-            }
-        });
-        panelPreview.add(btnPNG, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 5, 60, 30));
-
-        btnPDF.setBackground(new java.awt.Color(0, 102, 255));
-        btnPDF.setForeground(new java.awt.Color(0, 0, 0));
-        btnPDF.setText("In PDF");
-        btnPDF.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
-        btnPDF.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPDFActionPerformed(evt);
-            }
-        });
-        panelPreview.add(btnPDF, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 5, 60, 30));
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -800,24 +705,10 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
                         .addComponent(panelThongTinKH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(panelLichSuTieuDiem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(panelPreview, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panelPreview, javax.swing.GroupLayout.DEFAULT_SIZE, 637, Short.MAX_VALUE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreviousActionPerformed
-        if (currentPage > 1) {
-            currentPage--;
-        }
-        loadDataTable();
-    }//GEN-LAST:event_btnPreviousActionPerformed
-
-    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
-        if (currentPage < totalPages) {
-            currentPage++;
-        }
-        loadDataTable();
-    }//GEN-LAST:event_btnNextActionPerformed
 
     private void tbLichSuTieuDiemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbLichSuTieuDiemMouseClicked
 
@@ -833,21 +724,8 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
         });
     }//GEN-LAST:event_btnDoiActionPerformed
 
-    private void btnPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPDFActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPDFActionPerformed
-
-    private void btnPNGActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPNGActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPNGActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private view.swing.ButtonOutLine btnDoi;
-    private javax.swing.JButton btnNext;
-    private view.swing.ButtonOutLine btnPDF;
-    private view.swing.ButtonOutLine btnPNG;
-    private javax.swing.JButton btnPrevious;
-    private view.swing.Button button3;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -860,10 +738,7 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLabel lb;
     private javax.swing.JLabel lbBgBack;
     private javax.swing.JLabel lbBgFront;
@@ -888,12 +763,10 @@ public class ViewTheThanhVienChiTiet extends javax.swing.JPanel {
     private javax.swing.JLabel lbMaThe;
     private javax.swing.JLabel lbNgayHetHan;
     private javax.swing.JLabel lbNgayPhatHanh;
-    private javax.swing.JLabel lbPagination;
     private javax.swing.JLabel lbPreview;
     private javax.swing.JLabel lbTenKH;
     private javax.swing.JLabel lbTien;
     private javax.swing.JLabel lbTongDiem;
-    private javax.swing.JLabel lbTotal;
     private javax.swing.JLabel lbTrangThai;
     private javax.swing.JLabel lbTrangThai2;
     private javax.swing.JLayeredPane lpBack;

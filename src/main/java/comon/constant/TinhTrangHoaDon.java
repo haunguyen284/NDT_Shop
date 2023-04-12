@@ -11,5 +11,7 @@ package comon.constant;
 public enum TinhTrangHoaDon {
     DA_THANH_TOAN,
     DA_HUY,
-    CHUA_THANH_TOAN
+    CHUA_THANH_TOAN,
+    HOAN_TRA,
+    DOI_HANG
 }

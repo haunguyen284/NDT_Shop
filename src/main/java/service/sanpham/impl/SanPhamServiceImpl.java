@@ -4,6 +4,7 @@
  */
 package service.sanpham.impl;
 
+import comon.constant.sanpham.TrangThaiSanPham;
 import comon.utilities.Mapper;
 import dto.sanpham.SanPhamDTO;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class SanPhamServiceImpl implements SanPhamService {
             return null;
         }
         SanPham newModel = repository.save(model);
-        if (model != null){
+        if (model != null) {
             return Mapper.modelMapper().map(newModel, SanPhamDTO.class);
         } else {
             return null;
@@ -47,7 +48,7 @@ public class SanPhamServiceImpl implements SanPhamService {
     public SanPhamDTO update(SanPhamDTO dto) {
         SanPham model = Mapper.modelMapper().map(dto, SanPham.class);
         SanPham newModel = repository.save(model);
-        if (model != null){
+        if (model != null) {
             return Mapper.modelMapper().map(newModel, SanPhamDTO.class);
         } else {
             return null;
@@ -75,6 +76,16 @@ public class SanPhamServiceImpl implements SanPhamService {
         }
         return listDTO;
     }
+    
+    @Override
+    public List<SanPhamDTO> findAll() {
+        List<SanPham> listModel = repository.findAll();
+        List<SanPhamDTO> listDTO = new ArrayList<>();
+        for (SanPham x : listModel) {
+            listDTO.add(mapper.map(x, SanPhamDTO.class));
+        }
+        return listDTO;
+    }
 
     @Override
     public long count() {
@@ -87,5 +98,49 @@ public class SanPhamServiceImpl implements SanPhamService {
         return mapper.map(model, SanPhamDTO.class);
     }
 
+    @Override
+    public List<SanPhamDTO> searchByGiaBan(int currentPage, float giaBan) {
+        List<SanPham> listModel = repository.searchSanPhamByGiaBan(currentPage, giaBan);
+        List<SanPhamDTO> listDTO = new ArrayList<>();
+        for (SanPham x : listModel) {
+            listDTO.add(mapper.map(x, SanPhamDTO.class));
+        }
+        return listDTO;
+    }
+
+    @Override
+    public List<SanPhamDTO> searchByMa(int currentPage, String searchByMa) {
+        List<SanPham> listModel = repository.searchByMaSp(currentPage, searchByMa);
+        List<SanPhamDTO> listDTO = new ArrayList<>();
+        for (SanPham x : listModel) {
+            listDTO.add(mapper.map(x, SanPhamDTO.class));
+        }
+        return listDTO;
+    }
+
+    @Override
+    public List<SanPhamDTO> listSanPhamTheoMaGG(int currentPage, String searchByMa) {
+        List<SanPham> listModel = repository.listSanPhamTheoMaGG(currentPage, searchByMa);
+        List<SanPhamDTO> listDTO = new ArrayList<>();
+        for (SanPham x : listModel) {
+            listDTO.add(mapper.map(x, SanPhamDTO.class));
+        }
+        return listDTO;
+    }
+
+    @Override
+    public Object[] getByKhuyenMai(String id) {
+        return repository.getByKhuyenMai(id);
+    }
+
+    @Override
+    public List<SanPhamDTO> findByTrangThai(TrangThaiSanPham trangThaiSanPham) {
+        List<SanPham> listModel = repository.findByTrangThai(trangThaiSanPham);
+        List<SanPhamDTO> listDTO = new ArrayList<>();
+        for (SanPham x : listModel) {
+            listDTO.add(mapper.map(x, SanPhamDTO.class));
+        }
+        return listDTO;
+    }
 
 }

@@ -1,72 +1,87 @@
 package view.form.thongke;
 
-
+import comon.constant.TinhTrangHoaDon;
+import dto.thongke.DoanhThuTheoThang;
 import java.awt.Color;
 import java.text.DecimalFormat;
+import java.util.Calendar;
+import java.util.List;
 import javax.swing.Icon;
+import service.thongke.ThongKeService;
+import service.thongke.impl.ThongKeServiceImpl;
 import view.dialog.Message;
 import view.main.Main;
 import view.model.ModelCard;
-import view.model.ModelStudent;
+import view.swing.chart.ModelChart;
 import view.swing.icon.GoogleMaterialDesignIcons;
 import view.swing.icon.IconFontSwing;
-import view.swing.table.EventAction;
 
 public class ViewDoanhThu extends javax.swing.JPanel {
 
+    private ThongKeService thongKeService;
+
     public ViewDoanhThu() {
         initComponents();
-        table1.fixTable(jScrollPane1);
+        thongKeService = new ThongKeServiceImpl();
+        tbHienThi.fixTable(jScrollPane1);
         setOpaque(false);
         initData();
     }
 
     private void initData() {
         initCardData();
-        initTableData();
+        initChart();
+        loadCombobox();
+        loadDataDoanhThu();
     }
 
-    private void initTableData() {
-        EventAction eventAction = new EventAction() {
-            @Override
-            public void delete(ModelStudent student) {
-                if (showMessage("Delete Student : " + student.getName())) {
-                    System.out.println("User click OK");
-                } else {
-                    System.out.println("User click Cancel");
-                }
-            }
+    private void loadCombobox() {
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        for (int i = year; i > year - 4; i--) {
+            cbbNam.addItem(String.valueOf(i));
+        }
+        cbbNam.setSelectedIndex(0);
+    }
 
-            @Override
-            public void update(ModelStudent student) {
-                if (showMessage("Update Student : " + student.getName())) {
-                    System.out.println("User click OK");
-                } else {
-                    System.out.println("User click Cancel");
-                }
-            }
-        };
-        DecimalFormat df = new DecimalFormat("#,##0.##");
-        table1.addRow(new Object[]{1, df.format(200), df.format(2300), df.format(233300)});
-        table1.addRow(new Object[]{2, df.format(200), df.format(2300), df.format(233300)});
-        table1.addRow(new Object[]{3, df.format(200), df.format(2300), df.format(233300)});
-        table1.addRow(new Object[]{4, df.format(200), df.format(2300), df.format(233300)});
-        table1.addRow(new Object[]{5, df.format(200), df.format(2300), df.format(233300)});
-        table1.addRow(new Object[]{6, df.format(200), df.format(2300), df.format(233300)});
+    private void initChart() {
 
+        chart.addLegend("Doanh thu theo tháng", new Color(245, 189, 135));
+
+    }
+
+    public void loadDataDoanhThu() {
+        chart.clearData();
+        tbHienThi.clearAllRow();
+        TinhTrangHoaDon tinhTrangHoaDon;
+        if (cbbNam1.getSelectedIndex() == 0) {
+            tinhTrangHoaDon = TinhTrangHoaDon.DA_THANH_TOAN;
+        } else {
+            tinhTrangHoaDon = TinhTrangHoaDon.DA_HUY;
+        }
+        int year = Integer.parseInt(cbbNam.getSelectedItem().toString());
+        List<DoanhThuTheoThang> listDoanhThuTheoThang = thongKeService.getDoanhThuTheoTungThang(year, tinhTrangHoaDon);
+        for (DoanhThuTheoThang doanhThuTheoThang : listDoanhThuTheoThang) {
+            DecimalFormat df = new DecimalFormat("#,##0.##");
+            tbHienThi.addRow(new Object[]{
+                doanhThuTheoThang.getMonth(),
+                df.format(doanhThuTheoThang.getSumTongTien()) + " VNĐ"
+            });
+            chart.addData(new ModelChart(String.valueOf(doanhThuTheoThang.getMonth()), new double[]{doanhThuTheoThang.getSumTongTien()}));
+        }
     }
 
     private void initCardData() {
+        thongKeService.getSPBanChay();
         Icon icon1 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.SHOPPING_BASKET, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
-        card1.setData(new ModelCard("Tổng đơn ngày", 5100, 20, icon1));
+        card1.setData(new ModelCard("Tổng đơn ngày", thongKeService.getTongDonNgay(), 20, icon1));
         Icon icon2 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.MONETIZATION_ON, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
-        card2.setData(new ModelCard("Doanh thu ngày", 200000, 60, icon2));
+        card2.setData(new ModelCard("Doanh thu ngày", thongKeService.getDoanhThuNgay(), 60, icon2));
         Icon icon3 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.MONETIZATION_ON, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
-        card3.setData(new ModelCard("Doanh thu tháng", 3000000, 80, icon3));
+        card3.setData(new ModelCard("Doanh thu tháng", thongKeService.getDoanhThuThang(), 80, icon3));
         Icon icon4 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.MONETIZATION_ON, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
-        card4.setData(new ModelCard("Doanh thu năm", 55000000, 95, icon4));
+        card4.setData(new ModelCard("Doanh thu năm", thongKeService.getDoanhThuNam(), 95, icon4));
     }
-
 
     private boolean showMessage(String message) {
         Message obj = new Message(Main.getFrames()[0], true);
@@ -83,10 +98,14 @@ public class ViewDoanhThu extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        chart = new view.swing.chart.Chart();
         jPanel2 = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        table1 = new view.swing.table.Table();
+        tbHienThi = new view.swing.table.Table();
+        jLabel6 = new javax.swing.JLabel();
+        cbbNam = new javax.swing.JComboBox<>();
+        jLabel7 = new javax.swing.JLabel();
+        cbbNam1 = new javax.swing.JComboBox<>();
         card1 = new view.component.Card();
         card2 = new view.component.Card();
         card3 = new view.component.Card();
@@ -116,14 +135,12 @@ public class ViewDoanhThu extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addGap(0, 257, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3)
+                    .addComponent(chart, javax.swing.GroupLayout.PREFERRED_SIZE, 603, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -133,26 +150,47 @@ public class ViewDoanhThu extends javax.swing.JPanel {
                 .addGap(15, 15, 15)
                 .addComponent(jLabel3)
                 .addGap(9, 9, 9)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(425, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 419, Short.MAX_VALUE))
+                    .addComponent(chart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel5.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(76, 76, 76));
-        jLabel5.setText("Chi tiết doanh thu");
-        jLabel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
-
-        table1.setModel(new javax.swing.table.DefaultTableModel(
+        tbHienThi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Tháng", "Doanh thu"
             }
         ));
-        jScrollPane1.setViewportView(table1);
+        tbHienThi.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbHienThiMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbHienThi);
+
+        jLabel6.setText("Năm");
+
+        cbbNam.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbbNamActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setText("Tình trạng");
+
+        cbbNam1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Đã thanh toán", "Đã huỷ" }));
+        cbbNam1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbbNam1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -161,19 +199,30 @@ public class ViewDoanhThu extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1))
-                .addContainerGap())
+                        .addComponent(jLabel6)
+                        .addGap(18, 18, 18)
+                        .addComponent(cbbNam, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(cbbNam1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel5)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel7)
+                        .addComponent(cbbNam1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel6)
+                        .addComponent(cbbNam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -201,17 +250,17 @@ public class ViewDoanhThu extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(278, 936, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(card1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(24, 24, 24)
-                                .addComponent(card2, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
+                                .addComponent(card2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
                                 .addComponent(card3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
@@ -237,19 +286,39 @@ public class ViewDoanhThu extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cbbNam1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbNam1ActionPerformed
+        loadDataDoanhThu();
+    }//GEN-LAST:event_cbbNam1ActionPerformed
+
+    private void cbbNamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbNamActionPerformed
+        loadDataDoanhThu();
+    }//GEN-LAST:event_cbbNamActionPerformed
+
+    private void tbHienThiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbHienThiMouseClicked
+        int row = tbHienThi.getSelectedRow();
+        if (row == -1) {
+            return;
+        }
+
+    }//GEN-LAST:event_tbHienThiMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private view.component.Card card1;
     private view.component.Card card2;
     private view.component.Card card3;
     private view.component.Card card4;
+    private javax.swing.JComboBox<String> cbbNam;
+    private javax.swing.JComboBox<String> cbbNam1;
+    private view.swing.chart.Chart chart;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private view.swing.table.Table table1;
+    private view.swing.table.Table tbHienThi;
     // End of variables declaration//GEN-END:variables
 }

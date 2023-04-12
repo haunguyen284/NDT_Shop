@@ -15,7 +15,13 @@ public interface HoaDonChiTietService {
 
     List<HoaDonChiTietDTO> findAll(int position, int pageSize);
     
+    List<HoaDonChiTietDTO> findByHoaDon(String idHD);
+    
     HoaDonChiTietDTO findById(String id);
+    
+    List<HoaDonChiTietDTO> findByMaHoaDon(String ma);
+    
+    HoaDonChiTietDTO findCreatedAt(Long createdAt);
     
     HoaDonChiTietDTO save(HoaDonChiTietDTO dTO);
 

@@ -12,6 +12,7 @@ import lombok.Setter;
 import service.sanpham.SanPhamService;
 import service.sanpham.impl.SanPhamServiceImpl;
 import view.dialog.Message;
+import view.dialog.ShowMessageSuccessful;
 import view.main.Main;
 
 /**
@@ -24,7 +25,8 @@ public final class ModalSoLuong extends javax.swing.JDialog {
 
     private SanPhamService sanPhamService;
     private final SanPhamDTO sanPhamDTO;
-    String soLuong;
+    private String soLuong;
+    private boolean check = false;
 
     /**
      * @param parent
@@ -47,7 +49,6 @@ public final class ModalSoLuong extends javax.swing.JDialog {
 
     private void setSoLuongFromInput() {
         soLuong = txtSoLuong.getText();
-        sanPhamDTO.setSoLuongTon(Integer.parseInt(sanPhamDTO.getSoLuongTon()) - Integer.parseInt(soLuong) + "");
     }
 
     private void loadLabel() {
@@ -67,8 +68,8 @@ public final class ModalSoLuong extends javax.swing.JDialog {
             lbTrangThai.setForeground(Color.green);
         } else {
             lbTrangThai.setForeground(Color.red);
+            btnSave.setEnabled(false);
         }
-        lbXuatXu.setText(sanPhamDTO.getXuatXu().getTen());
     }
 
     /**
@@ -83,8 +84,6 @@ public final class ModalSoLuong extends javax.swing.JDialog {
         bg = new javax.swing.JPanel();
         heading = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        btnSave = new view.swing.Button();
-        btnExit = new view.swing.Button();
         txtSoLuong = new view.swing.MyTextField();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -113,6 +112,8 @@ public final class ModalSoLuong extends javax.swing.JDialog {
         lbMoTa = new javax.swing.JLabel();
         jLabel26 = new javax.swing.JLabel();
         lbTrangThai = new javax.swing.JLabel();
+        btnSave = new javax.swing.JButton();
+        btnThoat = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -129,27 +130,7 @@ public final class ModalSoLuong extends javax.swing.JDialog {
         jLabel11.setForeground(new java.awt.Color(0, 102, 102));
         jLabel11.setText("Nhập số lượng");
 
-        btnSave.setBackground(new java.awt.Color(0, 102, 255));
-        btnSave.setForeground(new java.awt.Color(255, 255, 255));
-        btnSave.setText("Lưu thay đổi");
-        btnSave.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
-        btnSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSaveActionPerformed(evt);
-            }
-        });
-
-        btnExit.setBackground(new java.awt.Color(0, 102, 255));
-        btnExit.setForeground(new java.awt.Color(255, 255, 255));
-        btnExit.setText("Thoát");
-        btnExit.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
-        btnExit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExitActionPerformed(evt);
-            }
-        });
-
-        txtSoLuong.setBackground(new java.awt.Color(230, 245, 241));
+        txtSoLuong.setBackground(new java.awt.Color(204, 229, 240));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(33, 105, 249)), "Thông tin sản phẩm", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Roboto Medium", 0, 14), new java.awt.Color(33, 105, 249))); // NOI18N
         jPanel1.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
@@ -189,19 +170,19 @@ public final class ModalSoLuong extends javax.swing.JDialog {
 
         lbSoLuong.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
         lbSoLuong.setForeground(new java.awt.Color(0, 0, 0));
-        lbSoLuong.setText("lbID");
+        lbSoLuong.setText("N/A");
 
         lbMauSac.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
         lbMauSac.setForeground(new java.awt.Color(0, 0, 0));
-        lbMauSac.setText("lbMa");
+        lbMauSac.setText("N/A");
 
         lbChatLieu.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
         lbChatLieu.setForeground(new java.awt.Color(0, 0, 0));
-        lbChatLieu.setText("lbTen");
+        lbChatLieu.setText("N/A");
 
         lbThuongHieu.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
         lbThuongHieu.setForeground(new java.awt.Color(0, 0, 0));
-        lbThuongHieu.setText("lbLoai");
+        lbThuongHieu.setText("N/A");
 
         jLabel14.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(33, 105, 249));
@@ -233,7 +214,7 @@ public final class ModalSoLuong extends javax.swing.JDialog {
 
         lbGiaNhap.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
         lbGiaNhap.setForeground(new java.awt.Color(0, 0, 0));
-        lbGiaNhap.setText("lbLoai");
+        lbGiaNhap.setText("N/A");
 
         jLabel22.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
         jLabel22.setForeground(new java.awt.Color(33, 105, 249));
@@ -245,11 +226,11 @@ public final class ModalSoLuong extends javax.swing.JDialog {
 
         lbXuatXu.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
         lbXuatXu.setForeground(new java.awt.Color(0, 0, 0));
-        lbXuatXu.setText("lbTen");
+        lbXuatXu.setText("N/A");
 
         lbMoTa.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
         lbMoTa.setForeground(new java.awt.Color(0, 0, 0));
-        lbMoTa.setText("lbLoai");
+        lbMoTa.setText("N/A");
 
         jLabel26.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
         jLabel26.setForeground(new java.awt.Color(33, 105, 249));
@@ -362,6 +343,26 @@ public final class ModalSoLuong extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        btnSave.setBackground(new java.awt.Color(33, 105, 249));
+        btnSave.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
+        btnSave.setForeground(new java.awt.Color(255, 255, 255));
+        btnSave.setText("Lưu thay đổi");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
+
+        btnThoat.setBackground(new java.awt.Color(33, 105, 249));
+        btnThoat.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
+        btnThoat.setForeground(new java.awt.Color(255, 255, 255));
+        btnThoat.setText("Thoát");
+        btnThoat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThoatActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
         bg.setLayout(bgLayout);
         bgLayout.setHorizontalGroup(
@@ -376,16 +377,17 @@ public final class ModalSoLuong extends javax.swing.JDialog {
                     .addGroup(bgLayout.createSequentialGroup()
                         .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtSoLuong, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnSave)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnThoat)
+                .addContainerGap())
         );
 
-        bgLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnExit, btnSave});
+        bgLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnSave, btnThoat});
 
         bgLayout.setVerticalGroup(
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -399,9 +401,9 @@ public final class ModalSoLuong extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSave)
+                    .addComponent(btnThoat))
                 .addContainerGap())
         );
 
@@ -423,23 +425,28 @@ public final class ModalSoLuong extends javax.swing.JDialog {
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         String result = null;
         setSoLuongFromInput();
+        if (Integer.parseInt(soLuong) > Integer.parseInt(sanPhamDTO.getSoLuongTon())) {
+            showMessage("Số lượng không thể lớn hơn số lượng tồn kho!");
+            return;
+        }
+        sanPhamDTO.setSoLuongTon(Integer.parseInt(sanPhamDTO.getSoLuongTon()) - Integer.parseInt(soLuong) + "");
         if (Objects.isNull(sanPhamService.update(sanPhamDTO))) {
             result = "Thêm thất bại!";
         } else {
             result = "Thêm thành công!";
+            check = true;
         }
-        showMessage(result);
         this.dispose();
     }//GEN-LAST:event_btnSaveActionPerformed
 
-    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
+    private void btnThoatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThoatActionPerformed
         this.dispose();
-    }//GEN-LAST:event_btnExitActionPerformed
+    }//GEN-LAST:event_btnThoatActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bg;
-    private view.swing.Button btnExit;
-    private view.swing.Button btnSave;
+    private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnThoat;
     private javax.swing.JLabel heading;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;

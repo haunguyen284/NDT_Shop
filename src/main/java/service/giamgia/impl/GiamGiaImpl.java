@@ -7,6 +7,7 @@ package service.giamgia.impl;
 import comon.utilities.Mapper;
 import comon.validator.NDTValidator;
 import dto.giamgia.GiamGiaDTO;
+import dto.sanpham.SanPhamDTO;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import model.giamgia.GiamGia;
+import model.sanpham.SanPham;
 import org.modelmapper.ModelMapper;
 import repository.giamgia.GiamGiaRepository;
 import service.giamgia.GiamGiaService;
@@ -72,7 +74,7 @@ public class GiamGiaImpl implements GiamGiaService {
                     result = "Add fail !";
                 }
             }
-            case "update" -> {             
+            case "update" -> {
                 if (optional.isEmpty()) {
                     return "Giam giá này không tồn tại !";
                 }
@@ -101,5 +103,25 @@ public class GiamGiaImpl implements GiamGiaService {
     public long count() {
         return repository.count();
     }
+
+    @Override
+    public List<GiamGiaDTO> searchByMa(int currentPage, String searchByMa) {
+        List<GiamGia> listModel = repository.searchByMaGG(currentPage, searchByMa);
+        List<GiamGiaDTO> listDTO = new ArrayList<>();
+        for (GiamGia x : listModel) {
+            listDTO.add(mapper.map(x, GiamGiaDTO.class));
+        }
+        return listDTO;
+    }
+
+    @Override
+    public String checkTrangThai(Long ngayHienTai) {
+        if (repository.updateTrangThai(ngayHienTai)) {
+            return "Delete successful !";
+        } else {
+            return "Delete Fail !";
+        }
+    }
+
 
 }

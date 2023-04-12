@@ -4,39 +4,64 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
+import java.util.Date;
 import javax.swing.JFrame;
+import lombok.Getter;
+import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
+import service.giamgia.GiamGiaService;
+import service.giamgia.impl.GiamGiaImpl;
 import view.component.Header;
 import view.component.Menu;
+import view.dialog.Message;
 import view.dialog.ShowMessage;
 import view.event.EventMenuSelected;
 import view.event.EventShowPopupMenu;
 import view.form.thongke.ViewDoanhThu;
 import view.form.MainForm;
+import view.form.doitra.ViewDoiTra;
+import view.form.dongiao.ViewDonGiao;
 import view.form.giamgia.ViewGiamGiamSp;
 import view.form.hoadon.ViewHoaDon;
+import view.form.hoadon.ViewLichSuHoaDon;
 import view.form.khachhang.ViewKhachHang;
 import view.form.khachhang.ViewTheThanhVien;
+import view.form.nhanvien.ModalDoiMatKhau;
+import view.form.nhanvien.ViewNhanVien;
 import view.form.sanpham.ViewAo;
 import view.form.sanpham.ViewQuan;
+import view.form.thongke.ViewTKSanPham;
 import view.swing.MenuItem;
 import view.swing.PopupMenu;
 import view.swing.icon.GoogleMaterialDesignIcons;
 import view.swing.icon.IconFontSwing;
 
+@Getter
+@Setter
 public class Main extends javax.swing.JFrame implements Runnable {
+
+    private GiamGiaService giamGiaService;
 
     private MigLayout layout;
     private Menu menu;
     private Header header;
     private MainForm main;
     private Animator animator;
+    private String role;
+    private String ten;
 
-    public Main() {
+    /**
+     *
+     * @param ten
+     * @param role
+     */
+    public Main(String ten, String role) {
         initComponents();
+        this.ten = ten;
+        this.role = role;
         init();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
@@ -45,44 +70,70 @@ public class Main extends javax.swing.JFrame implements Runnable {
         layout = new MigLayout("fill", "0[]0[100%, fill]0", "0[fill, top]0");
         bg.setLayout(layout);
         menu = new Menu();
-        header = new Header();
+        header = new Header(ten, role);
         main = new MainForm();
+        giamGiaService = new GiamGiaImpl();
         new Thread(this).start();
         menu.addEvent(new EventMenuSelected() {
             @Override
             public void menuSelected(int menuIndex, int subMenuIndex) {
                 System.out.println("Menu Index : " + menuIndex + " SubMenu Index " + subMenuIndex);
-                if (menuIndex == 0) {
-                    if (subMenuIndex == 0) {
-                        main.showForm(new ViewDoanhThu());
-//                    } else if (subMenuIndex == 1) {
-//                        main.showForm(new Form1());
-                    }
-                } else if (menuIndex == 1) {
-                    if (subMenuIndex == 0) {
-                        main.showForm(new ViewHoaDon());
-                    }
-                } else if (menuIndex == 2) {
-                    if (subMenuIndex == 0) {
-                        main.showForm(new ViewAo());
-                    }
-                    if (subMenuIndex == 1) {
-                        main.showForm(new ViewQuan());
-                    }
-                } else if (menuIndex == 3) {
-                    main.showForm(new ViewGiamGiamSp());
-                } else if (menuIndex == 5) {
-                    if (subMenuIndex == 0) {
-                        main.showForm(new ViewKhachHang());
-                    } else if (subMenuIndex == 1) {
-                        main.showForm(new ViewTheThanhVien(main));
-                    }
-                } else if (menuIndex == 7) {
-                    main.showForm(new ViewGiamGiamSp());
-                } else if (menuIndex == 8) {
-                    if (ShowMessage.show("Bạn chắc chắn muốn thoát ?")) {
-                        System.exit(0);
-                    }
+                switch (menuIndex) {
+                    case 0:
+                        main.showForm(new ViewHoaDon(main, ten));
+                    case 1:
+                        if (subMenuIndex == 0) {
+                            main.showForm(new ViewDoanhThu());
+                        } else if (subMenuIndex == 1) {
+                            main.showForm(new ViewTKSanPham());
+                        }
+                        break;
+                    case 2:
+                        if (subMenuIndex == 0) {
+                            main.showForm(new ViewDoiTra(main, ten));
+                        }
+                        if (subMenuIndex == 1) {
+                            main.showForm(new ViewLichSuHoaDon());
+                        }
+                        break;
+                    case 3:
+                        if (subMenuIndex == 0) {
+                            main.showForm(new ViewAo());
+                        }
+                        if (subMenuIndex == 1) {
+                            main.showForm(new ViewQuan());
+                        }
+                        break;
+                    case 4:
+                        main.showForm(new ViewGiamGiamSp());
+                        break;
+                    case 5:
+                        if (role.equals("STAFF")) {
+                            showMessage("Chỉ ADMIN mới có quyền quản lý nhân viên");
+                            return;
+                        }
+                        main.showForm(new ViewNhanVien());
+                        break;
+                    case 6:
+                        if (subMenuIndex == 0) {
+                            main.showForm(new ViewKhachHang());
+                        } else if (subMenuIndex == 1) {
+                            main.showForm(new ViewTheThanhVien(main));
+                        }
+                        break;
+                    case 7:
+                        new ModalDoiMatKhau(null, true, ten).setVisible(true);
+                        break;
+                    case 8:
+                        main.showForm(new ViewDonGiao());
+                        break;
+                    case 9:
+                        if (ShowMessage.show("Bạn chắc chắn muốn thoát ?")) {
+                            System.exit(0);
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
         });
@@ -141,6 +192,12 @@ public class Main extends javax.swing.JFrame implements Runnable {
         IconFontSwing.register(GoogleMaterialDesignIcons.getIconFont());
         //  Start with this form
         main.showForm(new ViewDoanhThu());
+    }
+
+    private boolean showMessage(String message) {
+        Message obj = new Message(Main.getFrames()[0], true);
+        obj.showMessage(message);
+        return obj.isOk();
     }
 
     @SuppressWarnings("unchecked")
@@ -212,7 +269,7 @@ public class Main extends javax.swing.JFrame implements Runnable {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new Main().setVisible(true);
+                new Main("admin", "ADMIN").setVisible(true);
             }
         });
     }
@@ -235,6 +292,8 @@ public class Main extends javax.swing.JFrame implements Runnable {
                 String am_pm = c.get(Calendar.AM_PM) == 1 ? "PM" : "AM";
                 String time = h + ":" + m + ":" + s + " " + am_pm + " - " + day + "/" + month + "/" + year;
                 header.lbCurrentTime.setText(time);
+                Long ngayHienTai = new Date().getTime();
+                giamGiaService.checkTrangThai(ngayHienTai);
                 Thread.sleep(1000);
             } catch (Exception e) {
             }

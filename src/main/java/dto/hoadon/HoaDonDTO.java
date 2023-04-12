@@ -62,11 +62,21 @@ public class HoaDonDTO extends AuditModelDTO {
             case DA_THANH_TOAN:
                 converted = "Đã thanh toán";
                 break;
+            case HOAN_TRA:
+                converted = "Hoàn trả";
+                break;
+            case DOI_HANG:
+                converted = "Đổi hàng";
+                break;
         }
         return converted;
     }
     
     public Object[] toDataRow(){
         return new Object[]{getId(), Objects.isNull(nhanVien) ? "Null" : nhanVien.getMaNV(), Objects.isNull(khachHang) ? "Null" : khachHang.getMaKH(), tongTien, convertTrangThai()};
+    }
+    
+    public Object[] toDataRowLichSu() {
+        return new Object[]{maHD, khachHang != null ? khachHang.getTen() : tenKH, nhanVien.getTen(),ngayThanhToan!=null?new Date(ngayThanhToan):null, tongTien+"vnđ", convertTrangThai()};
     }
 }

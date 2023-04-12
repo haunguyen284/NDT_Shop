@@ -4,6 +4,7 @@
  */
 package service.sanpham;
 
+import comon.constant.sanpham.TrangThaiSanPham;
 import dto.sanpham.AoDTO;
 import dto.sanpham.SanPhamDTO;
 import java.util.List;
@@ -20,10 +21,22 @@ public interface SanPhamService {
     SanPhamDTO update(SanPhamDTO dto);
 
     Optional<SanPhamDTO> findByID(String id);
-    
-    SanPhamDTO findById(String id);
 
+    SanPhamDTO findById(String id);
+    
     List<SanPhamDTO> getAll(int currentPage);
+    
+    List<SanPhamDTO> findAll();
+    
+    List<SanPhamDTO> findByTrangThai(TrangThaiSanPham trangThaiSanPham);
+
+    List<SanPhamDTO> searchByMa(int currentPage, String searchByMa);
+
+    List<SanPhamDTO> searchByGiaBan(int currentPage, float giaBan);
+
+    List<SanPhamDTO> listSanPhamTheoMaGG(int currentPage, String searchByMa);
 
     long count();
+    
+    Object[] getByKhuyenMai(String id);
 }

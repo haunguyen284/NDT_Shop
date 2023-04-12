@@ -52,6 +52,35 @@ public class Message extends javax.swing.JDialog {
         animator.setResolution(0);
         animator.setAcceleration(0.5f);
     }
+    
+     public Message(java.awt.Frame parent, boolean modal, GoogleMaterialDesignIcons icon) {
+        super(parent, modal);
+        initComponents();
+        lbIcon.setIcon(IconFontSwing.buildIcon(icon, 60, new Color(254, 86, 96), new Color(113, 74, 67)));
+        setOpacity(0f);
+        getContentPane().setBackground(Color.WHITE);
+        TimingTarget target = new TimingTargetAdapter() {
+            @Override
+            public void timingEvent(float fraction) {
+                if (show) {
+                    setOpacity(fraction);
+                } else {
+                    setOpacity(1f - fraction);
+                }
+            }
+
+            @Override
+            public void end() {
+                if (show == false) {
+                    setVisible(false);
+                }
+            }
+
+        };
+        animator = new Animator(200, target);
+        animator.setResolution(0);
+        animator.setAcceleration(0.5f);
+    }
 
     public void showMessage(String message) {
         lbMessage.setText(message);

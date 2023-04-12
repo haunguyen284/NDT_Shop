@@ -9,7 +9,10 @@ import comon.utilities.HibernateUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.TypedQuery;
+import model.giamgia.GiamGia;
 import model.giamgia.SanPhamGiamGia;
+import model.sanpham.SanPham;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -96,6 +99,19 @@ public class SanPhamGiamGiaRepository {
         }
         return Optional.ofNullable(x);
     }
+    
+        public List<SanPhamGiamGia> searchByMaSpGG(int currentPage, String searchByMa) {
+        List<SanPhamGiamGia> listModel;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT x FROM SanPhamGiamGia x JOIN GiamGia y On x.giamGia = y.id WHERE y.maGg LIKE '%' + :maGG +'%'";
+            TypedQuery<SanPhamGiamGia> query = session.createQuery(hql, SanPhamGiamGia.class);
+            query.setParameter("maGG", searchByMa);
+            query.setFirstResult((currentPage - 1) * PaginationConstant.DEFAULT_SIZE);
+            query.setMaxResults(PaginationConstant.DEFAULT_SIZE);
+            listModel = query.getResultList();
+        }
+        return listModel;
+    }
 
     public long count() {
         long count = 0;
@@ -107,6 +123,26 @@ public class SanPhamGiamGiaRepository {
             e.printStackTrace();
         }
         return count;
+    }
+
+    public boolean deleteSanPhamByIdGiamGia(String id) {
+        int check;
+        String hql = "DELETE FROM SanPhamGiamGia x WHERE x.giamGia.maGg = :id";
+        Transaction tx = null;
+        try ( Session s = factory.openSession()) {
+            tx = s.beginTransaction();
+            Query q = s.createQuery(hql);
+            q.setParameter("id", id);
+            check = q.executeUpdate();
+            tx.commit();
+            return check > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null) {
+                tx.rollback();
+            }
+        }
+        return false;
     }
 
 }

@@ -1,11 +1,24 @@
 package view.component;
 
+import dto.nhanvien.TaiKhoanDTO;
 import java.awt.event.ActionListener;
+import lombok.Getter;
+import lombok.Setter;
+import service.nhanvien.TaiKhoanService;
+import service.nhanvien.impl.TaiKhoanServiceImpl;
 
+@Getter
+@Setter
 public class Header extends javax.swing.JPanel {
 
-    public Header() {
+    private final TaiKhoanService taiKhoanService;
+
+    public Header(String ten, String role) {
         initComponents();
+        taiKhoanService = new TaiKhoanServiceImpl();
+        TaiKhoanDTO dTO = taiKhoanService.findByTenTaiKhoan(ten);
+        lbRole.setText(role);
+        lbUserName.setText(dTO.getNhanVien().getTen());
     }
 
     public void addMenuEvent(ActionListener event) {

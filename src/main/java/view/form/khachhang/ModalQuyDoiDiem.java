@@ -13,18 +13,21 @@ import java.util.Random;
 import service.khachhang.QuyDoiDiemService;
 import service.khachhang.impl.QuyDoiDiemServiceImpl;
 import view.dialog.Message;
+import view.dialog.ShowMessageSuccessful;
 import view.main.Main;
-
 
 /**
  *
  * @author Admin
  */
 public final class ModalQuyDoiDiem extends javax.swing.JDialog {
+
     private QuyDoiDiemService quyDoiDiemService;
     private final QuyDoiDiemDTO quyDoiDiemDTO;
+
     /**
      * Creates new form ModalKhachHang
+     *
      * @param parent
      * @param modal
      * @param quyDoiDiemDTO
@@ -37,7 +40,7 @@ public final class ModalQuyDoiDiem extends javax.swing.JDialog {
         this.quyDoiDiemDTO = quyDoiDiemDTO;
         fill(quyDoiDiemDTO);
     }
-    
+
     private boolean showMessage(String message) {
         Message obj = new Message(Main.getFrames()[0], true);
         obj.showMessage(message);
@@ -45,8 +48,8 @@ public final class ModalQuyDoiDiem extends javax.swing.JDialog {
     }
 
     public void fill(QuyDoiDiemDTO dTO) {
-        txtTienQuyDoi.setHint(dTO.getTienTichDiem()+"");
-        txtDiemQuyDoi.setHint(dTO.getTienTieuDiem()+"");
+        txtTienQuyDoi.setHint(dTO.getTienTichDiem() + "");
+        txtDiemQuyDoi.setHint(dTO.getTienTieuDiem() + "");
     }
 
     public void setObjectFromInput() {
@@ -175,8 +178,14 @@ public final class ModalQuyDoiDiem extends javax.swing.JDialog {
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         setObjectFromInput();
         String result = quyDoiDiemService.save(quyDoiDiemDTO);
-        showMessage(result);
-        this.dispose();
+        if (result.equals("Cập nhật thành công!")) {
+            this.dispose();
+            ShowMessageSuccessful.showSuccessful(result);
+        } else {
+            this.dispose();
+            showMessage(result);
+        }
+
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
@@ -186,45 +195,6 @@ public final class ModalQuyDoiDiem extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ModalQuyDoiDiem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ModalQuyDoiDiem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ModalQuyDoiDiem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ModalQuyDoiDiem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                ModalQuyDoiDiem dialog = new ModalQuyDoiDiem(new javax.swing.JFrame(), true, new QuyDoiDiemDTO());
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bg;

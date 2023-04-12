@@ -34,5 +34,8 @@ public class ThongSo extends PrimaryModel implements Serializable {
 
     @Column
     private float khoiLuong;
+    
+    @Column
+    private String ma;
 
 }

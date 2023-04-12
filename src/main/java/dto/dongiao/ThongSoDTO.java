@@ -29,4 +29,5 @@ public class ThongSoDTO extends AuditModelDTO {
     @NotNull(message = "Khối lượng  - Không được để trống")
     private float khoiLuong;
 
+    private String ma;
 }

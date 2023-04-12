@@ -21,6 +21,7 @@ import service.khachhang.TheThanhVienService;
 import service.khachhang.impl.KhachHangServiceImpl;
 import service.khachhang.impl.TheThanhVienServiceImpl;
 import view.dialog.Message;
+import view.dialog.ShowMessageSuccessful;
 import view.main.Main;
 
 /**
@@ -42,7 +43,7 @@ public class ModalKhachHang extends javax.swing.JDialog {
         theThanhVienService = new TheThanhVienServiceImpl();
         initComponents();
     }
-    
+
     private boolean showMessage(String message) {
         Message obj = new Message(Main.getFrames()[0], true);
         obj.showMessage(message);
@@ -62,6 +63,7 @@ public class ModalKhachHang extends javax.swing.JDialog {
         txtSoLanMua.setText(dTO.getSoLanMua() + "");
         cbxTrangThai.setSelectedItem(dTO.getTrangThaiKhachHang());
     }
+
     public void clear() {
         lbMaKH.setText("");
         lbMaTTV.setText("");
@@ -75,11 +77,11 @@ public class ModalKhachHang extends javax.swing.JDialog {
         txtSoLanMua.setText("");
         cbxTrangThai.setSelectedIndex(0);
     }
-    
+
     public String generateCustomerId(KhachHangDTO khachHang) {
         String hoTen = khachHang.getTen();
         Date ngaySinh = new Date(khachHang.getNgaySinh());
-         LocalDate localDate = ngaySinh.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localDate = ngaySinh.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
         String maKH = "";
         if (hoTen.contains(" ")) {
@@ -120,7 +122,6 @@ public class ModalKhachHang extends javax.swing.JDialog {
         String soLanMua = txtSoLanMua.getText();
         String trangThai = cbxTrangThai.getSelectedItem().toString();
 
-        
         dTO.setTen(ten);
         dTO.setSdt(sdt);
         dTO.setEmail(email);
@@ -139,12 +140,12 @@ public class ModalKhachHang extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, errorMessages);
             return null;
         }
-        if(lbMaKH.getText().isBlank()){
+        if (lbMaKH.getText().isBlank()) {
             dTO.setMaKH(generateCustomerId(dTO));
-        }else{
+        } else {
             dTO.setMaKH(lbMaKH.getText());
         }
-        if(!lbMaTTV.getText().isBlank()){
+        if (!lbMaTTV.getText().isBlank()) {
             dTO.setTheThanhVien(theThanhVienService.findByMaTTV(lbMaTTV.getText()));
         }
         dTO.setId(khachHangService.findId(dTO.getMaKH()));
@@ -410,9 +411,12 @@ public class ModalKhachHang extends javax.swing.JDialog {
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         KhachHangDTO dTO = getObjectFromInput();
         String result = khachHangService.save(dTO);
-        showMessage(result);
-        new ViewKhachHang().loadDataTable();
         this.dispose();
+        if(result.equals("Cập nhật thành công")){
+            ShowMessageSuccessful.showSuccessful(result);
+        }else{
+            showMessage(result);
+        }
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
@@ -423,44 +427,6 @@ public class ModalKhachHang extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ModalKhachHang.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ModalKhachHang.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ModalKhachHang.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ModalKhachHang.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                ModalKhachHang dialog = new ModalKhachHang(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bg;

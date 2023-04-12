@@ -20,9 +20,13 @@ public interface SanPhamGiamGiaService {
 
     Optional<SanPhamGiamGiaDTO> findById(String id);
 
-    String saveOrUpdate(String action, GiamGiaDTO giamGiaDTO, List<SanPhamDTO> listSPDTO);
-
+    String saveOrUpdate(String action, GiamGiaDTO giamGiaDTO, List<SanPhamDTO> listSPDTO,SanPhamGiamGiaDTO sanPhamGiamGiaDTO);
+    
+    List<SanPhamGiamGiaDTO> searchByMa(int currentPage, String searchByMa);
+    
     String delete(String id);
+
+    String deleteSanPhamByIdGiamGia(String id);
 
     long count();
 

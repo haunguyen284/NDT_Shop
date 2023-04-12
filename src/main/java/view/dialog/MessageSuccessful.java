@@ -65,27 +65,27 @@ public class MessageSuccessful extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         lbMessage = new javax.swing.JLabel();
         lbIcon = new javax.swing.JLabel();
-        button2 = new view.swing.Button();
+        buttonOutLine1 = new view.swing.ButtonOutLine();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
 
-        jPanel1.setBackground(new java.awt.Color(153, 255, 51));
+        jPanel1.setBackground(new java.awt.Color(0, 128, 0));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(75, 134, 253)));
 
-        lbMessage.setBackground(new java.awt.Color(102, 255, 102));
+        lbMessage.setBackground(new java.awt.Color(0, 128, 0));
         lbMessage.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
-        lbMessage.setForeground(new java.awt.Color(82, 82, 82));
+        lbMessage.setForeground(new java.awt.Color(255, 255, 255));
         lbMessage.setText("Message");
 
-        lbIcon.setBackground(new java.awt.Color(255, 255, 51));
+        lbIcon.setBackground(new java.awt.Color(204, 255, 153));
         lbIcon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbIcon.setIcon(new javax.swing.ImageIcon("D:\\DuAnMot\\NDT_Shop\\src\\main\\resources\\icon\\Accept.png")); // NOI18N
+        lbIcon.setIcon(new javax.swing.ImageIcon("C:\\Users\\Admin\\Documents\\GitHub\\NDT_Shop\\src\\main\\resources\\icon\\success.png")); // NOI18N
 
-        button2.setText("OK");
-        button2.addActionListener(new java.awt.event.ActionListener() {
+        buttonOutLine1.setText("OK");
+        buttonOutLine1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                button2ActionPerformed(evt);
+                buttonOutLine1ActionPerformed(evt);
             }
         });
 
@@ -95,14 +95,13 @@ public class MessageSuccessful extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(lbIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lbMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(buttonOutLine1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lbIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lbMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(20, 20, 20))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -111,9 +110,9 @@ public class MessageSuccessful extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lbIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addComponent(buttonOutLine1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -131,10 +130,10 @@ public class MessageSuccessful extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void button2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button2ActionPerformed
+    private void buttonOutLine1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOutLine1ActionPerformed
         ok = true;
         closeMenu();
-    }//GEN-LAST:event_button2ActionPerformed
+    }//GEN-LAST:event_buttonOutLine1ActionPerformed
 
     private void closeMenu() {
         if (animator.isRunning()) {
@@ -145,7 +144,7 @@ public class MessageSuccessful extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private view.swing.Button button2;
+    private view.swing.ButtonOutLine buttonOutLine1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lbIcon;
     private javax.swing.JLabel lbMessage;

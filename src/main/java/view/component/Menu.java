@@ -55,8 +55,9 @@ public class Menu extends javax.swing.JPanel {
     }
 
     public void initMenuItem() {
+        addMenu(new ModelMenu(ImageHelper.resizeImageIcon(new ImageIcon(getClass().getResource("/icon/Basket.png")), 24, 24), "Màn hình thu ngân"));
         addMenu(new ModelMenu(ImageHelper.resizeImageIcon(new ImageIcon(getClass().getResource("/icon/analysis.png")), 24, 24), "Thống kê", "Thống kê doanh thu", "Thống kê sản phẩm"));
-        addMenu(new ModelMenu(ImageHelper.resizeImageIcon(new ImageIcon(getClass().getResource("/icon/invoice.png")), 24, 24), "Quản lý hoá đơn", "Thêm mới", "Lịch sử"));
+        addMenu(new ModelMenu(ImageHelper.resizeImageIcon(new ImageIcon(getClass().getResource("/icon/invoice.png")), 24, 24), "Quản lý hoá đơn", "Đổi/Trả", "Lịch sử"));
         addMenu(new ModelMenu(ImageHelper.resizeImageIcon(new ImageIcon(getClass().getResource("/icon/groom-suit.png")), 24, 24), "Quản lý sản phẩm", "Áo", "Quần"));
         addMenu(new ModelMenu(ImageHelper.resizeImageIcon(new ImageIcon(getClass().getResource("/icon/discounts.png")), 24, 24), "Quản lý giảm giá"));
         addMenu(new ModelMenu(ImageHelper.resizeImageIcon(new ImageIcon(getClass().getResource("/icon/teamwork.png")), 24, 24), "Quản lý nhân viên"));
@@ -134,8 +135,8 @@ public class Menu extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(profile1, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
             .addComponent(sp, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(profile1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

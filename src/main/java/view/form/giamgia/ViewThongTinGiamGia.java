@@ -11,19 +11,11 @@ import comon.validator.NDTValidator;
 import dto.giamgia.GiamGiaDTO;
 import java.awt.Color;
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import lombok.Getter;
 import lombok.Setter;
-import raven.cell.TableActionCellEditor;
-import raven.cell.TableActionCellRender;
-import raven.cell.TableActionEvent;
 import service.giamgia.GiamGiaService;
 import service.giamgia.impl.GiamGiaImpl;
 import view.dialog.ShowMessage;
@@ -39,45 +31,35 @@ public class ViewThongTinGiamGia extends javax.swing.JDialog {
 
     private final GiamGiaService service;
     private final Validator validator;
-    private DefaultComboBoxModel cbb;
+    private final GiamGiaDTO giamGiaDTO;
 
-    /**
-     * Creates new form ViewModal
-     */
     public ViewThongTinGiamGia(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
         this.service = new GiamGiaImpl();
         this.validator = NDTValidator.getValidator();
-        this.cbb = new DefaultComboBoxModel();
-        loadCbb();
-    }
-
-    private void loadCbb() {
-        cbb.addElement("Đang hoạt động");
-        cbb.addElement("Ngừng hoạt động");
-        cboTrangThai.setModel(cbb);
+        this.giamGiaDTO = new GiamGiaDTO();
     }
 
     public void fill(GiamGiaDTO x) {
-        txtID.setText(x.getId());
         txtKetThuc.setDate(new Date(x.getNgayKetThuc()));
         txtBatDau.setDate(new Date(x.getNgayBatDau()));
-        txtMa.setText(x.getMaGg());
-        txtGiaTri.setText("" + x.getGiaTriGiamGia());
-        cboLoai.setSelectedItem(x.getLoaiGiamGia());
-        lblMoTa.setText(x.getMoTa());
-        cboTrangThai.setSelectedItem(x.getLoaiGiamGia());
         txtTen.setText(x.getTen());
+        txtDieuKien.setText("" + x.getDieuKienGiamGia());
+        cboLoai.setSelectedItem(x.convertLoaiGiamGia());
+        lblMoTa.setText(x.getMoTa());
+        cboTrangThai.setSelectedItem(x.convertGiamGia());
+        txtGiaTri.setText("" + x.getGiaTriGiamGia());
+        txtMa.setText(x.getMaGg());
     }
 
     public GiamGiaDTO form() {
         GiamGiaDTO x = new GiamGiaDTO();
-        x.setId(txtID.getText());
         x.setNgayBatDau(txtBatDau.getDate().getTime());
         x.setNgayKetThuc(txtKetThuc.getDate().getTime());
         x.setGiaTriGiamGia(Float.parseFloat(txtGiaTri.getText()));
+        x.setDieuKienGiamGia(Float.parseFloat(txtDieuKien.getText()));
         x.setMaGg(txtMa.getText());
         x.setMoTa(lblMoTa.getText());
         x.setTen(txtTen.getText());
@@ -96,20 +78,19 @@ public class ViewThongTinGiamGia extends javax.swing.JDialog {
         return x;
     }
 
-
     public void clearForm() {
         txtBatDau.setDate(new Date());
         txtKetThuc.setDate(new Date());
-        txtGiaTri.setText("");
-        txtMa.setText("");
-        txtID.setText("");
+        txtDieuKien.setText("");
         txtTen.setText("");
+        txtMa.setText("");
+        txtGiaTri.setText("");
         lblMoTa.setText("");
     }
 
     public void saveOrUpdate(String action) {
-        GiamGiaDTO qLGiamGia = form();
-        Set<ConstraintViolation<GiamGiaDTO>> violations = validator.validate(qLGiamGia);
+        GiamGiaDTO gg = form();
+        Set<ConstraintViolation<GiamGiaDTO>> violations = validator.validate(gg);
         if (!violations.isEmpty()) {
             String errors = "";
             for (ConstraintViolation<GiamGiaDTO> x : violations) {
@@ -118,12 +99,14 @@ public class ViewThongTinGiamGia extends javax.swing.JDialog {
             ShowMessage.show(errors);
             return;
         }
-        if (action.equals("add")) {
-            qLGiamGia.setId(null);
+        if (action.equals("update")) {
+            gg.setId(giamGiaDTO.getId());
         }
-        String result = service.saveOrUpdate(action, qLGiamGia);
+        String result = service.saveOrUpdate(action, gg);
         ShowMessageSuccessful.showSuccessful(result);
+        new ViewCreateSpGiamGia(null, true).loadData();
         new ViewGiamGiamSp().loadData();
+        this.dispose();
     }
 
     @SuppressWarnings("unchecked")
@@ -134,19 +117,19 @@ public class ViewThongTinGiamGia extends javax.swing.JDialog {
         citybg1 = new javax.swing.JLabel();
         favicon1 = new javax.swing.JLabel();
         userLabel6 = new javax.swing.JLabel();
-        txtGiaTri = new javax.swing.JTextField();
+        txtDieuKien = new javax.swing.JTextField();
         jSeparator5 = new javax.swing.JSeparator();
         passLabel1 = new javax.swing.JLabel();
         jSeparator6 = new javax.swing.JSeparator();
         txtSave = new javax.swing.JPanel();
         btnSave = new javax.swing.JLabel();
         jSeparator7 = new javax.swing.JSeparator();
-        txtTen = new javax.swing.JTextField();
+        txtGiaTri = new javax.swing.JTextField();
         userLabel7 = new javax.swing.JLabel();
         userLabel8 = new javax.swing.JLabel();
         userLabel9 = new javax.swing.JLabel();
+        txtTen = new javax.swing.JTextField();
         txtMa = new javax.swing.JTextField();
-        txtID = new javax.swing.JTextField();
         jSeparator8 = new javax.swing.JSeparator();
         cboTrangThai = new javax.swing.JComboBox<>();
         cboLoai = new javax.swing.JComboBox<>();
@@ -174,25 +157,24 @@ public class ViewThongTinGiamGia extends javax.swing.JDialog {
         bg1.add(favicon1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, -1, -1));
 
         userLabel6.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
-        userLabel6.setText("ID");
+        userLabel6.setText("Mã giảm giá");
         bg1.add(userLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 80, -1, -1));
 
-        txtGiaTri.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
-        txtGiaTri.setForeground(new java.awt.Color(204, 204, 204));
-        txtGiaTri.setText("Vui lòng điền vào điều kiện giảm giá...");
-        txtGiaTri.setBorder(null);
-        txtGiaTri.addMouseListener(new java.awt.event.MouseAdapter() {
+        txtDieuKien.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
+        txtDieuKien.setForeground(new java.awt.Color(204, 204, 204));
+        txtDieuKien.setBorder(null);
+        txtDieuKien.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                txtGiaTriMousePressed(evt);
+                txtDieuKienMousePressed(evt);
             }
         });
-        bg1.add(txtGiaTri, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 350, 290, 30));
+        bg1.add(txtDieuKien, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 350, 290, 30));
 
         jSeparator5.setForeground(new java.awt.Color(153, 153, 153));
         bg1.add(jSeparator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 380, 290, 20));
 
         passLabel1.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
-        passLabel1.setText("Tên giảm giá");
+        passLabel1.setText("Giá trị giảm giá");
         bg1.add(passLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 240, -1, -1));
 
         jSeparator6.setForeground(new java.awt.Color(153, 153, 153));
@@ -237,60 +219,59 @@ public class ViewThongTinGiamGia extends javax.swing.JDialog {
         jSeparator7.setForeground(new java.awt.Color(153, 153, 153));
         bg1.add(jSeparator7, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 290, 20));
 
-        txtTen.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
-        txtTen.setForeground(new java.awt.Color(204, 204, 204));
-        txtTen.setText("Vui lòng điền vào giá trị giảm giá....");
-        txtTen.setBorder(null);
-        txtTen.addMouseListener(new java.awt.event.MouseAdapter() {
+        txtGiaTri.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
+        txtGiaTri.setForeground(new java.awt.Color(204, 204, 204));
+        txtGiaTri.setBorder(null);
+        txtGiaTri.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                txtTenMousePressed(evt);
+                txtGiaTriMousePressed(evt);
             }
         });
-        txtTen.addActionListener(new java.awt.event.ActionListener() {
+        txtGiaTri.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTenActionPerformed(evt);
+                txtGiaTriActionPerformed(evt);
             }
         });
-        bg1.add(txtTen, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 260, 290, 30));
+        bg1.add(txtGiaTri, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 260, 290, 30));
 
         userLabel7.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
-        userLabel7.setText("Mã giảm giá");
+        userLabel7.setText("Tên giảm giá");
         bg1.add(userLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 150, -1, -1));
 
         userLabel8.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
-        userLabel8.setText("Giá trị giảm giá");
+        userLabel8.setText("Điều kiện giảm giá");
         bg1.add(userLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 330, -1, -1));
 
         userLabel9.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
         userLabel9.setText("Ngày kết thúc");
         bg1.add(userLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 330, -1, -1));
 
-        txtMa.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        txtTen.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
+        txtTen.setForeground(new java.awt.Color(204, 204, 204));
+        txtTen.setBorder(null);
+        txtTen.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                txtTenMousePressed(evt);
+            }
+        });
+        bg1.add(txtTen, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 170, 290, 30));
+
+        txtMa.setFont(new java.awt.Font("Roboto", 1, 14)); // NOI18N
         txtMa.setForeground(new java.awt.Color(204, 204, 204));
-        txtMa.setText("Vui lòng điền vào tên giảm giá....");
         txtMa.setBorder(null);
+        txtMa.setCaretColor(new java.awt.Color(204, 204, 204));
         txtMa.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 txtMaMousePressed(evt);
             }
         });
-        bg1.add(txtMa, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 170, 290, 30));
-
-        txtID.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
-        txtID.setForeground(new java.awt.Color(204, 204, 204));
-        txtID.setBorder(null);
-        txtID.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                txtIDMousePressed(evt);
-            }
-        });
-        bg1.add(txtID, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 290, 30));
+        bg1.add(txtMa, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 290, 30));
 
         jSeparator8.setForeground(new java.awt.Color(153, 153, 153));
         bg1.add(jSeparator8, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 130, 290, 20));
 
         cboTrangThai.setBackground(new java.awt.Color(255, 255, 255));
-        cboTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Đang hoạt động", "Ngừng hoạt động" }));
         cboTrangThai.setBorder(null);
         bg1.add(cboTrangThai, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 170, 270, 30));
 
@@ -377,9 +358,9 @@ public class ViewThongTinGiamGia extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtGiaTriMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtGiaTriMousePressed
+    private void txtDieuKienMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtDieuKienMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtGiaTriMousePressed
+    }//GEN-LAST:event_txtDieuKienMousePressed
 
     private void btnSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseClicked
         if (ShowMessage.show("Bạn muốn lưu giảm giá này chứ ?")) {
@@ -401,6 +382,10 @@ public class ViewThongTinGiamGia extends javax.swing.JDialog {
         btnSave.setForeground(Color.WHITE);
     }//GEN-LAST:event_btnSaveMouseExited
 
+    private void txtGiaTriMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtGiaTriMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtGiaTriMousePressed
+
     private void txtTenMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtTenMousePressed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTenMousePressed
@@ -409,11 +394,8 @@ public class ViewThongTinGiamGia extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtMaMousePressed
 
-    private void txtIDMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtIDMousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtIDMousePressed
-
     private void btnCloseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCloseMouseClicked
+        new ViewCreateSpGiamGia(null, true).loadData();
         new ViewGiamGiamSp().loadData();
         this.dispose();
     }//GEN-LAST:event_btnCloseMouseClicked
@@ -428,9 +410,9 @@ public class ViewThongTinGiamGia extends javax.swing.JDialog {
         btnClose.setForeground(Color.WHITE);
     }//GEN-LAST:event_btnCloseMouseExited
 
-    private void txtTenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTenActionPerformed
+    private void txtGiaTriActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGiaTriActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtTenActionPerformed
+    }//GEN-LAST:event_txtGiaTriActionPerformed
 
     /**
      * @param args the command line arguments
@@ -453,8 +435,8 @@ public class ViewThongTinGiamGia extends javax.swing.JDialog {
     private javax.swing.JLabel passLabel1;
     private com.toedter.calendar.JDateChooser txtBatDau;
     private javax.swing.JPanel txtClose;
+    private javax.swing.JTextField txtDieuKien;
     private javax.swing.JTextField txtGiaTri;
-    private javax.swing.JTextField txtID;
     private com.toedter.calendar.JDateChooser txtKetThuc;
     private javax.swing.JTextField txtMa;
     private javax.swing.JPanel txtSave;
