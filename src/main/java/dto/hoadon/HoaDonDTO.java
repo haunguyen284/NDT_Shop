@@ -6,6 +6,7 @@ package dto.hoadon;
 
 import comon.constant.TinhTrangHoaDon;
 import comon.model.AuditModelDTO;
+import comon.utilities.VndConvertUtil;
 import dto.khachhang.KhachHangDTO;
 import dto.giamgia.GiamGiaDTO;
 import dto.nhanvien.NhanVienDTO;
@@ -73,10 +74,10 @@ public class HoaDonDTO extends AuditModelDTO {
     }
     
     public Object[] toDataRow(){
-        return new Object[]{getId(), Objects.isNull(nhanVien) ? "Null" : nhanVien.getMaNV(), Objects.isNull(khachHang) ? "Null" : khachHang.getMaKH(), tongTien, convertTrangThai()};
+        return new Object[]{getId(), Objects.isNull(nhanVien) ? "Null" : nhanVien.getMaNV(), Objects.isNull(khachHang) ? "Null" : khachHang.getMaKH(), VndConvertUtil.floatToVnd(tongTien), convertTrangThai()};
     }
     
     public Object[] toDataRowLichSu() {
-        return new Object[]{maHD, khachHang != null ? khachHang.getTen() : tenKH, nhanVien.getTen(),ngayThanhToan!=null?new Date(ngayThanhToan):null, tongTien+"vnđ", convertTrangThai()};
+        return new Object[]{maHD, khachHang != null ? khachHang.getTen() : tenKH, nhanVien.getTen(),ngayThanhToan!=null?new Date(ngayThanhToan):null, VndConvertUtil.floatToVnd(tongTien), convertTrangThai()};
     }
 }

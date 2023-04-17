@@ -30,23 +30,20 @@ public class KhachHangDTO extends AuditModelDTO {
     private String maKH;
 
     @NotBlank(message = "Tên - Không được để trống !")
-//    @Pattern(regexp = ModelProperties.REGEX_NAME, message = "Tên không hợp lệ")
     private String ten;
 
-    @NotNull(message = "Ngày sinh - Không được để trống !")
     private long ngaySinh;
 
     @NotEmpty(message = "Gioi tính - Không được để trống !")
     private String gioiTinh;
 
-    @NotBlank(message = "SĐT - Không được để trống !")
+    @Pattern(regexp = "^(\\+84|0)(1\\d{9}|3\\d{8}|5\\d{8}|7\\d{8}|8\\d{8}|9\\d{8})$", message = "SDT - Không hợp lệ!")
     private String sdt;
 
     @NotBlank(message = "Địa chỉ - Không được để trống !")
     private String diaChi;
 
-    @NotBlank(message = "Email - Không được để trống !")
-    @Pattern(regexp = ModelProperties.REGEX_EMAIL)
+    @Pattern(regexp = ModelProperties.REGEX_EMAIL, message = "Email - Không hợp lệ")
     private String email;
 
     @NotNull(message = "Số lần mua - Không được để trống !")
@@ -55,10 +52,10 @@ public class KhachHangDTO extends AuditModelDTO {
     private TrangThaiKhachHang trangThaiKhachHang;
 
     private String ghiChu;
-    
-    private String convertTrangThai(){
+
+    private String convertTrangThai() {
         String converted = "";
-        switch(this.trangThaiKhachHang){
+        switch (this.trangThaiKhachHang) {
             case TRANG_THAI_1:
                 converted = "Khách hàng mới";
                 break;

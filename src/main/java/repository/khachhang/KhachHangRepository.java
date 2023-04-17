@@ -25,19 +25,21 @@ public class KhachHangRepository {
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT n FROM KhachHang n";
             TypedQuery<KhachHang> query = session.createQuery(hql, KhachHang.class);
-            query.setFirstResult(position);
+            query.setFirstResult(position*pageSize);
             query.setMaxResults(pageSize);
             listModel = query.getResultList();
         }
         return listModel;
     }
     
-    public List<KhachHang> findByTrangThai(TrangThaiKhachHang trangThaiKhachHang) {
+    public List<KhachHang> findByTrangThai(TrangThaiKhachHang trangThaiKhachHang,int position, int pageSize) {
         List<KhachHang> listModel;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT n FROM KhachHang n Where n.trangThaiKhachHang =:trangThaiKhachHang";
             TypedQuery<KhachHang> query = session.createQuery(hql, KhachHang.class);
             query.setParameter("trangThaiKhachHang", trangThaiKhachHang);
+            query.setFirstResult(position*pageSize);
+            query.setMaxResults(pageSize);
             listModel = query.getResultList();
         }
         return listModel;
@@ -74,6 +76,20 @@ public class KhachHangRepository {
             query.setParameter("id", id);
             model = query.getSingleResult();
         }
+        return model;
+    }
+    
+    public KhachHang findBySDT(String sdt) {
+        KhachHang model;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT n FROM KhachHang n Where n.sdt=:sdt";
+            TypedQuery<KhachHang> query = session.createQuery(hql, KhachHang.class);
+            query.setParameter("sdt", sdt);
+            model = query.getSingleResult();
+        } catch (Exception e) {
+                e.printStackTrace();
+                model = null;
+            }
         return model;
     }
     

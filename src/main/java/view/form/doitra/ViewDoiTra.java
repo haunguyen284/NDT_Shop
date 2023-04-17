@@ -1,22 +1,20 @@
 package view.form.doitra;
 
-import com.android.dx.command.Main;
 import comon.constant.TinhTrangHoaDon;
 import comon.utilities.DateTimeUtil;
+import comon.utilities.QrScanner;
 import comon.utilities.VndConvertUtil;
-import dto.dongiao.DonGiaoDTO;
 import dto.hoadon.HoaDonChiTietDTO;
 import dto.hoadon.HoaDonDTO;
-import dto.khachhang.KhachHangDTO;
 import dto.nhanvien.TaiKhoanDTO;
 import dto.sanpham.SanPhamDTO;
-import java.awt.Color;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -25,20 +23,14 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import service.HoaDon.impl.HoaDonServiceImpl;
-import service.dongiao.DonGiaoService;
-import service.dongiao.ThongSoService;
 import service.dongiao.impl.DonGiaoServiceImpl;
 import service.dongiao.impl.ThongSoServiceImpl;
 import service.hoaDon.HoaDonService;
 import service.hoadon.HoaDonChiTietService;
 import service.hoadon.impl.HoaDonChiTietServiceImpl;
-import service.khachhang.KhachHangService;
-import service.khachhang.QuyDoiDiemService;
-import service.khachhang.ViDiemService;
 import service.khachhang.impl.KhachHangServiceImpl;
 import service.khachhang.impl.QuyDoiDiemServiceImpl;
 import service.khachhang.impl.ViDiemServiceImpl;
-import service.nhanvien.NhanVienService;
 import service.nhanvien.TaiKhoanService;
 import service.nhanvien.impl.NhanVienServiceImpl;
 import service.nhanvien.impl.TaiKhoanServiceImpl;
@@ -47,7 +39,6 @@ import service.sanpham.impl.SanPhamServiceImpl;
 import view.dialog.Message;
 import view.dialog.ShowMessageSuccessful;
 import view.form.MainForm;
-import view.form.hoadon.ModalSoLuong;
 import view.form.hoadon.ModalSoLuongDoiTra;
 
 public class ViewDoiTra extends javax.swing.JPanel {
@@ -55,14 +46,8 @@ public class ViewDoiTra extends javax.swing.JPanel {
     private final HoaDonService hoaDonService;
     private final SanPhamService sanPhamService;
     private final HoaDonChiTietService hoaDonChiTietService;
-    private final KhachHangService khachHangService;
-    private final NhanVienService nhanVienService;
     private final TaiKhoanService taiKhoanService;
-    private final QuyDoiDiemService quyDoiDiemService;
-    private final DonGiaoService donGiaoService;
-    private final ThongSoService thongSoService;
-    private final ViDiemService viDiemService;
-    private DefaultTableModel dtmGioHangKhachTra;
+    private final DefaultTableModel dtmGioHangKhachTra;
     private final String user;
     private final MainForm main;
 
@@ -76,13 +61,7 @@ public class ViewDoiTra extends javax.swing.JPanel {
         hoaDonService = new HoaDonServiceImpl();
         sanPhamService = new SanPhamServiceImpl();
         hoaDonChiTietService = new HoaDonChiTietServiceImpl();
-        khachHangService = new KhachHangServiceImpl();
-        nhanVienService = new NhanVienServiceImpl();
         taiKhoanService = new TaiKhoanServiceImpl();
-        quyDoiDiemService = new QuyDoiDiemServiceImpl();
-        donGiaoService = new DonGiaoServiceImpl();
-        thongSoService = new ThongSoServiceImpl();
-        viDiemService = new ViDiemServiceImpl();
         dtmGioHangKhachTra = (DefaultTableModel) tbGioHangKhachTra.getModel();
         tbGioHangKhachTra.setModel(dtmGioHangKhachTra);
         this.user = user;
@@ -111,7 +90,6 @@ public class ViewDoiTra extends javax.swing.JPanel {
             }
             tongTien += (hoaDonChiTietDTO.getSoLuong() * hoaDonChiTietDTO.getDonGia());
         }
-        System.out.println(count + "=====" + listHDCTDTO.size());
         if (count == listHDCTDTO.size()) {
             hoaDonDTO.setTinhTrangHoaDon(TinhTrangHoaDon.DOI_HANG);
         }
@@ -252,7 +230,7 @@ public class ViewDoiTra extends javax.swing.JPanel {
         txtMaHD = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
         btnTimHD = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        btnQuetHD = new javax.swing.JButton();
         pnlGioHang2 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         tbDoiTra = new view.swing.table.Table();
@@ -261,10 +239,10 @@ public class ViewDoiTra extends javax.swing.JPanel {
         pnlDsHoaDon1 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tbHoaDonKhachTra = new view.swing.table.Table();
-        jTextField2 = new javax.swing.JTextField();
+        txtTimKiem = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnTimHoaDon = new javax.swing.JButton();
+        btnQuetHoaDon = new javax.swing.JButton();
         pnlGioHang1 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         tbGioHangKhachTra = new view.swing.table.Table();
@@ -329,10 +307,15 @@ public class ViewDoiTra extends javax.swing.JPanel {
             }
         });
 
-        jButton5.setBackground(new java.awt.Color(33, 105, 249));
-        jButton5.setFont(new java.awt.Font("Roboto Medium", 0, 12)); // NOI18N
-        jButton5.setForeground(new java.awt.Color(255, 255, 255));
-        jButton5.setText("Quét mã");
+        btnQuetHD.setBackground(new java.awt.Color(33, 105, 249));
+        btnQuetHD.setFont(new java.awt.Font("Roboto Medium", 0, 12)); // NOI18N
+        btnQuetHD.setForeground(new java.awt.Color(255, 255, 255));
+        btnQuetHD.setText("Quét mã");
+        btnQuetHD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnQuetHDActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlDsHoaDon2Layout = new javax.swing.GroupLayout(pnlDsHoaDon2);
         pnlDsHoaDon2.setLayout(pnlDsHoaDon2Layout);
@@ -346,7 +329,7 @@ public class ViewDoiTra extends javax.swing.JPanel {
                 .addGap(36, 36, 36)
                 .addComponent(btnTimHD, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnQuetHD, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
         );
         pnlDsHoaDon2Layout.setVerticalGroup(
@@ -357,7 +340,7 @@ public class ViewDoiTra extends javax.swing.JPanel {
                     .addComponent(txtMaHD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel24)
                     .addComponent(btnTimHD)
-                    .addComponent(jButton5))
+                    .addComponent(btnQuetHD))
                 .addContainerGap(32, Short.MAX_VALUE))
         );
 
@@ -481,15 +464,25 @@ public class ViewDoiTra extends javax.swing.JPanel {
 
         jLabel6.setText("Mã");
 
-        jButton3.setBackground(new java.awt.Color(33, 105, 249));
-        jButton3.setFont(new java.awt.Font("Roboto Medium", 0, 12)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("T");
+        btnTimHoaDon.setBackground(new java.awt.Color(33, 105, 249));
+        btnTimHoaDon.setFont(new java.awt.Font("Roboto Medium", 0, 12)); // NOI18N
+        btnTimHoaDon.setForeground(new java.awt.Color(255, 255, 255));
+        btnTimHoaDon.setText("T");
+        btnTimHoaDon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimHoaDonActionPerformed(evt);
+            }
+        });
 
-        jButton4.setBackground(new java.awt.Color(33, 105, 249));
-        jButton4.setFont(new java.awt.Font("Roboto Medium", 0, 12)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(255, 255, 255));
-        jButton4.setText("Q");
+        btnQuetHoaDon.setBackground(new java.awt.Color(33, 105, 249));
+        btnQuetHoaDon.setFont(new java.awt.Font("Roboto Medium", 0, 12)); // NOI18N
+        btnQuetHoaDon.setForeground(new java.awt.Color(255, 255, 255));
+        btnQuetHoaDon.setText("Q");
+        btnQuetHoaDon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnQuetHoaDonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlDsHoaDon1Layout = new javax.swing.GroupLayout(pnlDsHoaDon1);
         pnlDsHoaDon1.setLayout(pnlDsHoaDon1Layout);
@@ -505,21 +498,21 @@ public class ViewDoiTra extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)
+                        .addComponent(btnTimHoaDon)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4)
+                        .addComponent(btnQuetHoaDon)
                         .addGap(38, 38, 38))))
         );
         pnlDsHoaDon1Layout.setVerticalGroup(
             pnlDsHoaDon1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDsHoaDon1Layout.createSequentialGroup()
                 .addGroup(pnlDsHoaDon1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(btnTimHoaDon)
+                    .addComponent(btnQuetHoaDon))
                 .addGap(8, 8, 8)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
                 .addContainerGap())
@@ -1141,18 +1134,152 @@ public class ViewDoiTra extends javax.swing.JPanel {
         main.showForm(new ViewDoiTra(main, user));
     }//GEN-LAST:event_btnHuyActionPerformed
 
+    private void btnTimHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimHoaDonActionPerformed
+        String maHD = txtTimKiem.getText();
+        HoaDonDTO hdDTO = new HoaDonDTO();
+        try {
+            String id = hoaDonService.findId(maHD);
+            hdDTO = hoaDonService.findById(id);
+            if (hdDTO.getTinhTrangHoaDon() != TinhTrangHoaDon.DA_THANH_TOAN) {
+                showMessage("Hoá đơn phải được thanh toán mới có thể trả hàng!");
+                return;
+            }
+        } catch (Exception e) {
+            showMessage("Không tìm thấy hoá đơn");
+        }
+        tbHoaDonKhachTra.clearAllRow();
+        tbHoaDonKhachTra.addRow(hdDTO.toDataRow());
+        tbHoaDonKhachTra.setRowSelectionInterval(0, 0);
+
+        tbGioHangKhachTra.clearAllRow();
+        List<HoaDonChiTietDTO> listHDCTDTO = hoaDonChiTietService.findByMaHoaDon(maHD);
+        for (HoaDonChiTietDTO hoaDonChiTietDTO : listHDCTDTO) {
+            tbGioHangKhachTra.addRow(new Object[]{
+                hoaDonChiTietDTO.getId(),
+                hoaDonChiTietDTO.getSanPham().getMaSP(),
+                hoaDonChiTietDTO.getSanPham().getTenSP(),
+                hoaDonChiTietDTO.getSoLuong(),
+                hoaDonChiTietDTO.getDonGia(),
+                hoaDonChiTietDTO.getSoLuong() * hoaDonChiTietDTO.getDonGia(),
+                hoaDonChiTietDTO.convertedTinhTrang(),});
+        }
+        lbIdHoaDonKhachTra.setText(hdDTO.getMaHD());
+        if (!Objects.isNull(hdDTO.getKhachHang())) {
+            lbHoTenKhachTra.setText(hdDTO.getKhachHang().getTen());
+            lbMaKhachTra.setText(hdDTO.getKhachHang().getMaKH());
+            lbSDTKhachTra.setText(hdDTO.getKhachHang().getSdt());
+            lbDiaChiKhachTra.setText(hdDTO.getKhachHang().getDiaChi());
+            lbEmailKhachTra.setText(hdDTO.getKhachHang().getEmail());
+            lbGhiChuKhachTra.setText(hdDTO.getKhachHang().getGhiChu());
+            lbTongTienKhachTra.setText(VndConvertUtil.floatToVnd(hdDTO.getTongTien()));
+            if (!Objects.isNull(hdDTO.getKhachHang().getTheThanhVien())) {
+                lbMaTheKhachTra.setText(hdDTO.getKhachHang().getTheThanhVien().getMaTTV());
+                lbLoaiTheKhachTra.setText(hdDTO.getKhachHang().getTheThanhVien().getLoaiThe().getTen());
+                lbSoDiemKhachTra.setText(hdDTO.getKhachHang().getTheThanhVien().getViDiem().getTongDiem() + "");
+            }
+        }
+        updateTongTien();
+    }//GEN-LAST:event_btnTimHoaDonActionPerformed
+
+    private void btnQuetHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuetHoaDonActionPerformed
+        QrScanner qrScanner = new QrScanner(null, true);
+        qrScanner.setVisible(true);
+        qrScanner.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                HoaDonDTO hdDTO = new HoaDonDTO();
+                try {
+                    String id = hoaDonService.findId(qrScanner.getQrString());
+                    hdDTO = hoaDonService.findById(id);
+                    if (hdDTO.getTinhTrangHoaDon() != TinhTrangHoaDon.DA_THANH_TOAN) {
+                        showMessage("Hoá đơn phải được thanh toán mới có thể trả hàng!");
+                        return;
+                    }
+                } catch (Exception ex) {
+                    showMessage("Không tìm thấy hoá đơn");
+                }
+                tbHoaDonKhachTra.clearAllRow();
+                tbHoaDonKhachTra.addRow(hdDTO.toDataRow());
+                tbHoaDonKhachTra.setRowSelectionInterval(0, 0);
+
+                tbGioHangKhachTra.clearAllRow();
+                List<HoaDonChiTietDTO> listHDCTDTO = hoaDonChiTietService.findByMaHoaDon(hdDTO.getMaHD());
+                for (HoaDonChiTietDTO hoaDonChiTietDTO : listHDCTDTO) {
+                    tbGioHangKhachTra.addRow(new Object[]{
+                        hoaDonChiTietDTO.getId(),
+                        hoaDonChiTietDTO.getSanPham().getMaSP(),
+                        hoaDonChiTietDTO.getSanPham().getTenSP(),
+                        hoaDonChiTietDTO.getSoLuong(),
+                        hoaDonChiTietDTO.getDonGia(),
+                        hoaDonChiTietDTO.getSoLuong() * hoaDonChiTietDTO.getDonGia(),
+                        hoaDonChiTietDTO.convertedTinhTrang(),});
+                }
+                lbIdHoaDonKhachTra.setText(hdDTO.getMaHD());
+                if (!Objects.isNull(hdDTO.getKhachHang())) {
+                    lbHoTenKhachTra.setText(hdDTO.getKhachHang().getTen());
+                    lbMaKhachTra.setText(hdDTO.getKhachHang().getMaKH());
+                    lbSDTKhachTra.setText(hdDTO.getKhachHang().getSdt());
+                    lbDiaChiKhachTra.setText(hdDTO.getKhachHang().getDiaChi());
+                    lbEmailKhachTra.setText(hdDTO.getKhachHang().getEmail());
+                    lbGhiChuKhachTra.setText(hdDTO.getKhachHang().getGhiChu());
+                    lbTongTienKhachTra.setText(VndConvertUtil.floatToVnd(hdDTO.getTongTien()));
+                    if (!Objects.isNull(hdDTO.getKhachHang().getTheThanhVien())) {
+                        lbMaTheKhachTra.setText(hdDTO.getKhachHang().getTheThanhVien().getMaTTV());
+                        lbLoaiTheKhachTra.setText(hdDTO.getKhachHang().getTheThanhVien().getLoaiThe().getTen());
+                        lbSoDiemKhachTra.setText(hdDTO.getKhachHang().getTheThanhVien().getViDiem().getTongDiem() + "");
+                    }
+                }
+                updateTongTien();
+            }
+        });
+    }//GEN-LAST:event_btnQuetHoaDonActionPerformed
+
+    private void btnQuetHDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuetHDActionPerformed
+        QrScanner qrScanner = new QrScanner(null, true);
+        qrScanner.setVisible(true);
+        qrScanner.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                HoaDonDTO hdDTO = new HoaDonDTO();
+                try {
+                    String id = hoaDonService.findId(qrScanner.getQrString());
+                    hdDTO = hoaDonService.findById(id);
+                    if (hdDTO.getTinhTrangHoaDon() != TinhTrangHoaDon.DA_THANH_TOAN) {
+                        showMessage("Hoá đơn phải được thanh toán mới có thể trả hàng!");
+                        return;
+                    }
+                } catch (Exception ex) {
+                    showMessage("Không tìm thấy hoá đơn");
+                }
+
+                tbDoiTra.clearAllRow();
+                List<HoaDonChiTietDTO> listHDCTDTO = hoaDonChiTietService.findByMaHoaDon(hdDTO.getMaHD());
+                for (HoaDonChiTietDTO hoaDonChiTietDTO : listHDCTDTO) {
+                    tbDoiTra.addRow(new Object[]{
+                        hoaDonChiTietDTO.getId(),
+                        hoaDonChiTietDTO.getSanPham().getMaSP(),
+                        hoaDonChiTietDTO.getSanPham().getTenSP(),
+                        hoaDonChiTietDTO.getSoLuong(),
+                        hoaDonChiTietDTO.getDonGia(),
+                        hoaDonChiTietDTO.getSoLuong() * hoaDonChiTietDTO.getDonGia(),
+                        hoaDonChiTietDTO.convertedTinhTrang(),});
+                }
+            }
+        });
+    }//GEN-LAST:event_btnQuetHDActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCapNhat1;
     private javax.swing.JButton btnHuy;
+    private javax.swing.JButton btnQuetHD;
+    private javax.swing.JButton btnQuetHoaDon;
     private javax.swing.JButton btnTimHD;
+    private javax.swing.JButton btnTimHoaDon;
     private javax.swing.JButton btnXacNhan;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox cbSanPhamLoi;
     private javax.swing.JCheckBox cbSanPhamOK;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel24;
@@ -1179,7 +1306,6 @@ public class ViewDoiTra extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel lbDiaChiKhachTra;
     private javax.swing.JLabel lbEmailKhachTra;
     private javax.swing.JLabel lbGhiChuKhachTra;
@@ -1207,5 +1333,6 @@ public class ViewDoiTra extends javax.swing.JPanel {
     private view.swing.table.Table tbHoaDonKhachTra;
     private view.swing.MaterialTabbed tbpnlKhachHang1;
     private javax.swing.JTextField txtMaHD;
+    private javax.swing.JTextField txtTimKiem;
     // End of variables declaration//GEN-END:variables
 }

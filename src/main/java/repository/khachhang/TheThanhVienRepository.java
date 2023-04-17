@@ -24,7 +24,7 @@ public class TheThanhVienRepository {
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT n FROM TheThanhVien n";
             TypedQuery<TheThanhVien> query = session.createQuery(hql, TheThanhVien.class);
-            query.setFirstResult(position);
+            query.setFirstResult(position*pageSize);
             query.setMaxResults(pageSize);
             listModel = query.getResultList();
         }

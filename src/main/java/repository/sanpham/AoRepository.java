@@ -24,13 +24,14 @@ public class AoRepository {
         List<Ao> listModel;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT x FROM Ao x WHERE "
-                    + "(:dai IS NULL OR :dai LIKE '' OR :dai BETWEEN x.sizeAo.rongVaiBeNhat AND x.sizeAo.rongVaiLonNhat) "
+                    + "(:dai IS NULL OR :dai LIKE '' OR :dai BETWEEN x.sizeAo.daiBeNhat AND x.sizeAo.daiLonNhat) "
                     + "AND (:tayAo IS NULL OR :tayAo LIKE '' OR :tayAo BETWEEN x.sizeAo.tayAoBeNhat AND x.sizeAo.tayAoLonNhat) "
                     + "AND (:vai IS NULL OR :vai LIKE '' OR :vai BETWEEN x.sizeAo.rongVaiBeNhat AND x.sizeAo.rongVaiLonNhat) "
                     + "AND (:mauSac IS NULL OR :mauSac LIKE '' OR x.sanPham.mauSac.ten LIKE '%' + :mauSac + '%') "
                     + "AND (:chatLieu IS NULL OR :chatLieu LIKE '' OR x.sanPham.chatLieu.ten LIKE '%' + :chatLieu + '%') "
                     + "AND (:thuongHieu IS NULL OR :thuongHieu LIKE '' OR x.sanPham.thuongHieu.ten LIKE '%' + :thuongHieu + '%') "
-                    + "AND (:ma IS NULL OR :ma LIKE '' OR x.sanPham.maSP LIKE '%' + :ma + '%')";
+                    + "AND (:ma IS NULL OR :ma LIKE '' OR x.sanPham.maSP LIKE '%' + :ma + '%') "
+                    + "ORDER BY x.sanPham.createdAt DESC";
             TypedQuery<Ao> query = session.createQuery(hql, Ao.class);
             query.setParameter("dai", searchDTO.getDai());
             query.setParameter("tayAo", searchDTO.getTayAo());

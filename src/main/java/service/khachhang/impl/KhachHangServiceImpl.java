@@ -46,9 +46,9 @@ public class KhachHangServiceImpl implements KhachHangService{
     }
     
     @Override
-    public List<KhachHangDTO> findByTrangThai(TrangThaiKhachHang trangThaiKhachHang) {
+    public List<KhachHangDTO> findByTrangThai(TrangThaiKhachHang trangThaiKhachHang, int position, int pageSize) {
         List<KhachHangDTO> listDTO = new ArrayList<>();
-        List<KhachHang> listModel = khachHangRepository.findByTrangThai(trangThaiKhachHang);
+        List<KhachHang> listModel = khachHangRepository.findByTrangThai(trangThaiKhachHang, position, pageSize);
         for (KhachHang khachHang : listModel) {
             listDTO.add(mapper.map(khachHang, KhachHangDTO.class));
         }
@@ -60,10 +60,19 @@ public class KhachHangServiceImpl implements KhachHangService{
         KhachHang model = khachHangRepository.findById(id);
         return mapper.map(model, KhachHangDTO.class);
     }
+    
+    @Override
+    public KhachHangDTO findBySDT(String sdt) {
+        KhachHang model = khachHangRepository.findBySDT(sdt);
+        return mapper.map(model, KhachHangDTO.class);
+    }
 
     @Override
     public String save(KhachHangDTO dTO) {
         KhachHang model = mapper.map(dTO, KhachHang.class);
+//        if(model.getId()==null && khachHangRepository.findBySDT(dTO.getSdt())!=null){
+//            return "SDT đã tồn tại";
+//        }
         if(khachHangRepository.save(model)!=null){
             return "Cập nhật thành công";
         }else{

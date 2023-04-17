@@ -32,7 +32,8 @@ public class QuanRepository {
                     + "AND (:mauSac IS NULL OR :mauSac LIKE '' OR x.sanPham.mauSac.ten LIKE '%' + :mauSac + '%') "
                     + "AND (:chatLieu IS NULL OR :chatLieu LIKE '' OR x.sanPham.chatLieu.ten LIKE '%' + :chatLieu + '%') "
                     + "AND (:thuongHieu IS NULL OR :thuongHieu LIKE '' OR x.sanPham.thuongHieu.ten LIKE '%' + :thuongHieu + '%') "
-                    + "AND (:ma IS NULL OR :ma LIKE '' OR x.sanPham.maSP LIKE '%' + :ma + '%')";
+                    + "AND (:ma IS NULL OR :ma LIKE '' OR x.sanPham.maSP LIKE '%' + :ma + '%') "
+                    + "ORDER BY x.sanPham.createdAt DESC";
             TypedQuery<Quan> query = session.createQuery(hql, Quan.class);
             query.setParameter("canNang", searchDTO.getCanNang());
             query.setParameter("eo", searchDTO.getEo());

@@ -410,6 +410,7 @@ public class ModalKhachHang extends javax.swing.JDialog {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         KhachHangDTO dTO = getObjectFromInput();
+        if(Objects.isNull(dTO)) return;
         String result = khachHangService.save(dTO);
         this.dispose();
         if(result.equals("Cập nhật thành công")){

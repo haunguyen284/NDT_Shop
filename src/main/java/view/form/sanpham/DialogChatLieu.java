@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import service.sanpham.ChatLieuService;
 import service.sanpham.impl.ChatLieuServiceImpl;
 import view.dialog.ShowMessage;
+import view.dialog.ShowMessageSuccessful;
 
 /**
  *
@@ -295,6 +296,11 @@ public class DialogChatLieu extends javax.swing.JDialog {
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         ChatLieuDTO dto = getDTOFromInput();
         String result = chatLieuService.create(dto);
+        if(result.contains("thành công")){
+            ShowMessageSuccessful.showSuccessful(result);
+            loadDataTable();
+            return;
+        }
         ShowMessage.show(result);
         loadDataTable();
     }//GEN-LAST:event_btnThemActionPerformed
@@ -311,6 +317,11 @@ public class DialogChatLieu extends javax.swing.JDialog {
         ChatLieuDTO dto = getDTOFromInput();
         dto.setId(selectedId);
         String result = chatLieuService.update(dto);
+        if(result.contains("thành công")){
+            ShowMessageSuccessful.showSuccessful(result);
+            loadDataTable();
+            return;
+        }
         ShowMessage.show(result);
         loadDataTable();
     }//GEN-LAST:event_btnSuaActionPerformed

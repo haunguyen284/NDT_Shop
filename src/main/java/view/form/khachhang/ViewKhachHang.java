@@ -53,7 +53,7 @@ public class ViewKhachHang extends javax.swing.JPanel {
         initComponents();
         tbKhachHang.fixTable(jScrollPane1);
         setOpaque(false);
-        pageSize = 8;
+        pageSize = 10;
         currentPage = 1;
         khachHangService = new KhachHangServiceImpl();
         theThanhVienService = new TheThanhVienServiceImpl();
@@ -78,14 +78,14 @@ public class ViewKhachHang extends javax.swing.JPanel {
             default:
                 throw new AssertionError();
         }
-        List<KhachHangDTO> listDTOs = khachHangService.findByTrangThai(trangThai);
+        List<KhachHangDTO> listDTOs = khachHangService.findByTrangThai(trangThai, currentPage-1, pageSize);
         DefaultTableModel dtm = (DefaultTableModel) tbKhachHang.getModel();
         tbKhachHang.setModel(dtm);
         dtm.setRowCount(0);
         for (KhachHangDTO dto : listDTOs) {
             dtm.addRow(dto.toDataRow());
         }
-        totalKhachHang = khachHangService.totalCount();
+        totalKhachHang = listDTOs.size();
         lbTotal.setText("Total: " + totalKhachHang);
         totalPages = (int) (totalKhachHang / pageSize) + 1;
         setStatePagination();

@@ -4,12 +4,18 @@
  */
 package view.form.khachhang;
 
+import comon.validator.NDTValidator;
+import dto.khachhang.KhachHangDTO;
 import dto.khachhang.QuyDoiDiemDTO;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Set;
+import javax.swing.JOptionPane;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import service.khachhang.QuyDoiDiemService;
 import service.khachhang.impl.QuyDoiDiemServiceImpl;
 import view.dialog.Message;
@@ -50,13 +56,6 @@ public final class ModalQuyDoiDiem extends javax.swing.JDialog {
     public void fill(QuyDoiDiemDTO dTO) {
         txtTienQuyDoi.setHint(dTO.getTienTichDiem() + "");
         txtDiemQuyDoi.setHint(dTO.getTienTieuDiem() + "");
-    }
-
-    public void setObjectFromInput() {
-        String tien = txtTienQuyDoi.getText();
-        String diem = txtDiemQuyDoi.getText();
-        quyDoiDiemDTO.setTienTichDiem(Long.parseLong(tien));
-        quyDoiDiemDTO.setTienTieuDiem(Long.parseLong(diem));
     }
 
     /**
@@ -176,7 +175,22 @@ public final class ModalQuyDoiDiem extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        setObjectFromInput();
+        String tien = txtTienQuyDoi.getText();
+        String diem = txtDiemQuyDoi.getText();
+        if (txtTienQuyDoi.getText().isBlank() || txtDiemQuyDoi.getText().isBlank()) {
+            showMessage("Vui lòng nhập đủ dữ liệu");
+            return;
+        }
+        try {
+            quyDoiDiemDTO.setTienTichDiem(Long.parseLong(tien));
+            quyDoiDiemDTO.setTienTieuDiem(Long.parseLong(diem));
+        } catch (NumberFormatException numberFormatException) {
+            showMessage("Không hợp lệ, vui lòng nhập lại dữ liệu!");
+        }
+        if (Long.parseLong(diem) > Long.parseLong(tien)) {
+            showMessage("Không hợp lệ, điểm không thể lớn hơn tiền tích điểm!");
+            return;
+        }
         String result = quyDoiDiemService.save(quyDoiDiemDTO);
         if (result.equals("Cập nhật thành công!")) {
             this.dispose();

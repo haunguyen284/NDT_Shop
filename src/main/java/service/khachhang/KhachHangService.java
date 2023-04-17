@@ -16,11 +16,13 @@ public interface KhachHangService {
 
     List<KhachHangDTO> findAll(int position, int pageSize);
     
-    List<KhachHangDTO> findByTrangThai(TrangThaiKhachHang trangThaiKhachHang);
+    List<KhachHangDTO> findByTrangThai(TrangThaiKhachHang trangThaiKhachHang, int position, int pageSize);
     
     List<KhachHangDTO> findByName(String ten, int position, int pageSize);
 
     KhachHangDTO findById(String id);
+    
+    KhachHangDTO findBySDT(String sdt);
     
     KhachHangDTO findByIdTheThanhVien(String idTTV);
     

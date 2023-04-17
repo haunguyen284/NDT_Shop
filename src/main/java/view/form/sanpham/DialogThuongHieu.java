@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import service.sanpham.ThuongHieuService;
 import service.sanpham.impl.ThuongHieuServiceImpl;
 import view.dialog.ShowMessage;
+import view.dialog.ShowMessageSuccessful;
 
 /**
  *
@@ -296,6 +297,11 @@ public class DialogThuongHieu extends javax.swing.JDialog {
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         ThuongHieuDTO dto = getDTOFromInput();
         String result = thuongHieuService.create(dto);
+        if(result.contains("thành công")){
+            ShowMessageSuccessful.showSuccessful(result);
+            loadDataTable();
+            return;
+        }
         ShowMessage.show(result);
 
         loadDataTable();
@@ -313,6 +319,11 @@ public class DialogThuongHieu extends javax.swing.JDialog {
         ThuongHieuDTO dto = getDTOFromInput();
         dto.setId(selectedId);
         String result = thuongHieuService.update(dto);
+        if(result.contains("thành công")){
+            ShowMessageSuccessful.showSuccessful(result);
+            loadDataTable();
+            return;
+        }
         ShowMessage.show(result);
         loadDataTable();
     }//GEN-LAST:event_btnSuaActionPerformed

@@ -13,6 +13,7 @@ import service.sanpham.SizeQuanService;
 import service.sanpham.impl.SizeAoServiceImpl;
 import service.sanpham.impl.SizeQuanServiceImpl;
 import view.dialog.ShowMessage;
+import view.dialog.ShowMessageSuccessful;
 
 /**
  *
@@ -380,6 +381,11 @@ public class DialogSizeQuan extends javax.swing.JDialog {
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         SizeQuanDTO dto = getDTOFromInput();
         String result = sizeQuanService.create(dto);
+        if(result.contains("thành công")){
+            ShowMessageSuccessful.showSuccessful(result);
+            loadDataTable();
+            return;
+        }
         ShowMessage.show(result);
 
         loadDataTable();
@@ -397,6 +403,11 @@ public class DialogSizeQuan extends javax.swing.JDialog {
         SizeQuanDTO dto = getDTOFromInput();
         dto.setId(selectedId);
         String result = sizeQuanService.update(dto);
+        if(result.contains("thành công")){
+            ShowMessageSuccessful.showSuccessful(result);
+            loadDataTable();
+            return;
+        }
         ShowMessage.show(result);
 
         loadDataTable();

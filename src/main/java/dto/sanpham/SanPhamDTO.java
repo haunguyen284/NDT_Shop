@@ -7,6 +7,7 @@ package dto.sanpham;
 import comon.constant.sanpham.LoaiSanPham;
 import comon.constant.sanpham.TrangThaiSanPham;
 import comon.model.AuditModelDTO;
+import comon.utilities.VndConvertUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
@@ -76,6 +77,6 @@ public class SanPhamDTO extends AuditModelDTO {
     }
     
     public Object[] toDataRow(){
-        return new Object[]{getId(),maSP,tenSP,giaBan,soLuongTon,convertLoaiSanPham(), mauSac.getTen(), chatLieu.getTen(), thuongHieu.getTen(), xuatXu.getTen()};
+        return new Object[]{getId(),maSP,tenSP,VndConvertUtil.floatToVnd(Float.parseFloat(giaBan)),soLuongTon,convertLoaiSanPham(), mauSac.getTen(), chatLieu.getTen(), thuongHieu.getTen(), xuatXu.getTen()};
     }
 }

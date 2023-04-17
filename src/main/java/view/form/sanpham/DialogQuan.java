@@ -25,6 +25,7 @@ import service.sanpham.impl.AoServiceImpl;
 import service.sanpham.impl.QuanServiceImpl;
 import service.sanpham.impl.SanPhamServiceImpl;
 import view.dialog.ShowMessage;
+import view.dialog.ShowMessageSuccessful;
 
 /**
  *
@@ -373,7 +374,7 @@ public class DialogQuan extends javax.swing.JDialog {
         spDTO.setGiaBan(giaBan);
         spDTO.setSoLuongTon(soLuong);
         spDTO.setMoTa(moTa);
-        spDTO.setLoaiSp(LoaiSanPham.AO);
+        spDTO.setLoaiSp(LoaiSanPham.QUAN);
         spDTO.setTrangThaiSanPham(trangThai);
         spDTO.setMauSac(selectedMau);
         spDTO.setChatLieu(selectedChatLieu);
@@ -401,6 +402,10 @@ public class DialogQuan extends javax.swing.JDialog {
             } else {
                 rs = "Mã sản phẩm đã tồn tại";
             }
+        }
+        if(rs.contains("thành công")){
+            ShowMessageSuccessful.showSuccessful(rs);
+            return;
         }
         ShowMessage.show(rs);
     }//GEN-LAST:event_btnLuuActionPerformed

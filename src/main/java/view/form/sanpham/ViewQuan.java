@@ -110,12 +110,12 @@ public class ViewQuan extends javax.swing.JPanel {
         
         String canNang = txtCanNang.getText();
         if (!canNang.equals("")){
-            searchDTO.setCanNang(eo);
+            searchDTO.setCanNang(canNang);
         }
         
         String mong = txtMong.getText();
         if (!mong.equals("")){
-            searchDTO.setMong(eo);
+            searchDTO.setMong(mong);
         }
         searchDTO.setMa(txtMa.getText());
         searchDTO.setMauSac(cbbMauSac.getSelectedItem().toString());

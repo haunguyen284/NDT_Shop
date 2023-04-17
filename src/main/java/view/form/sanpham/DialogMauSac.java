@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import service.sanpham.MauSacService;
 import service.sanpham.impl.MauSacServiceImpl;
 import view.dialog.ShowMessage;
+import view.dialog.ShowMessageSuccessful;
 
 /**
  *
@@ -302,6 +303,11 @@ public class DialogMauSac extends javax.swing.JDialog {
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         MauSacDTO dto = getDTOFromInput();
         String result = mauSacService.create(dto);
+        if(result.contains("thành công")){
+            ShowMessageSuccessful.showSuccessful(result);
+            loadDataTable();
+            return;
+        }
         ShowMessage.show(result);
         loadDataTable();
     }//GEN-LAST:event_btnThemActionPerformed
@@ -318,6 +324,11 @@ public class DialogMauSac extends javax.swing.JDialog {
         MauSacDTO dto = getDTOFromInput();
         dto.setId(selectedId);
         String result = mauSacService.update(dto);
+        if(result.contains("thành công")){
+            ShowMessageSuccessful.showSuccessful(result);
+            loadDataTable();
+            return;
+        }
         ShowMessage.show(result);
         loadDataTable();
     }//GEN-LAST:event_btnSuaActionPerformed

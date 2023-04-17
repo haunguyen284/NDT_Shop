@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import service.sanpham.XuatXuService;
 import service.sanpham.impl.XuatXuServiceImpl;
 import view.dialog.ShowMessage;
+import view.dialog.ShowMessageSuccessful;
 
 /**
  *
@@ -293,6 +294,11 @@ public class DialogXuatXu extends javax.swing.JDialog {
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         XuatXuDTO dto = getDTOFromInput();
         String result = xuatXuService.create(dto);
+        if(result.contains("thành công")){
+            ShowMessageSuccessful.showSuccessful(result);
+            loadDataTable();
+            return;
+        }
         ShowMessage.show(result);
 
         loadDataTable();
@@ -310,6 +316,11 @@ public class DialogXuatXu extends javax.swing.JDialog {
         XuatXuDTO dto = getDTOFromInput();
         dto.setId(selectedId);
         String result = xuatXuService.update(dto);
+        if(result.contains("thành công")){
+            ShowMessageSuccessful.showSuccessful(result);
+            loadDataTable();
+            return;
+        }
         ShowMessage.show(result);
 
         loadDataTable();

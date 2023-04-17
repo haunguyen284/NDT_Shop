@@ -21,6 +21,7 @@ import service.sanpham.SanPhamService;
 import service.sanpham.impl.AoServiceImpl;
 import service.sanpham.impl.SanPhamServiceImpl;
 import view.dialog.ShowMessage;
+import view.dialog.ShowMessageSuccessful;
 
 /**
  *
@@ -397,6 +398,10 @@ public class DialogAo extends javax.swing.JDialog {
             } else {
                 rs = "Mã sản phẩm đã tồn tại";
             }
+        }
+        if(rs.contains("thành công")){
+            ShowMessageSuccessful.showSuccessful(rs);
+            return;
         }
         ShowMessage.show(rs);
     }//GEN-LAST:event_btnLuuActionPerformed

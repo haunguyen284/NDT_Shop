@@ -43,7 +43,7 @@ public class LichSuTieuDiemRepository {
     public List<LichSuTieuDiem> findAllByViDiem(String idViDiem) {
         List<LichSuTieuDiem> listModel;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT n FROM LichSuTieuDiem n where n.viDiem.id =:idViDiem";
+            String hql = "SELECT n FROM LichSuTieuDiem n where n.viDiem.id =:idViDiem ORDER BY n.createdAt";
             TypedQuery<LichSuTieuDiem> query = session.createQuery(hql, LichSuTieuDiem.class);
             query.setParameter("idViDiem", idViDiem);
             listModel = query.getResultList();

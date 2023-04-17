@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import service.sanpham.SizeAoService;
 import service.sanpham.impl.SizeAoServiceImpl;
 import view.dialog.ShowMessage;
+import view.dialog.ShowMessageSuccessful;
 
 /**
  *
@@ -377,6 +378,11 @@ public class DialogSizeAo extends javax.swing.JDialog {
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         SizeAoDTO dto = getDTOFromInput();
         String result = sizeAoService.create(dto);
+        if(result.contains("thành công")){
+            ShowMessageSuccessful.showSuccessful(result);
+            loadDataTable();
+            return;
+        }
         ShowMessage.show(result);
 
         loadDataTable();
@@ -394,6 +400,11 @@ public class DialogSizeAo extends javax.swing.JDialog {
         SizeAoDTO dto = getDTOFromInput();
         dto.setId(selectedId);
         String result = sizeAoService.update(dto);
+        if(result.contains("thành công")){
+            ShowMessageSuccessful.showSuccessful(result);
+            loadDataTable();
+            return;
+        }
         ShowMessage.show(result);
 
         loadDataTable();

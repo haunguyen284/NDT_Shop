@@ -423,17 +423,13 @@ public final class ModalSoLuong extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        String result = null;
         setSoLuongFromInput();
         if (Integer.parseInt(soLuong) > Integer.parseInt(sanPhamDTO.getSoLuongTon())) {
             showMessage("Số lượng không thể lớn hơn số lượng tồn kho!");
             return;
         }
         sanPhamDTO.setSoLuongTon(Integer.parseInt(sanPhamDTO.getSoLuongTon()) - Integer.parseInt(soLuong) + "");
-        if (Objects.isNull(sanPhamService.update(sanPhamDTO))) {
-            result = "Thêm thất bại!";
-        } else {
-            result = "Thêm thành công!";
+        if (!Objects.isNull(sanPhamService.update(sanPhamDTO))) {
             check = true;
         }
         this.dispose();
