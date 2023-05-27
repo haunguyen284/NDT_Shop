@@ -4,6 +4,7 @@
  */
 package view.form.nhanvien;
 
+import comon.constant.nhanvien.TrangThaiNhanVien;
 import comon.validator.NDTValidator;
 import dto.nhanvien.NhanVienDTO;
 import java.time.LocalDate;
@@ -52,6 +53,7 @@ public class ModalNhanVien extends javax.swing.JDialog {
         jdNgaySinh.setDate(new Date(dTO.getNgaySinh()));
         txtDiaChi.setText(dTO.getDiaChi());
         cbxGioiTinh.setSelectedItem(dTO.getGioiTinh());
+        cbTrangThai.setSelectedItem(dTO.convertTrangThaiNhanVien());
     }
 
     public void clear() {
@@ -111,6 +113,16 @@ public class ModalNhanVien extends javax.swing.JDialog {
         dTO.setNgaySinh(ngaySinh);
         dTO.setDiaChi(diaChi);
         dTO.setGioiTinh(gioiTinh);
+        switch (cbTrangThai.getSelectedIndex()) {
+            case 0:
+                dTO.setTrangThaiNhanVien(TrangThaiNhanVien.DANG_LAM);
+                break;
+            case 1:
+                dTO.setTrangThaiNhanVien(TrangThaiNhanVien.DA_NGHI);
+                break;
+            default:
+                throw new AssertionError();
+        }
         Validator validator = NDTValidator.getValidator();
         Set<ConstraintViolation<NhanVienDTO>> violations = validator.validate(dTO);
         if (!violations.isEmpty()) {
@@ -159,6 +171,8 @@ public class ModalNhanVien extends javax.swing.JDialog {
         btnExit = new view.swing.Button();
         cbxGioiTinh = new javax.swing.JComboBox<>();
         lbMaNV = new javax.swing.JLabel();
+        cbTrangThai = new javax.swing.JComboBox<>();
+        jLabel17 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -216,6 +230,11 @@ public class ModalNhanVien extends javax.swing.JDialog {
         lbMaNV.setForeground(new java.awt.Color(255, 0, 0));
         lbMaNV.setText("ê");
 
+        cbTrangThai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Đang làm", "Đã nghỉ" }));
+
+        jLabel17.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+        jLabel17.setText("Trạng thái");
+
         javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
         bg.setLayout(bgLayout);
         bgLayout.setHorizontalGroup(
@@ -254,7 +273,9 @@ public class ModalNhanVien extends javax.swing.JDialog {
                                 .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(heading))
+                            .addComponent(heading)
+                            .addComponent(cbTrangThai, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel17))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -288,7 +309,11 @@ public class ModalNhanVien extends javax.swing.JDialog {
                                 .addComponent(jLabel18)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jdNgaySinh, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(105, 105, 105))
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel17)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbTrangThai, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(36, 36, 36))
                             .addGroup(bgLayout.createSequentialGroup()
                                 .addGap(39, 39, 39)
                                 .addComponent(txtDiaChi, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -384,6 +409,7 @@ public class ModalNhanVien extends javax.swing.JDialog {
     private javax.swing.JPanel bg;
     private view.swing.Button btnExit;
     private view.swing.Button btnSave;
+    private javax.swing.JComboBox<String> cbTrangThai;
     private javax.swing.JComboBox<String> cbxGioiTinh;
     private javax.swing.JLabel heading;
     private javax.swing.JLabel jLabel1;
@@ -392,6 +418,7 @@ public class ModalNhanVien extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private com.toedter.calendar.JDateChooser jdNgaySinh;
     private javax.swing.JLabel lbMaNV;

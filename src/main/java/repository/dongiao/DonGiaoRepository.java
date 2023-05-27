@@ -5,6 +5,8 @@
 package repository.dongiao;
 
 import comon.constant.PaginationConstant;
+import comon.constant.dongiao.TrangThaiDonGiao;
+import comon.constant.dongiao.YeuCauDonHang;
 import comon.utilities.HibernateUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +21,64 @@ import org.hibernate.query.Query;
 
 /**
  *
- * @author Admin
+ * @author ADMIN KH
  */
 public class DonGiaoRepository {
 
+    public List<DonGiao> getAll(int currentPage, String maDG, TrangThaiDonGiao trangThaiDonGiao, YeuCauDonHang yeuCauDonHang) {
+        String hql = "SELECT x FROM DonGiao x "
+                + "WHERE (:maDG IS NULL OR :maDG LIKE '' OR x.maDG LIKE '%' + :maDG +'%') "
+                + "AND (:trangThaiDonGiao IS NULL OR :trangThaiDonGiao LIKE '' OR x.trangThaiDonGiao LIKE '%' + :trangThaiDonGiao + '%') "
+                + "AND (:yeuCauDonHang IS NULL OR :yeuCauDonHang LIKE '' OR x.yeuCauDonHang LIKE '%' + :yeuCauDonHang + '%') "
+                + "AND x.thongSo != null";
+        List<DonGiao> listDonGiao = new ArrayList<>();
+        try ( Session s = HibernateUtil.getSessionFactory().openSession()) {
+            Query<DonGiao> query = s.createQuery(hql, DonGiao.class);
+            query.setParameter("maDG", maDG);
+            query.setParameter("yeuCauDonHang", yeuCauDonHang != null? String.valueOf(yeuCauDonHang.ordinal()):yeuCauDonHang);
+            query.setParameter("trangThaiDonGiao", trangThaiDonGiao  != null? String.valueOf(trangThaiDonGiao.ordinal()):trangThaiDonGiao);
+            query.setFirstResult((currentPage - 1) * PaginationConstant.DEFAULT_SIZE);
+            query.setMaxResults(PaginationConstant.DEFAULT_SIZE);
+            listDonGiao = query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listDonGiao;
+    }
+
+    public boolean saveOrUpdate(DonGiao x) {
+        Transaction tx = null;
+        try ( Session s = HibernateUtil.getSessionFactory().openSession()) {
+            tx = s.beginTransaction();
+            s.saveOrUpdate(x);
+            tx.commit();
+            return true;
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            if (tx != null) {
+                tx.rollback();
+            }
+        }
+        return false;
+    }
+
+    public Optional<DonGiao> finByID(String id) {
+        String hql = "FROM DonGiao x  WHERE x.id = :id";
+        List<DonGiao> list = new ArrayList<>();
+        DonGiao x = null;
+        try ( Session s = HibernateUtil.getSessionFactory().openSession()) {
+            Query<DonGiao> q = s.createQuery(hql, DonGiao.class);
+            q.setParameter("id", id);
+            list = q.getResultList();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        }
+        if (!list.isEmpty()) {
+            x = list.get(0);
+        }
+        return Optional.ofNullable(x);
+    }
+    
     public DonGiao findById(String id) {
         DonGiao model;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -34,6 +90,18 @@ public class DonGiaoRepository {
         return model;
     }
 
+    public long count() {
+        long count = 0;
+        String hql = "SELECT COUNT(x.id)FROM DonGiao x";
+        try ( Session s = HibernateUtil.getSessionFactory().openSession()) {
+            Query q = s.createQuery(hql);
+            count = (long) q.uniqueResult();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+    
     public String findId(String maDG) {
         String id;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -74,76 +142,5 @@ public class DonGiaoRepository {
         }
         return model;
     }
-    
-    public List<DonGiao> getAll(int currentPage) {
-        String hql = "SELECT x FROM DonGiao x WHERE x.trangThaiDonGiao != null AND x.thongSo != null";
-        List<DonGiao> listDonGiao = new ArrayList<>();
-        try ( Session s = HibernateUtil.getSessionFactory().openSession()) {
-            Query<DonGiao> query = s.createQuery(hql, DonGiao.class);
-            query.setFirstResult((currentPage - 1) * PaginationConstant.DEFAULT_SIZE);
-            query.setMaxResults(PaginationConstant.DEFAULT_SIZE);
-            listDonGiao = query.getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return listDonGiao;
-    }
 
-    public boolean saveOrUpdate(DonGiao x) {
-        Transaction tx = null;
-        try ( Session s = HibernateUtil.getSessionFactory().openSession()) {
-            tx = s.beginTransaction();
-            s.saveOrUpdate(x);
-            tx.commit();
-            return true;
-        } catch (HibernateException e) {
-            e.printStackTrace();
-            if (tx != null) {
-                tx.rollback();
-            }
-        }
-        return false;
-    }
-
-    public Optional<DonGiao> finByIDDuy(String id) {
-        String hql = "FROM DonGiao x  WHERE x.id = :id";
-        List<DonGiao> list = new ArrayList<>();
-        DonGiao x = null;
-        try ( Session s = HibernateUtil.getSessionFactory().openSession()) {
-            Query<DonGiao> q = s.createQuery(hql, DonGiao.class);
-            q.setParameter("id", id);
-            list = q.getResultList();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
-        if (!list.isEmpty()) {
-            x = list.get(0);
-        }
-        return Optional.ofNullable(x);
-    }
-
-    public List<DonGiao> searchByMaSp(int currentPage, String searchByMa) {
-        List<DonGiao> listModel;
-        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT x FROM DonGiao x WHERE x.maDG LIKE '%' + :maSp +'%'";
-            TypedQuery<DonGiao> query = session.createQuery(hql, DonGiao.class);
-            query.setParameter("maSp", searchByMa);
-            query.setFirstResult((currentPage - 1) * PaginationConstant.DEFAULT_SIZE);
-            query.setMaxResults(PaginationConstant.DEFAULT_SIZE);
-            listModel = query.getResultList();
-        }
-        return listModel;
-    }
-
-    public long count() {
-        long count = 0;
-        String hql = "SELECT COUNT(x.id)FROM DonGiao x";
-        try ( Session s = HibernateUtil.getSessionFactory().openSession()) {
-            Query q = s.createQuery(hql);
-            count = (long) q.uniqueResult();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
-        return count;
-    }
 }

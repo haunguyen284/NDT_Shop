@@ -5,6 +5,7 @@
 package dto.nhanvien;
 
 import comon.constant.ModelProperties;
+import comon.constant.nhanvien.TrangThaiNhanVien;
 import comon.model.AuditModelDTO;
 import comon.utilities.DateTimeUtil;
 import java.util.Date;
@@ -43,8 +44,25 @@ public class NhanVienDTO extends AuditModelDTO {
     @NotBlank(message = "Email - Không được để trống !")
     @Pattern(regexp = ModelProperties.REGEX_EMAIL)
     private String email;
-    public Object[] toDataRow(){
-        return new Object[] {maNV,ten,sdt,gioiTinh,ngaySinh == null? "cc" : DateTimeUtil.formatDate(new Date(ngaySinh)),diaChi,email};
+    
+    
+    private TrangThaiNhanVien trangThaiNhanVien;
+    
+    public String convertTrangThaiNhanVien(){
+        String trangThai = "";
+        switch (trangThaiNhanVien) {
+            case DANG_LAM:
+                trangThai = "Đang làm";
+                break;
+            case DA_NGHI:
+                trangThai = "Đã nghỉ";
+                break;
+            default:
+                throw new AssertionError();
+        }
+        return trangThai;
     }
-
+    public Object[] toDataRow(){
+        return new Object[] {maNV,ten,sdt,gioiTinh,ngaySinh == null? "NO NO" : DateTimeUtil.formatDate(new Date(ngaySinh)),diaChi,email,convertTrangThaiNhanVien()};
+    }
 }

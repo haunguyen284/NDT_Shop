@@ -5,6 +5,8 @@
 package repository.giamgia;
 
 import comon.constant.PaginationConstant;
+import comon.constant.giamgia.TrangThaiGiamGia;
+import comon.constant.sanpham.LoaiSanPham;
 import comon.utilities.HibernateUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +33,17 @@ public class SanPhamGiamGiaRepository {
         this.factory = HibernateUtil.getSessionFactory();
     }
 
-    public List<SanPhamGiamGia> getAll(int currentPage) {
-        String hql = "SELECT g FROM SanPhamGiamGia g";
+    public List<SanPhamGiamGia> getAll(int currentPage, TrangThaiGiamGia trangThaiGiamGia, LoaiSanPham loaiSanPham, String maGG) {
+        String hql = "SELECT x FROM SanPhamGiamGia x WHERE "
+                + "(:trangThai IS NULL OR :trangThai LIKE '' OR x.giamGia.trangThaiGiamGia LIKE '%' + :trangThai + '%')"
+                + " AND (:loaiSP IS NULL OR :loaiSP LIKE '' OR x.sanPham.loaiSp LIKE '%' + :loaiSP + '%')"
+                + " AND (:maGG IS NULL OR :maGG LIKE '' OR x.giamGia.maGg LIKE '%' + :maGG + '%')";
         List<SanPhamGiamGia> listSanPhamGiamGia = new ArrayList<>();
         try ( Session s = factory.openSession()) {
             Query<SanPhamGiamGia> query = s.createQuery(hql, SanPhamGiamGia.class);
+            query.setParameter("trangThai", trangThaiGiamGia != null ? String.valueOf(trangThaiGiamGia.ordinal()) : trangThaiGiamGia);
+            query.setParameter("loaiSP", loaiSanPham != null ? String.valueOf(loaiSanPham.ordinal()) : loaiSanPham);
+            query.setParameter("maGG", maGG);
             query.setFirstResult((currentPage - 1) * PaginationConstant.DEFAULT_SIZE);
             query.setMaxResults(PaginationConstant.DEFAULT_SIZE);
             listSanPhamGiamGia = query.getResultList();
@@ -99,19 +107,6 @@ public class SanPhamGiamGiaRepository {
         }
         return Optional.ofNullable(x);
     }
-    
-        public List<SanPhamGiamGia> searchByMaSpGG(int currentPage, String searchByMa) {
-        List<SanPhamGiamGia> listModel;
-        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT x FROM SanPhamGiamGia x JOIN GiamGia y On x.giamGia = y.id WHERE y.maGg LIKE '%' + :maGG +'%'";
-            TypedQuery<SanPhamGiamGia> query = session.createQuery(hql, SanPhamGiamGia.class);
-            query.setParameter("maGG", searchByMa);
-            query.setFirstResult((currentPage - 1) * PaginationConstant.DEFAULT_SIZE);
-            query.setMaxResults(PaginationConstant.DEFAULT_SIZE);
-            listModel = query.getResultList();
-        }
-        return listModel;
-    }
 
     public long count() {
         long count = 0;
@@ -125,9 +120,22 @@ public class SanPhamGiamGiaRepository {
         return count;
     }
 
+    public List<SanPhamGiamGia> listSanPhamTheoMaGG(int currentPage, String searchByMa) {
+        List<SanPhamGiamGia> listModel;
+        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT x FROM SanPhamGiamGia x WHERE x.giamGia.maGg = :maGG";
+            TypedQuery<SanPhamGiamGia> query = session.createQuery(hql, SanPhamGiamGia.class);
+            query.setParameter("maGG", searchByMa);
+            query.setFirstResult((currentPage - 1) * PaginationConstant.DEFAULT_SIZE);
+            query.setMaxResults(PaginationConstant.DEFAULT_SIZE);
+            listModel = query.getResultList();
+        }
+        return listModel;
+    }
+
     public boolean deleteSanPhamByIdGiamGia(String id) {
         int check;
-        String hql = "DELETE FROM SanPhamGiamGia x WHERE x.giamGia.maGg = :id";
+        String hql = "DELETE FROM SanPhamGiamGia x WHERE x.id = :id";
         Transaction tx = null;
         try ( Session s = factory.openSession()) {
             tx = s.beginTransaction();

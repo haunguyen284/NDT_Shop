@@ -36,8 +36,8 @@ public class GiamGiaImpl implements GiamGiaService {
     }
 
     @Override
-    public List<GiamGiaDTO> getAll(int currentPage) {
-        List<GiamGia> listModel = repository.getAll(currentPage);
+    public List<GiamGiaDTO> getAll(int currentPage, String maGG) {
+        List<GiamGia> listModel = repository.getAll(currentPage, maGG);
         List<GiamGiaDTO> listDTO = new ArrayList<>();
         for (GiamGia x : listModel) {
             listDTO.add(mapper.map(x, GiamGiaDTO.class));
@@ -105,16 +105,6 @@ public class GiamGiaImpl implements GiamGiaService {
     }
 
     @Override
-    public List<GiamGiaDTO> searchByMa(int currentPage, String searchByMa) {
-        List<GiamGia> listModel = repository.searchByMaGG(currentPage, searchByMa);
-        List<GiamGiaDTO> listDTO = new ArrayList<>();
-        for (GiamGia x : listModel) {
-            listDTO.add(mapper.map(x, GiamGiaDTO.class));
-        }
-        return listDTO;
-    }
-
-    @Override
     public String checkTrangThai(Long ngayHienTai) {
         if (repository.updateTrangThai(ngayHienTai)) {
             return "Delete successful !";
@@ -122,6 +112,5 @@ public class GiamGiaImpl implements GiamGiaService {
             return "Delete Fail !";
         }
     }
-
 
 }

@@ -10,17 +10,25 @@ import dto.giamgia.GiamGiaDTO;
 import dto.giamgia.SanPhamGiamGiaDTO;
 import dto.sanpham.SanPhamDTO;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.validation.Validator;
 import lombok.Getter;
 import lombok.Setter;
+import raven.cell.PanelAction;
 import raven.cell.TableActionCellEditor;
 import raven.cell.TableActionCellRender;
 import raven.cell.TableActionEvent;
@@ -29,7 +37,6 @@ import service.giamgia.SanPhamGiamGiaService;
 import service.giamgia.impl.GiamGiaImpl;
 import service.giamgia.impl.SanPhamGiamGiaImpl;
 import service.sanpham.SanPhamService;
-import service.sanpham.impl.SanPhamImpl;
 import service.sanpham.impl.SanPhamServiceImpl;
 import view.dialog.ShowMessage;
 import view.dialog.ShowMessageSuccessful;
@@ -40,22 +47,25 @@ import view.dialog.ShowMessageSuccessful;
  */
 @Getter
 @Setter
-public class ViewCreateSpGiamGia extends javax.swing.JDialog {
-    
+public class ModalAddSanPhamGiamGia extends javax.swing.JDialog {
+
     private final GiamGiaService service;
     private final SanPhamService serviceSp;
     private final Validator validator;
     private DefaultComboBoxModel cbb;
-    private final DefaultTableModel dtm;
+    private final DefaultTableModel dtmGiamGia;
+    private final DefaultTableModel dtmSanPham;
     private int currentPage = 1;
     private int totalPage = 1;
-    private ViewThongTinGiamGia viewThongTin;
+    private ModalGiamGia viewThongTin;
     private SanPhamGiamGiaService sanPhamGiamGiaService;
+    private String idSpGG;
+    private final SanPhamGiamGiaDTO sanPhamGiamGiaDTO;
 
     /**
      * Creates new form ViewModal
      */
-    public ViewCreateSpGiamGia(java.awt.Frame parent, boolean modal) {
+    public ModalAddSanPhamGiamGia(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
@@ -64,8 +74,10 @@ public class ViewCreateSpGiamGia extends javax.swing.JDialog {
         this.sanPhamGiamGiaService = new SanPhamGiamGiaImpl();
         this.validator = NDTValidator.getValidator();
         this.cbb = new DefaultComboBoxModel();
-        this.dtm = new DefaultTableModel();
-        this.viewThongTin = new ViewThongTinGiamGia(parent, true);
+        this.dtmGiamGia = new DefaultTableModel();
+        this.dtmSanPham = new DefaultTableModel();
+        this.viewThongTin = new ModalGiamGia(parent, true);
+        this.sanPhamGiamGiaDTO = new SanPhamGiamGiaDTO();
         loadData();
         loadDataSanPham();
     }
@@ -73,30 +85,36 @@ public class ViewCreateSpGiamGia extends javax.swing.JDialog {
     // Load dữ liệu cho bảng Giam giá
     public void loadData() {
         String[] columns = {"ID", "TÊN", "GIÁ TRỊ MỨC GIAM GIÁ ", "ĐIỀU KIỆN ", "LOẠI GIẢM GIÁ", "TRẠNG THÁI", "NGÀY BẮT ĐẦU", "NGÀY KẾT THÚC", "MÔ TẢ", "FUNCTION"};
-        dtm.setColumnIdentifiers(columns);
-        tblGiamGia.setModel(dtm);
-        List<GiamGiaDTO> listData = service.getAll(currentPage);
-        dtm.setRowCount(0);
-        for (GiamGiaDTO x : listData) {
-            dtm.addRow(x.toDataRow());
-        }
+        dtmGiamGia.setColumnIdentifiers(columns);
+        tblGiamGia.setModel(dtmGiamGia);
+        String maGG = txtSearchByMaGg.getText();
+        showDataGiamGia(service.getAll(currentPage, maGG));
         showPaganation();
         createButton();
     }
 
+    public void showDataGiamGia(List<GiamGiaDTO> list) {
+        dtmGiamGia.setRowCount(0);
+        for (GiamGiaDTO x : list) {
+            dtmGiamGia.addRow(x.toDataRow());
+        }
+    }
+
     // Load dữ liệu cho bảng sản phẩm
     public void loadDataSanPham() {
-        List<SanPhamDTO> listData = serviceSp.getAll(currentPage);
-        DefaultTableModel dtmSp = (DefaultTableModel) tblSanPham.getModel();
-        tblSanPham.setModel(dtmSp);
-        dtmSp.setRowCount(0);
-        for (SanPhamDTO x : listData) {
-            dtmSp.addRow(x.toDataRowSanPham());
-        }
+        String[] columns = {"ID", "TÊN", "GIÁ BÁN ", "SỐ LƯỢNG TỒN ", "LOẠI", "THƯƠNG HIỆU", "TRẠNG THÁI"};
+        dtmSanPham.setColumnIdentifiers(columns);
+        tblSanPham.setModel(dtmSanPham);
+        showDataSanPham(serviceSp.getAll(currentPage));
         showPaganationSp();
-        createButtonSanPham();
     }
-    // Tạo nút button cho hàng
+
+    public void showDataSanPham(List<SanPhamDTO> list) {
+        dtmSanPham.setRowCount(0);
+        for (SanPhamDTO x : list) {
+            dtmSanPham.addRow(x.toDataRowSanPham());
+        }
+    }
 
     private void createButton() {
         TableActionEvent event = new TableActionEvent() {
@@ -105,7 +123,7 @@ public class ViewCreateSpGiamGia extends javax.swing.JDialog {
                 viewThongTin.getBtnSave().setVisible(true);
                 viewThongTin.getTxtSave().setVisible(true);
                 viewThongTin.getBtnSave().setText("Update");
-                
+
                 row = tblGiamGia.getSelectedRow();
                 if (row < 0) {
                     return;
@@ -116,24 +134,14 @@ public class ViewCreateSpGiamGia extends javax.swing.JDialog {
                     viewThongTin.fill(optional.get());
                     viewThongTin.getGiamGiaDTO().setId(id);
                     viewThongTin.setVisible(true);
-                }
-            }
-            
-            @Override
-            public void onDelete(int row) {
-                row = tblGiamGia.getSelectedRow();
-                if (row < 0) {
-                    return;
-                }
-                if (ShowMessage.show("Bạn muốn xóa giảm giá này chứ ?")) {
-                    String id = tblGiamGia.getValueAt(row, 0).toString();
-                    String result = service.delete(id);
-                    ShowMessageSuccessful.showSuccessful(result);
                     loadData();
                 }
-                
             }
-            
+
+            @Override
+            public void onDelete(int row) {
+            }
+
             @Override
             public void onView(int row) {
                 viewThongTin.getBtnSave().setVisible(false);
@@ -152,63 +160,11 @@ public class ViewCreateSpGiamGia extends javax.swing.JDialog {
         };
         tblGiamGia.getColumnModel().getColumn(9).setCellRenderer(new TableActionCellRender());
         tblGiamGia.getColumnModel().getColumn(9).setCellEditor(new TableActionCellEditor(event));
-        
+
     }
 
-    // Tạo button cho table San phẩm trong View
-    private void createButtonSanPham() {
-        TableActionEvent event = new TableActionEvent() {
-            @Override
-            public void onEdit(int row) {
-                row = tblSanPham.getSelectedRow();
-                if (row < 0) {
-                    return;
-                }
-                String idSp = tblSanPham.getValueAt(row, 0).toString();
-                Optional<SanPhamDTO> modelSpGG = serviceSp.findByID(idSp);
-                if (modelSpGG.isPresent()) {
-                    if (ShowMessage.show("Bạn muốn xóa giảm giá này chứ ?")) {
-//                        String result = sanPhamGiamGiaService.deleteSanPhamByIdGiamGia(giamGiaDTO.getId());
-//                        ShowMessageSuccessful.showSuccessful(result);
-                        loadData();
-                    }
-                }
-            }
-            
-            @Override
-            public void onDelete(int row) {
-                row = tblGiamGia.getSelectedRow();
-                if (row < 0) {
-                    return;
-                }
-                if (ShowMessage.show("Bạn muốn xóa giảm giá này chứ ?")) {
-                    String id = tblGiamGia.getValueAt(row, 0).toString();
-                    String result = service.delete(id);
-                    ShowMessageSuccessful.showSuccessful(result);
-                    loadData();
-                }
-                
-            }
-            
-            @Override
-            public void onView(int row) {
-                viewThongTin.getBtnSave().setVisible(false);
-                viewThongTin.getTxtSave().setVisible(false);
-                row = tblGiamGia.getSelectedRow();
-                if (row < 0) {
-                    return;
-                }
-                String id = tblGiamGia.getValueAt(row, 0).toString();
-                Optional<GiamGiaDTO> optional = service.findById(id);
-                if (optional.isPresent()) {
-                    viewThongTin.fill(optional.get());
-                    viewThongTin.setVisible(true);
-                }
-            }
-        };
-        
-        tblSanPham.getColumnModel().getColumn(6).setCellRenderer(new TableActionCellRender());
-        tblSanPham.getColumnModel().getColumn(6).setCellEditor(new TableActionCellEditor(event));
+    public void exit() {
+        this.dispose();
     }
 
     // Phân trang cho giảm giá
@@ -258,7 +214,7 @@ public class ViewCreateSpGiamGia extends javax.swing.JDialog {
         }
         return x;
     }
-    
+
     public List<SanPhamDTO> listsSP() {
         tblSanPham.setRowSelectionAllowed(true);
         List<SanPhamDTO> listSp = new ArrayList<>();
@@ -272,7 +228,7 @@ public class ViewCreateSpGiamGia extends javax.swing.JDialog {
         }
         return listSp;
     }
-    
+
     public void saveOrUpdate(String action) {
         int rowSp = tblSanPham.getSelectedRow();
         int rowGiamGia = tblGiamGia.getSelectedRow();
@@ -292,30 +248,22 @@ public class ViewCreateSpGiamGia extends javax.swing.JDialog {
         }
         String result = sanPhamGiamGiaService.saveOrUpdate(action, ggDTO, listSanPham, sanPhamGiamGiaDTO);
         ShowMessageSuccessful.showSuccessful(result);
-        new ViewGiamGiamSp().loadData();
+        new ViewGiamGiaSanPham().loadData();
         this.dispose();
     }
 
     // end
     // load dữ liệu tìm kiếm theo điều kiện giảm giá table Sản phẩm
-    public void loadSearch(List<SanPhamDTO> listSearch) {
-        DefaultTableModel dtmSp = (DefaultTableModel) tblSanPham.getModel();
-        dtmSp.setRowCount(0);
-        for (SanPhamDTO x : listSearch) {
-            dtmSp.addRow(x.toDataRowSanPham());
+    public void loadSearchSanPhamGiamGiaTheoMaGG(List<SanPhamGiamGiaDTO> listSearch) {
+        DefaultTableModel dtmGiamGiaSp = (DefaultTableModel) tblSanPham.getModel();
+        dtmGiamGiaSp.setRowCount(0);
+        for (SanPhamGiamGiaDTO x : listSearch) {
+            dtmGiamGiaSp.addRow(x.toDataRowSanPhamGiamGiaTheoMaGG());
         }
         showPaganationSp();
     }
 
-    // load dữ liệu tìm kiếm theo điều kiện giảm giá table Sản phẩm
-    public void loadSearchGiamGia(List<GiamGiaDTO> listSearch) {
-        dtm.setRowCount(0);
-        for (GiamGiaDTO x : listSearch) {
-            dtm.addRow(x.toDataRow());
-        }
-        showPaganationSp();
-    }
-    
+    ////
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -533,6 +481,9 @@ public class ViewCreateSpGiamGia extends javax.swing.JDialog {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblSanPhamMouseClicked(evt);
             }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tblSanPhamMouseReleased(evt);
+            }
         });
         jScrollPane3.setViewportView(tblSanPham);
 
@@ -748,7 +699,6 @@ public class ViewCreateSpGiamGia extends javax.swing.JDialog {
     }//GEN-LAST:event_btnSaveMouseExited
 
     private void btnCloseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCloseMouseClicked
-        new ViewGiamGiamSp().loadData();
         this.dispose();
     }//GEN-LAST:event_btnCloseMouseClicked
 
@@ -778,8 +728,10 @@ public class ViewCreateSpGiamGia extends javax.swing.JDialog {
     private void tblGiamGiaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblGiamGiaMouseClicked
         int row = tblGiamGia.getSelectedRow();
         float dieuKien = (float) tblGiamGia.getValueAt(row, 3);
-        List<SanPhamDTO> listSearch = serviceSp.searchByGiaBan(currentPage, dieuKien);
-        loadSearch(listSearch);
+        String id = tblGiamGia.getValueAt(row, 0).toString();
+        List<SanPhamDTO> listSearch = serviceSp.searchByGiaBan(currentPage, dieuKien, id);
+        showDataSanPham(listSearch);
+
     }//GEN-LAST:event_tblGiamGiaMouseClicked
 
     private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
@@ -859,16 +811,43 @@ public class ViewCreateSpGiamGia extends javax.swing.JDialog {
     }//GEN-LAST:event_btnLastSpActionPerformed
 
     private void btnSearchByMaGgMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSearchByMaGgMouseClicked
-        String maGg = txtSearchByMaGg.getText();
-        List<GiamGiaDTO> list = service.searchByMa(currentPage, maGg);
-        loadSearchGiamGia(list);
+
+        loadData();
     }//GEN-LAST:event_btnSearchByMaGgMouseClicked
 
     private void btnSearchByMaSpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSearchByMaSpMouseClicked
         String maSp = txtSearchByMaSp.getText();
         List<SanPhamDTO> list = serviceSp.searchByMa(currentPage, maSp);
-        loadSearch(list);
+        showDataSanPham(list);
     }//GEN-LAST:event_btnSearchByMaSpMouseClicked
+
+    private void tblSanPhamMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSanPhamMouseReleased
+        if (SwingUtilities.isRightMouseButton(evt)) {
+            tblSanPham.setRowSelectionAllowed(true);
+            int[] listRowSp = tblSanPham.getSelectedRows();
+            JPopupMenu popupMenu = new JPopupMenu();
+            JMenuItem menuUpdate = new JMenuItem("Gỡ sản phẩm");
+            menuUpdate.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if (ShowMessage.show("Bạn muốn gỡ sản phẩm này khỏi giảm giá này chứ ?")) {
+                        for (int rowSP : listRowSp) {
+                            String idSP = tblSanPham.getValueAt(rowSP, 0).toString();
+                            Optional<SanPhamGiamGiaDTO> modelSpGG = sanPhamGiamGiaService.findById(idSP);
+                            if (modelSpGG.isPresent()) {
+                                String result = sanPhamGiamGiaService.delete(idSP);
+                            }
+                        }
+                        ShowMessageSuccessful.showSuccessful("Gỡ thành công !");
+                        List<SanPhamGiamGiaDTO> listSanPham = sanPhamGiamGiaService.listSanPhamTheoMaGG(currentPage, idSpGG);
+                        loadSearchSanPhamGiamGiaTheoMaGG(listSanPham);
+                    }
+                }
+            });
+            popupMenu.add(menuUpdate);
+            popupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+        }
+
+    }//GEN-LAST:event_tblSanPhamMouseReleased
 
     /**
      * @param args the command line arguments

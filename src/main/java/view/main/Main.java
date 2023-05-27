@@ -24,7 +24,7 @@ import view.form.thongke.ViewDoanhThu;
 import view.form.MainForm;
 import view.form.doitra.ViewDoiTra;
 import view.form.dongiao.ViewDonGiao;
-import view.form.giamgia.ViewGiamGiamSp;
+import view.form.giamgia.ViewGiamGiaSanPham;
 import view.form.hoadon.ViewHoaDon;
 import view.form.hoadon.ViewLichSuHoaDon;
 import view.form.khachhang.ViewKhachHang;
@@ -105,7 +105,7 @@ public class Main extends javax.swing.JFrame implements Runnable {
                         }
                         break;
                     case 4:
-                        main.showForm(new ViewGiamGiamSp());
+                        main.showForm(new ViewGiamGiaSanPham());
                         break;
                     case 5:
                         if (role.equals("STAFF")) {

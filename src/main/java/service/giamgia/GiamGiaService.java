@@ -15,15 +15,13 @@ import java.util.Optional;
  */
 public interface GiamGiaService {
 
-    List<GiamGiaDTO> getAll(int currentPage);
+    List<GiamGiaDTO> getAll(int currentPage,String maGG);
 
     Optional<GiamGiaDTO> findById(String id);
 
     String saveOrUpdate(String action, GiamGiaDTO x);
 
     String delete(String id);
-
-    List<GiamGiaDTO> searchByMa(int currentPage, String searchByMa);
 
     String checkTrangThai(Long ngayHienTai);
 

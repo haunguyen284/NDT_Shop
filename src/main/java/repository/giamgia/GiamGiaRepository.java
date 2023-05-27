@@ -30,11 +30,12 @@ public class GiamGiaRepository {
         this.factory = HibernateUtil.getSessionFactory();
     }
 
-    public List<GiamGia> getAll(int currentPage) {
-        String hql = "SELECT g FROM GiamGia g";
+    public List<GiamGia> getAll(int currentPage,String maGG) {
+        String hql = "SELECT x FROM GiamGia x WHERE :maGG IS NULL OR :maGG LIKE '' OR x.maGg LIKE '%' + :maGG +'%'";
         List<GiamGia> listGiamGia = new ArrayList<>();
         try ( Session s = factory.openSession()) {
             Query<GiamGia> query = s.createQuery(hql, GiamGia.class);
+            query.setParameter("maGG",maGG);
             query.setFirstResult((currentPage - 1) * PaginationConstant.DEFAULT_SIZE);
             query.setMaxResults(PaginationConstant.DEFAULT_SIZE);
             listGiamGia = query.getResultList();
@@ -107,19 +108,6 @@ public class GiamGiaRepository {
             e.printStackTrace();
         }
         return count;
-    }
-
-    public List<GiamGia> searchByMaGG(int currentPage, String searchByMa) {
-        List<GiamGia> listModel;
-        try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT x FROM GiamGia x WHERE x.maGg LIKE '%' + :maGG +'%'";
-            TypedQuery<GiamGia> query = session.createQuery(hql, GiamGia.class);
-            query.setParameter("maGG", searchByMa);
-            query.setFirstResult((currentPage - 1) * PaginationConstant.DEFAULT_SIZE);
-            query.setMaxResults(PaginationConstant.DEFAULT_SIZE);
-            listModel = query.getResultList();
-        }
-        return listModel;
     }
 
     public boolean updateTrangThai(Long ngayHienTai) {

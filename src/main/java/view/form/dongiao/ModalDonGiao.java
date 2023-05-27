@@ -29,13 +29,13 @@ import view.form.MainForm;
  */
 @Getter
 @Setter
-public class ViewShowThongTinDonGiao extends javax.swing.JDialog {
+public class ModalDonGiao extends javax.swing.JDialog {
 
     private final DonGiaoService service;
     private final Validator validator;
     private final DonGiaoDTO donGiaoDTO;
 
-    public ViewShowThongTinDonGiao(java.awt.Frame parent, boolean modal) {
+    public ModalDonGiao(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
@@ -420,8 +420,7 @@ public class ViewShowThongTinDonGiao extends javax.swing.JDialog {
     }//GEN-LAST:event_txtDiaChiMousePressed
 
     private void btnSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseClicked
-        this.dispose();
-        if (ShowMessage.show("Bạn muốn lưu đơn giao này chứ ?")) {
+        if (ShowMessage.show("Bạn muốn lưu giảm giá này chứ ?")) {
             if (btnSave.getText().equals("Save")) {
                 saveOrUpdate("add");
                 return;

@@ -2,6 +2,9 @@ package view.form.giamgia;
 
 import comon.constant.ModelProperties;
 import comon.constant.PaginationConstant;
+import comon.constant.giamgia.TrangThaiGiamGia;
+import comon.constant.sanpham.LoaiSanPham;
+import comon.constant.sanpham.TrangThaiQuanAo;
 import comon.validator.NDTValidator;
 import dto.giamgia.GiamGiaDTO;
 import dto.giamgia.SanPhamGiamGiaDTO;
@@ -12,6 +15,7 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.validation.ConstraintViolation;
@@ -37,7 +41,7 @@ import view.swing.table.EventAction;
 
 @Getter
 @Setter
-public class ViewGiamGiamSp extends javax.swing.JPanel {
+public class ViewGiamGiaSanPham extends javax.swing.JPanel {
 
     private final DefaultTableModel dtm;
     private final GiamGiaService service;
@@ -46,30 +50,39 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
     private final Validator validator;
     private int currentPage = 1;
     private int totalPage = 1;
-    private ViewCreateSpGiamGia viewModal1;
+    private ModalAddSanPhamGiamGia modalAddSpGG;
+    private ModalDetailSanPhamGiamGia detailSanPhamGiamGia;
+    private DefaultComboBoxModel cboTrangThai;
+    private DefaultComboBoxModel cboLoaiSp;
+    private final GiamGiaDTO giamGiaDTO;
 
-    public ViewGiamGiamSp() {
+    public ViewGiamGiaSanPham() {
         initComponents();
         tblSanPhamGiamGia.fixTable(jScrollPane1);
         setOpaque(false);
-        initData();
         this.dtm = new DefaultTableModel();
         this.service = new GiamGiaImpl();
         this.sanPhamGiamGiaService = new SanPhamGiamGiaImpl();
         this.sanPhamService = new SanPhamServiceImpl();
         this.validator = NDTValidator.getValidator();
-        this.viewModal1 = new ViewCreateSpGiamGia(null, true);
+        this.modalAddSpGG = new ModalAddSanPhamGiamGia(null, true);
+        this.cboLoaiSp = new DefaultComboBoxModel();
+        this.cboTrangThai = new DefaultComboBoxModel();
+        this.giamGiaDTO = new GiamGiaDTO();
+        this.detailSanPhamGiamGia = new ModalDetailSanPhamGiamGia(null, true);
+        cboTrangThai();
+        cboLoai();
         loadData();
-        createbutton();
+        createButton();
     }
 
-    private void createbutton() {
+    private void createButton() {
         TableActionEvent event = new TableActionEvent() {
             @Override
             public void onEdit(int row) {
-                viewModal1.getBtnSave().setVisible(true);
-                viewModal1.getTxtSave().setVisible(true);
-                viewModal1.getBtnSave().setText("Update");
+                modalAddSpGG.getBtnSave().setVisible(true);
+                modalAddSpGG.getTxtSave().setVisible(true);
+                modalAddSpGG.getBtnSave().setText("Update");
 
                 row = tblSanPhamGiamGia.getSelectedRow();
                 if (row < 0) {
@@ -79,46 +92,35 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
                 String maGG = tblSanPhamGiamGia.getValueAt(row, 1).toString();
                 Optional<SanPhamGiamGiaDTO> optional = sanPhamGiamGiaService.findById(id);
                 if (optional.isPresent()) {
-                    List<GiamGiaDTO> listGiamGia = service.searchByMa(currentPage, maGG);
-                    List<SanPhamDTO> listSanPham = sanPhamService.listSanPhamTheoMaGG(currentPage, maGG);
-                    viewModal1.loadSearchGiamGia(listGiamGia);
-                    viewModal1.loadSearch(listSanPham);
-                    viewModal1.setVisible(true);
+                    List<GiamGiaDTO> listGiamGia = service.getAll(currentPage, maGG);
+                    List<SanPhamGiamGiaDTO> listSanPham = sanPhamGiamGiaService.listSanPhamTheoMaGG(currentPage, maGG);
+                    modalAddSpGG.showDataGiamGia(listGiamGia);
+                    modalAddSpGG.loadSearchSanPhamGiamGiaTheoMaGG(listSanPham);
+                    modalAddSpGG.setVisible(true);
+                    modalAddSpGG.setIdSpGG(maGG);
+                    modalAddSpGG.getSanPhamGiamGiaDTO().setId(id);
+
+                    loadData();
                 }
             }
 
             @Override
             public void onDelete(int row) {
-                row = tblSanPhamGiamGia.getSelectedRow();
-                if (row < 0) {
-                    return;
-                }
-                if (ShowMessage.show("Bạn muốn xóa giảm giá này chứ ?")) {
-                    String id = tblSanPhamGiamGia.getValueAt(row, 0).toString();
-                    String result = service.delete(id);
-                    ShowMessageSuccessful.showSuccessful(result);
-                    loadData();
-                }
-
             }
 
             @Override
             public void onView(int row) {
-                viewModal1.getBtnSave().setVisible(false);
-                viewModal1.getTxtSave().setVisible(false);
+                modalAddSpGG.getBtnSave().setVisible(false);
+                modalAddSpGG.getTxtSave().setVisible(false);
                 row = tblSanPhamGiamGia.getSelectedRow();
                 if (row < 0) {
                     return;
                 }
                 String id = tblSanPhamGiamGia.getValueAt(row, 0).toString();
-                String maGG = tblSanPhamGiamGia.getValueAt(row, 1).toString();
                 Optional<SanPhamGiamGiaDTO> optional = sanPhamGiamGiaService.findById(id);
                 if (optional.isPresent()) {
-                    List<GiamGiaDTO> listGiamGia = service.searchByMa(currentPage, maGG);
-                    List<SanPhamDTO> listSanPham = sanPhamService.listSanPhamTheoMaGG(currentPage, maGG);
-                    viewModal1.loadSearchGiamGia(listGiamGia);
-                    viewModal1.loadSearch(listSanPham);
-                    viewModal1.setVisible(true);
+                    detailSanPhamGiamGia.fill(optional.get());
+                    detailSanPhamGiamGia.setVisible(true);
                 }
             }
         };
@@ -126,21 +128,31 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
         tblSanPhamGiamGia.getColumnModel().getColumn(9).setCellEditor(new TableActionCellEditor(event));
     }
 
-    private void initData() {
-        initTableData();
-    }
-
     public void loadData() {
         String[] columns = {"ID", "MÃ", "TÊN GIẢM GIÁ", "GIÁ TRỊ MỨC GIAM GIÁ ", "NGÀY BẮT ĐẦU ", "NGÀY KẾT THÚC", "TÊN SẢN PHẨM", "LOẠI SẢN PHẨM", "TRẠNG THÁI", "CHỨC NĂNG"};
         dtm.setColumnIdentifiers(columns);
         tblSanPhamGiamGia.setModel(dtm);
-        List<SanPhamGiamGiaDTO> listData = sanPhamGiamGiaService.getAll(currentPage);
+        TrangThaiGiamGia trangThaiGiamGia = null;
+        if (cboTrangThaiGG.getSelectedItem().toString().equals("Đang hoạt động")) {
+            trangThaiGiamGia = TrangThaiGiamGia.DANG_HOAT_DONG;
+        } else if (cboTrangThaiGG.getSelectedItem().toString().equals("Ngừng hoạt động")) {
+            trangThaiGiamGia = TrangThaiGiamGia.NGUNG_HOAT_DONG;
+        }
+
+        LoaiSanPham loaiSanPham = null;
+        if (cboLoaiSanPham.getSelectedItem().toString().equals("ÁO")) {
+            loaiSanPham = LoaiSanPham.AO;
+        } else if (cboLoaiSanPham.getSelectedItem().toString().equals("QUẦN")) {
+            loaiSanPham = LoaiSanPham.QUAN;
+        }
+        String searchByMa = txtSearch.getText();
+        List<SanPhamGiamGiaDTO> listSanPhamGiamGiaDTO = sanPhamGiamGiaService.getAll(currentPage, trangThaiGiamGia, loaiSanPham, searchByMa);
         dtm.setRowCount(0);
-        for (SanPhamGiamGiaDTO x : listData) {
+        for (SanPhamGiamGiaDTO x : listSanPhamGiamGiaDTO) {
             dtm.addRow(x.toDataRow());
         }
         showPaganation();
-        createbutton();
+        createButton();
     }
 
     public void showPaganation() {
@@ -160,41 +172,25 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
         lblCount.setText("Total " + countTotalRow);
     }
 
-    private void initTableData() {
-        EventAction eventAction = new EventAction() {
-            @Override
-            public void delete(ModelStudent student) {
-                if (showMessage("Delete Student : " + student.getName())) {
-                    System.out.println("User click OK");
-                } else {
-                    System.out.println("User click Cancel");
-                }
-            }
-
-            @Override
-            public void update(ModelStudent student) {
-                if (showMessage("Update Student : " + student.getName())) {
-                    System.out.println("User click OK");
-                } else {
-                    System.out.println("User click Cancel");
-                }
-            }
-        };
-
+    private void cboTrangThai() {
+        cboTrangThai.addElement("");
+        cboTrangThai.addElement("Đang hoạt động");
+        cboTrangThai.addElement("Ngừng hoạt động");
+        cboTrangThaiGG.setModel(cboTrangThai);
     }
 
-    public void loadDataSearch(List<SanPhamGiamGiaDTO> list) {
-        dtm.setRowCount(0);
-        for (SanPhamGiamGiaDTO sanPhamGiamGiaDTO : list) {
-            dtm.addRow(sanPhamGiamGiaDTO.toDataRow());
-        }
-        showPaganation();
+    private void cboLoai() {
+        cboLoaiSp.addElement("");
+        cboLoaiSp.addElement("ÁO");
+        cboLoaiSp.addElement("QUẦN");
+        cboLoaiSanPham.setModel(cboLoaiSp);
     }
 
-    private boolean showMessage(String message) {
-        Message obj = new Message(Main.getFrames()[0], true);
-        obj.showMessage(message);
-        return obj.isOk();
+    private void clear() {
+        cboLoaiSanPham.setSelectedIndex(0);
+        cboTrangThaiGG.setSelectedIndex(0);
+        txtSearch.setText("");
+        loadData();
     }
 
     @SuppressWarnings("unchecked")
@@ -219,13 +215,11 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
         btnAdd = new view.swing.Button();
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jLabel6 = new javax.swing.JLabel();
+        cboLoaiSanPham = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        jSpinner2 = new javax.swing.JSpinner();
-        jSpinner3 = new javax.swing.JSpinner();
-        button2 = new view.swing.Button();
+        cboTrangThaiGG = new javax.swing.JComboBox<>();
+        btnLoc = new view.swing.Button();
+        btnClear = new view.swing.Button();
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(4, 72, 210));
@@ -373,63 +367,67 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Lọc"));
 
-        jLabel3.setText("Loại giảm giá");
+        jLabel3.setText("Loại sản phẩm");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jLabel6.setText("Gía trị giảm giá");
+        cboLoaiSanPham.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ÁO", "QUẦN" }));
 
         jLabel4.setText("Trạng thái");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboTrangThaiGG.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Đang hoạt động", "Ngừng hoạt động" }));
 
-        button2.setBackground(new java.awt.Color(0, 102, 255));
-        button2.setForeground(new java.awt.Color(255, 255, 255));
-        button2.setText("Lọc");
+        btnLoc.setBackground(new java.awt.Color(0, 102, 255));
+        btnLoc.setForeground(new java.awt.Color(255, 255, 255));
+        btnLoc.setText("Lọc");
+        btnLoc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLocActionPerformed(evt);
+            }
+        });
+
+        btnClear.setBackground(new java.awt.Color(0, 102, 255));
+        btnClear.setForeground(new java.awt.Color(255, 255, 255));
+        btnClear.setText("Clear");
+        btnClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(211, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addComponent(cboLoaiSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(101, 101, 101)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cboTrangThaiGG, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(144, 144, 144)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jSpinner2)
-                    .addComponent(jSpinner3, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(53, 53, 53)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jComboBox1, 0, 154, Short.MAX_VALUE)
-                    .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(46, 46, 46)
-                .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnClear, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+                    .addComponent(btnLoc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(146, 146, 146))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 3, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel4)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(9, 9, 9))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(21, 21, 21)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cboTrangThaiGG, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(cboLoaiSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(31, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnLoc, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -467,7 +465,6 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
-        // TODO add your handling code here:
         currentPage = 1;
         btnNext.setEnabled(true);
         btnPrevious.setEnabled(false);
@@ -505,13 +502,13 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
     }//GEN-LAST:event_btnLastActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        viewModal1.loadDataSanPham();
-        viewModal1.loadData();
-        viewModal1.getBtnSave().setVisible(true);
-        viewModal1.getTxtSave().setVisible(true);
-        viewModal1.getBtnSave().setText("Save");
-        viewModal1.setVisible(true);
-        viewModal1.addWindowListener(new WindowAdapter() {
+        modalAddSpGG.loadDataSanPham();
+        modalAddSpGG.loadData();
+        modalAddSpGG.getBtnSave().setVisible(true);
+        modalAddSpGG.getTxtSave().setVisible(true);
+        modalAddSpGG.getBtnSave().setText("Save");
+        modalAddSpGG.setVisible(true);
+        modalAddSpGG.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
                 loadData();
@@ -533,34 +530,37 @@ public class ViewGiamGiamSp extends javax.swing.JPanel {
     }//GEN-LAST:event_tblSanPhamGiamGiaMouseClicked
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        String searchByMa = txtSearch.getText();
-        List<SanPhamGiamGiaDTO> listSearchByMa = sanPhamGiamGiaService.searchByMa(currentPage, searchByMa);
-        loadDataSearch(listSearchByMa);
-
+        loadData();
     }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void btnLocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLocActionPerformed
+        loadData();
+    }//GEN-LAST:event_btnLocActionPerformed
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        clear();
+    }//GEN-LAST:event_btnClearActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private view.swing.Button btnAdd;
+    private view.swing.Button btnClear;
     private javax.swing.JButton btnFirst;
     private javax.swing.JButton btnLast;
+    private view.swing.Button btnLoc;
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnPrevious;
     private view.swing.Button btnSearch;
-    private view.swing.Button button2;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JComboBox<String> cboLoaiSanPham;
+    private javax.swing.JComboBox<String> cboTrangThaiGG;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSpinner jSpinner2;
-    private javax.swing.JSpinner jSpinner3;
     private javax.swing.JLabel lblCount;
     private javax.swing.JLabel lblPage;
     private view.swing.table.Table tblSanPhamGiamGia;

@@ -5,6 +5,7 @@
 package model.nhanvien;
 
 import comon.constant.ModelProperties;
+import comon.constant.nhanvien.TrangThaiNhanVien;
 import comon.model.PrimaryModel;
 import java.io.Serializable;
 import java.util.Set;
@@ -53,5 +54,8 @@ public class NhanVien extends PrimaryModel implements Serializable{
     @Column(length = ModelProperties.LENGTH_EMAIL)
     @Nationalized
     private String email;
+    
+    @Column
+    private TrangThaiNhanVien trangThaiNhanVien;
     
 }

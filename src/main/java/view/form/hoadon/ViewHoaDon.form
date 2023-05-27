@@ -1842,7 +1842,7 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jTextField1" min="-2" pref="175" max="-2" attributes="0"/>
+                          <Component id="txtTimKiemHD" min="-2" pref="175" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btnTimHoaDon" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -1857,7 +1857,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jTextField1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtTimKiemHD" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnTimHoaDon" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnQuetHoaDon" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -1971,7 +1971,7 @@
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextField1">
+        <Component class="javax.swing.JTextField" name="txtTimKiemHD">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>

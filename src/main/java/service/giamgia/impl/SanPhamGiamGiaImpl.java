@@ -4,21 +4,16 @@
  */
 package service.giamgia.impl;
 
+import comon.constant.giamgia.TrangThaiGiamGia;
+import comon.constant.sanpham.LoaiSanPham;
 import comon.utilities.Mapper;
-import comon.validator.NDTValidator;
 import dto.giamgia.GiamGiaDTO;
 import dto.giamgia.SanPhamGiamGiaDTO;
 import dto.sanpham.SanPhamDTO;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import javax.swing.JOptionPane;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-import model.giamgia.GiamGia;
 import model.giamgia.SanPhamGiamGia;
-import model.sanpham.SanPham;
 import org.modelmapper.ModelMapper;
 import repository.giamgia.SanPhamGiamGiaRepository;
 import service.giamgia.SanPhamGiamGiaService;
@@ -38,8 +33,8 @@ public class SanPhamGiamGiaImpl implements SanPhamGiamGiaService {
     }
 
     @Override
-    public List<SanPhamGiamGiaDTO> getAll(int currentPage) {
-        List<SanPhamGiamGia> listModel = repository.getAll(currentPage);
+    public List<SanPhamGiamGiaDTO> getAll(int currentPage, TrangThaiGiamGia trangThaiGiamGia, LoaiSanPham loaiSanPham, String maGG) {
+        List<SanPhamGiamGia> listModel = repository.getAll(currentPage, trangThaiGiamGia, loaiSanPham, maGG);
         List<SanPhamGiamGiaDTO> listDTO = new ArrayList<>();
         for (SanPhamGiamGia x : listModel) {
             listDTO.add(mapper.map(x, SanPhamGiamGiaDTO.class));
@@ -93,9 +88,9 @@ public class SanPhamGiamGiaImpl implements SanPhamGiamGiaService {
     @Override
     public String delete(String id) {
         if (repository.delete(id)) {
-            return "Delete successful !";
+            return "Successful !";
         } else {
-            return "Delete Fail !";
+            return "Fail !";
         }
     }
 
@@ -107,15 +102,15 @@ public class SanPhamGiamGiaImpl implements SanPhamGiamGiaService {
     @Override
     public String deleteSanPhamByIdGiamGia(String id) {
         if (repository.deleteSanPhamByIdGiamGia(id)) {
-            return "Delete successful !";
+            return "Successful !";
         } else {
-            return "Delete Fail !";
+            return "Fail !";
         }
     }
 
     @Override
-    public List<SanPhamGiamGiaDTO> searchByMa(int currentPage, String searchByMa) {
-        List<SanPhamGiamGia> listModel = repository.searchByMaSpGG(currentPage, searchByMa);
+    public List<SanPhamGiamGiaDTO> listSanPhamTheoMaGG(int currentPage, String searchByMa) {
+        List<SanPhamGiamGia> listModel = repository.listSanPhamTheoMaGG(currentPage, searchByMa);
         List<SanPhamGiamGiaDTO> listDTO = new ArrayList<>();
         for (SanPhamGiamGia x : listModel) {
             listDTO.add(mapper.map(x, SanPhamGiamGiaDTO.class));

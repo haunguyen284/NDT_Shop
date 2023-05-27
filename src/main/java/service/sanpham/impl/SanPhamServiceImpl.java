@@ -78,8 +78,8 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
     
     @Override
-    public List<SanPhamDTO> findAll() {
-        List<SanPham> listModel = repository.findAll();
+    public List<SanPhamDTO> findAll(String ma) {
+        List<SanPham> listModel = repository.findAll(ma);
         List<SanPhamDTO> listDTO = new ArrayList<>();
         for (SanPham x : listModel) {
             listDTO.add(mapper.map(x, SanPhamDTO.class));
@@ -99,8 +99,8 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public List<SanPhamDTO> searchByGiaBan(int currentPage, float giaBan) {
-        List<SanPham> listModel = repository.searchSanPhamByGiaBan(currentPage, giaBan);
+    public List<SanPhamDTO> searchByGiaBan(int currentPage, float giaBan,String id) {
+        List<SanPham> listModel = repository.searchSanPhamByGiaBan(currentPage, giaBan,id);
         List<SanPhamDTO> listDTO = new ArrayList<>();
         for (SanPham x : listModel) {
             listDTO.add(mapper.map(x, SanPhamDTO.class));

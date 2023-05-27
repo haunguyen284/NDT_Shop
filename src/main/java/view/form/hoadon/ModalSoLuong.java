@@ -62,6 +62,7 @@ public final class ModalSoLuong extends javax.swing.JDialog {
         lbMoTa.setText(sanPhamDTO.getMoTa());
         lbSoLuong.setText(sanPhamDTO.getSoLuongTon());
         lbTen.setText(sanPhamDTO.getTenSP());
+        lbXuatXu.setText(sanPhamDTO.getXuatXu().getTen());
         lbThuongHieu.setText(sanPhamDTO.getThuongHieu().getTen());
         lbTrangThai.setText(sanPhamDTO.convertSanPham());
         if (lbTrangThai.getText().equals("Đang hoạt động")) {

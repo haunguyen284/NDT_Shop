@@ -316,7 +316,8 @@ public class ViewNhanVien extends javax.swing.JPanel {
             JMenuItem menuCreate = new JMenuItem("Tạo tài khoản");
             menuUpdate.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    NhanVienDTO dTO = getObjectsFromTable(row);
+                    String id = nhanVienService.findId(tbNhanVien.getValueAt(row, 0).toString());
+                    NhanVienDTO dTO = nhanVienService.findById(id);
                     modalNhanVien.fill(dTO);
                     modalNhanVien.setVisible(true);
                     modalNhanVien.addWindowListener(new WindowAdapter() {

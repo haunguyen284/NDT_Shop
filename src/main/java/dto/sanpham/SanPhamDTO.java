@@ -73,7 +73,7 @@ public class SanPhamDTO extends AuditModelDTO {
     }
 
     public Object[] toDataRowSanPham() {
-        return new Object[]{getId(), tenSP, giaBan, soLuongTon, convertLoaiSanPham(), convertSanPham()};
+        return new Object[]{getId(), tenSP, giaBan, soLuongTon, convertLoaiSanPham(),thuongHieu.getTen(), convertSanPham()};
     }
     
     public Object[] toDataRow(){

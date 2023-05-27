@@ -190,13 +190,27 @@ public class ThongKeRepository {
     public List<SanPhamThongKe> getSanPhamBanChay() {
         List<SanPhamThongKe> results = new ArrayList<>();
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            Date startDate = calendar.getTime();
+            Date endDate = new Date();
+
+            Long startTimestamp = new Timestamp(startDate.getTime()).getTime();
+            Long endTimestamp = new Timestamp(endDate.getTime()).getTime();
 
             String hql = "SELECT TOP(4) SanPham.tenSP, SanPham.maSP, SUM(soLuong) as soLuong "
                     + "FROM HoaDonChiTiet "
                     + "JOIN SanPham ON HoaDonChiTiet.san_pham_id=SanPham.id "
+                    + "WHERE HoaDonChiTiet.createdAt BETWEEN :startDate AND :endDate "
                     + "GROUP BY san_pham_id, SanPham.tenSP, SanPham.maSP "
                     + "ORDER BY SUM(soLuong) DESC";
             TypedQuery<Object[]> query = session.createSQLQuery(hql);
+            query.setParameter("startDate", startTimestamp);
+            query.setParameter("endDate", endTimestamp);
             List<Object[]> resultList = query.getResultList();
             for (Object[] obj : resultList) {
                 String tenSP = (String) obj[0];

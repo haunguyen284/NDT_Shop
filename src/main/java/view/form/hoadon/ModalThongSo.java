@@ -88,6 +88,7 @@ public final class ModalThongSo extends javax.swing.JDialog {
         txtChieuCao.setHint(thongSoDTO.getCao() + " CM");
         txtChieuDai.setHint(thongSoDTO.getDai() + " CM");
         txtChieuRong.setHint(thongSoDTO.getRong() + " CM");
+        txtKhoiLuong.setHint(thongSoDTO.getKhoiLuong() + " KG");
     }
 
     /**

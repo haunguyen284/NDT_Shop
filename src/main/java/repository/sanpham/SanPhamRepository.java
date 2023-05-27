@@ -21,7 +21,7 @@ import org.hibernate.query.Query;
  * @author ADMIN KH
  */
 public class SanPhamRepository {
-    
+
     public List<SanPham> findByTrangThai(TrangThaiSanPham trangThaiSanPham) {
         List<SanPham> listModel;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -32,7 +32,7 @@ public class SanPhamRepository {
         }
         return listModel;
     }
-    
+
     public List<SanPham> findAll(int position) {
         List<SanPham> listModel;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -44,12 +44,13 @@ public class SanPhamRepository {
         }
         return listModel;
     }
-    
-    public List<SanPham> findAll() {
+
+    public List<SanPham> findAll(String ma) {
         List<SanPham> listModel;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT x FROM SanPham x";
+            String hql = "SELECT x FROM SanPham x WHERE x.maSP LIKE '%' + :maSp +'%'";
             TypedQuery<SanPham> query = session.createQuery(hql, SanPham.class);
+            query.setParameter("maSp", ma);
             listModel = query.getResultList();
         }
         return listModel;
@@ -142,12 +143,15 @@ public class SanPhamRepository {
         return count;
     }
 
-    public List<SanPham> searchSanPhamByGiaBan(int currentPage, float searchGiaBan) {
+    public List<SanPham> searchSanPhamByGiaBan(int currentPage, float searchGiaBan, String id) {
         List<SanPham> listModel;
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT x FROM SanPham x WHERE x.giaBan >= :giaBan";
+            String hql = "SELECT x FROM SanPham x WHERE x.giaBan >= :giaBan "
+                    + "AND x.maSP NOT IN (SELECT y.sanPham.maSP "
+                    + "FROM SanPhamGiamGia y WHERE y.giamGia.id = :id)";
             TypedQuery<SanPham> query = session.createQuery(hql, SanPham.class);
             query.setParameter("giaBan", searchGiaBan);
+            query.setParameter("id", id);
             query.setFirstResult((currentPage - 1) * PaginationConstant.DEFAULT_SIZE);
             query.setMaxResults(PaginationConstant.DEFAULT_SIZE);
             listModel = query.getResultList();
@@ -183,8 +187,8 @@ public class SanPhamRepository {
         }
         return listModel;
     }
-    
-    public Object[] getByKhuyenMai(String id){
+
+    public Object[] getByKhuyenMai(String id) {
         Object[] model = null;
         List<Object[]> listModel = new ArrayList<>();
         try ( Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -199,8 +203,8 @@ public class SanPhamRepository {
             query.setParameter("id", id);
             listModel = query.getResultList();
         }
-        if (!listModel.isEmpty()){
-           model = listModel.get(0); 
+        if (!listModel.isEmpty()) {
+            model = listModel.get(0);
         }
         return model;
     }

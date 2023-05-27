@@ -12,6 +12,7 @@ import dto.giamgia.GiamGiaDTO;
 import java.awt.Color;
 import java.util.Date;
 import java.util.Set;
+import javax.swing.JOptionPane;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import lombok.Getter;
@@ -27,13 +28,13 @@ import view.dialog.ShowMessageSuccessful;
  */
 @Getter
 @Setter
-public class ViewThongTinGiamGia extends javax.swing.JDialog {
+public class ModalGiamGia extends javax.swing.JDialog {
 
     private final GiamGiaService service;
     private final Validator validator;
     private final GiamGiaDTO giamGiaDTO;
 
-    public ViewThongTinGiamGia(java.awt.Frame parent, boolean modal) {
+    public ModalGiamGia(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
@@ -89,6 +90,7 @@ public class ViewThongTinGiamGia extends javax.swing.JDialog {
     }
 
     public void saveOrUpdate(String action) {
+        StringBuilder builder = new StringBuilder();
         GiamGiaDTO gg = form();
         Set<ConstraintViolation<GiamGiaDTO>> violations = validator.validate(gg);
         if (!violations.isEmpty()) {
@@ -96,7 +98,33 @@ public class ViewThongTinGiamGia extends javax.swing.JDialog {
             for (ConstraintViolation<GiamGiaDTO> x : violations) {
                 errors += x.getMessage() + "\n";
             }
-            ShowMessage.show(errors);
+            JOptionPane.showMessageDialog(this, errors, "ERRORS", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (txtDieuKien.getText().isBlank() || txtDieuKien.getText().isEmpty()) {
+            builder.append("Điều kiện giảm giá - Không được để trống ! \n");
+        } else if (!txtDieuKien.getText().matches("\\d+")) {
+            builder.append("Điều kiện giảm giá - Phải là số dương > 0 ! \n");
+        }
+        if (txtGiaTri.getText().isBlank() || txtGiaTri.getText().isEmpty()) {
+            builder.append("Giá trị giảm giá - Không được để trống ! \n");
+        } else if (!txtGiaTri.getText().matches("\\d+")) {
+            builder.append("Giá trị giảm giá - Phải là số dương > 0 ! \n");
+        }
+        if (cboLoai.getSelectedIndex() == 0) {
+            if (Float.valueOf(txtGiaTri.getText()) < 0 || Float.valueOf(txtGiaTri.getText()) > 100) {
+                builder.append("Phần trăm khuyến mãi không được < 0 và > 100 ! \n");
+            }
+        } else {
+            if (Float.valueOf(txtGiaTri.getText()) < 0) {
+                builder.append("Khuyến mãi theo tiền mặt phải > 0 ! \n");
+            }
+        }
+        if (txtBatDau.getDate().getTime() > txtKetThuc.getDate().getTime()) {
+            builder.append("Thời gian bắt đầu phải bé hơn thời gian kết thúc ! \n");
+        }
+        if (builder.length() > 0) {
+            JOptionPane.showMessageDialog(this, builder.toString(), "ERRORS", JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (action.equals("update")) {
@@ -104,8 +132,6 @@ public class ViewThongTinGiamGia extends javax.swing.JDialog {
         }
         String result = service.saveOrUpdate(action, gg);
         ShowMessageSuccessful.showSuccessful(result);
-        new ViewCreateSpGiamGia(null, true).loadData();
-        new ViewGiamGiamSp().loadData();
         this.dispose();
     }
 
@@ -395,9 +421,11 @@ public class ViewThongTinGiamGia extends javax.swing.JDialog {
     }//GEN-LAST:event_txtMaMousePressed
 
     private void btnCloseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCloseMouseClicked
-        new ViewCreateSpGiamGia(null, true).loadData();
-        new ViewGiamGiamSp().loadData();
+
         this.dispose();
+        new ModalAddSanPhamGiamGia(null, true).loadData();
+        new ViewGiamGiaSanPham().loadData();
+
     }//GEN-LAST:event_btnCloseMouseClicked
 
     private void btnCloseMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCloseMouseEntered

@@ -26,13 +26,13 @@ public interface SanPhamService {
     
     List<SanPhamDTO> getAll(int currentPage);
     
-    List<SanPhamDTO> findAll();
+    List<SanPhamDTO> findAll(String ma);
     
     List<SanPhamDTO> findByTrangThai(TrangThaiSanPham trangThaiSanPham);
 
     List<SanPhamDTO> searchByMa(int currentPage, String searchByMa);
 
-    List<SanPhamDTO> searchByGiaBan(int currentPage, float giaBan);
+    List<SanPhamDTO> searchByGiaBan(int currentPage, float giaBan,String id);
 
     List<SanPhamDTO> listSanPhamTheoMaGG(int currentPage, String searchByMa);
 

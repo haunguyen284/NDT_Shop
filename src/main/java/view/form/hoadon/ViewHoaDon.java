@@ -21,6 +21,7 @@ import dto.khachhang.TheThanhVienDTO;
 import dto.khachhang.ViDiemDTO;
 import dto.nhanvien.TaiKhoanDTO;
 import dto.sanpham.SanPhamDTO;
+import dto.sanpham.SearchAoDTO;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -166,7 +167,10 @@ public class ViewHoaDon extends javax.swing.JPanel {
     }
 
     public final void loadDataTableSanPham() {
-        List<SanPhamDTO> listDTOs = sanPhamService.findByTrangThai(TrangThaiSanPham.ACTIVE);
+        String ma = txtTimKiemSP.getText();
+        SearchAoDTO searchSPDTO = new SearchAoDTO();
+        searchSPDTO.setMa(ma);
+        List<SanPhamDTO> listDTOs = sanPhamService.findAll(ma);
         DefaultTableModel dtm = (DefaultTableModel) tbSanPham.getModel();
         tbSanPham.setModel(dtm);
         dtm.setRowCount(0);
@@ -402,7 +406,7 @@ public class ViewHoaDon extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         tbHoaDon = new view.swing.table.Table();
         cbbLocHoaDon = new javax.swing.JComboBox<>();
-        jTextField1 = new javax.swing.JTextField();
+        txtTimKiemHD = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         btnTimHoaDon = new javax.swing.JButton();
         btnQuetHoaDon = new javax.swing.JButton();
@@ -1373,7 +1377,7 @@ public class ViewHoaDon extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtTimKiemHD, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnTimHoaDon)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1384,7 +1388,7 @@ public class ViewHoaDon extends javax.swing.JPanel {
             pnlDsHoaDonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDsHoaDonLayout.createSequentialGroup()
                 .addGroup(pnlDsHoaDonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTimKiemHD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
                     .addComponent(btnTimHoaDon)
                     .addComponent(btnQuetHoaDon)
@@ -1805,10 +1809,10 @@ public class ViewHoaDon extends javax.swing.JPanel {
         if (tbpnlKhachHang.getSelectedIndex() == 0) {
 //                Khi bật tab đầu tiên
             if (!txtHoTen.getText().isBlank()) {
+                khDTO.setTen(txtHoTen.getText());
                 khDTO.setMaKH(generateCustomerId(khDTO));
                 khachHangService.save(khDTO);
                 khDTO = khachHangService.findById(khachHangService.findId(khDTO.getMaKH()));
-                khDTO.setTen(txtHoTen.getText());
                 khDTO.setDiaChi(txtDiaChi.getText());
                 khDTO.setSdt(txtSDT.getText());
                 khDTO.setGioiTinh(cbbGioiTinh.getSelectedItem().toString());
@@ -1953,10 +1957,12 @@ public class ViewHoaDon extends javax.swing.JPanel {
             hdDTO.setKhachHang(khDTO);
             hdDTO.setTenKH(khDTO.getTen());
             hdDTO.setDiaChi(khDTO.getDiaChi());
-            hdDTO.setTongTien(VndConvertUtil.vndToFloat(lbTongTien.getText()));
+            float tongTien = VndConvertUtil.vndToFloat(lbCanTra.getText());
+            hdDTO.setTongTien(tongTien);
             hdDTO.setTinhTrangHoaDon(TinhTrangHoaDon.DA_THANH_TOAN);
             hdDTO.setNgayThanhToan(DateTimeUtil.stringToDate(lbNgayTao.getText()).getTime());
             hdDTO = hoaDonService.save(hdDTO);
+//            hdDTO = hoaDonService.findById(hdDTO.getId());
             List<HoaDonChiTietDTO> hdctGioHang = hoaDonChiTietService.findByHoaDon(hdDTO.getId());
             for (HoaDonChiTietDTO hoaDonChiTietDTO : hdctGioHang) {
                 hoaDonChiTietDTO.setTinhTrangHoaDon(TinhTrangHoaDon.DA_THANH_TOAN);
@@ -2243,58 +2249,112 @@ public class ViewHoaDon extends javax.swing.JPanel {
     }//GEN-LAST:event_btnDoiDiemActionPerformed
 
     private void btnTimSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimSPActionPerformed
-        SanPhamDTO dTO = null;
-        try {
-            dTO = sanPhamService.findById(txtTimKiemSP.getText());
-        } catch (NoResultException ex) {
-            showMessage("Không tìm thấy sản phẩm");
-        }
-        Object[] spKM = sanPhamService.getByKhuyenMai(dTO.getId());
-        ModalSoLuong modalSoLuong = new ModalSoLuong(null, true, dTO);
-        modalSoLuong.setVisible(true);
-        modalSoLuong.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent e) {
-                try {
-                    String soLuong = modalSoLuong.getSoLuong();
-                    SanPhamDTO dTO = sanPhamService.findById(txtTimKiemSP.getText());
-                    int rowIndex = isDuplicate(dTO);
-                    if (rowIndex >= 0) {
-                        int soLuongCu = Integer.parseInt(dtmGioHang.getValueAt(rowIndex, 3).toString());
-                        int soLuongMoi = soLuongCu + Integer.parseInt(soLuong);
-                        dtmGioHang.setValueAt(soLuongMoi, rowIndex, 3);
-                    } else {
-                        String donGia = dTO.getGiaBan();
-                        String khuyenMai = "Không";
-                        if (spKM != null) {
-                            donGia = String.valueOf(spKM[3]);
-                            khuyenMai = "Có";
-                        }
-                        dtmGioHang.addRow(new Object[]{
-                            dTO.getId(),
-                            dTO.getMaSP(),
-                            dTO.getTenSP(),
-                            Integer.parseInt(soLuong),
-                            VndConvertUtil.floatToVnd(Float.parseFloat(donGia)),
-                            convertedThanhTien(donGia, soLuong), khuyenMai});
-                        updateGiamGia();
-                        updateTongTien();
-                    }
-                    updateGiamGia();
-                    updateTongTien();
-                    loadDataTableSanPham();
-                } catch (NumberFormatException numberFormatException) {
-                }
-            }
-        });
+        loadDataTableSanPham();
+          
     }//GEN-LAST:event_btnTimSPActionPerformed
 
     private void btnTimHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimHoaDonActionPerformed
-        // TODO add your handling code here:
+        String maHD = txtTimKiemHD.getText();
+        HoaDonDTO hdDTO = new HoaDonDTO();
+        try {
+            String id = hoaDonService.findId(maHD);
+            hdDTO = hoaDonService.findById(id);
+            if (hdDTO.getTinhTrangHoaDon() != TinhTrangHoaDon.DA_THANH_TOAN) {
+                showMessage("Hoá đơn phải được thanh toán mới có thể trả hàng!");
+                return;
+            }
+        } catch (Exception e) {
+            showMessage("Không tìm thấy hoá đơn");
+        }
+        lbIdHoaDon.setText(hdDTO.getMaHD());
+        List<HoaDonChiTietDTO> hdctGioHang = hoaDonChiTietService.findByHoaDon(hdDTO.getId());
+        dtmGioHang.setRowCount(0);
+        for (HoaDonChiTietDTO hoaDonChiTietDTO : hdctGioHang) {
+            SanPhamDTO dTO = sanPhamService.findById(hoaDonChiTietDTO.getSanPham().getId());
+            Object[] spKM = sanPhamService.getByKhuyenMai(dTO.getId());
+            String donGia = dTO.getGiaBan();
+            String khuyenMai = "Không";
+            if (spKM != null) {
+                donGia = String.valueOf(spKM[3]);
+                khuyenMai = "Có";
+            }
+            dtmGioHang.addRow(new Object[]{
+                dTO.getId(),
+                dTO.getMaSP(),
+                dTO.getTenSP(),
+                Integer.parseInt(hoaDonChiTietDTO.getSoLuong() + ""),
+                VndConvertUtil.floatToVnd(Float.parseFloat(donGia)),
+                convertedThanhTien(donGia, hoaDonChiTietDTO.getSoLuong() + ""), khuyenMai});
+        }
+//            loadLabel
+        if (!Objects.isNull(hdDTO.getKhachHang())) {
+            tbpnlKhachHang.setSelectedIndex(1);
+            lbHoTen.setText(hdDTO.getKhachHang().getTen());
+            lbMaKH.setText(hdDTO.getKhachHang().getMaKH());
+            if (!Objects.isNull(hdDTO.getKhachHang().getTheThanhVien())) {
+                lbMaThe.setText(hdDTO.getKhachHang().getTheThanhVien().getMaTTV());
+                lbLoaiThe.setText(hdDTO.getKhachHang().getTheThanhVien().getLoaiThe().getTen());
+                lbSoDiem.setText(hdDTO.getKhachHang().getTheThanhVien().getViDiem().getTongDiem() + "");
+            }
+        }
+        btnTaoHoaDon.setEnabled(false);
+        btnCapNhat.setEnabled(true);
+        updateGiamGia();
+        updateTongTien();
     }//GEN-LAST:event_btnTimHoaDonActionPerformed
 
     private void btnQuetHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuetHoaDonActionPerformed
-        // TODO add your handling code here:
+        QrScanner qrScanner = new QrScanner(null, true);
+        qrScanner.setVisible(true);
+        qrScanner.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                HoaDonDTO hdDTO = null;
+                try {
+                    String maHD = hoaDonService.findId(qrScanner.getQrString());
+                    hdDTO = hoaDonService.findById(maHD);
+                } catch (NoResultException ex) {
+                    showMessage("Không tìm thấy hoá đơn");
+                    return;
+                }
+                lbIdHoaDon.setText(hdDTO.getMaHD());
+                List<HoaDonChiTietDTO> hdctGioHang = hoaDonChiTietService.findByHoaDon(hdDTO.getId());
+                dtmGioHang.setRowCount(0);
+                for (HoaDonChiTietDTO hoaDonChiTietDTO : hdctGioHang) {
+                    SanPhamDTO dTO = sanPhamService.findById(hoaDonChiTietDTO.getSanPham().getId());
+                    Object[] spKM = sanPhamService.getByKhuyenMai(dTO.getId());
+                    String donGia = dTO.getGiaBan();
+                    String khuyenMai = "Không";
+                    if (spKM != null) {
+                        donGia = String.valueOf(spKM[3]);
+                        khuyenMai = "Có";
+                    }
+                    dtmGioHang.addRow(new Object[]{
+                        dTO.getId(),
+                        dTO.getMaSP(),
+                        dTO.getTenSP(),
+                        Integer.parseInt(hoaDonChiTietDTO.getSoLuong() + ""),
+                        VndConvertUtil.floatToVnd(Float.parseFloat(donGia)),
+                        convertedThanhTien(donGia, hoaDonChiTietDTO.getSoLuong() + ""), khuyenMai});
+                }
+//            loadLabel
+                if (!Objects.isNull(hdDTO.getKhachHang())) {
+                    tbpnlKhachHang.setSelectedIndex(1);
+                    lbHoTen.setText(hdDTO.getKhachHang().getTen());
+                    lbMaKH.setText(hdDTO.getKhachHang().getMaKH());
+                    if (!Objects.isNull(hdDTO.getKhachHang().getTheThanhVien())) {
+                        lbMaThe.setText(hdDTO.getKhachHang().getTheThanhVien().getMaTTV());
+                        lbLoaiThe.setText(hdDTO.getKhachHang().getTheThanhVien().getLoaiThe().getTen());
+                        lbSoDiem.setText(hdDTO.getKhachHang().getTheThanhVien().getViDiem().getTongDiem() + "");
+                    }
+                }
+                btnTaoHoaDon.setEnabled(false);
+                btnCapNhat.setEnabled(true);
+                updateGiamGia();
+                updateTongTien();
+            }
+
+        });
     }//GEN-LAST:event_btnQuetHoaDonActionPerformed
 
 
@@ -2372,7 +2432,6 @@ public class ViewHoaDon extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextField jTextField1;
     private com.toedter.calendar.JDateChooser jdNgaySinh;
     private javax.swing.JLabel lbCanTra;
     private javax.swing.JLabel lbGiamGia;
@@ -2417,6 +2476,7 @@ public class ViewHoaDon extends javax.swing.JPanel {
     private javax.swing.JTextField txtKhachTra;
     private javax.swing.JTextField txtSDT;
     private view.swing.MyTextField txtTimKiem;
+    private javax.swing.JTextField txtTimKiemHD;
     private javax.swing.JTextPane txtTimKiemSP;
     // End of variables declaration//GEN-END:variables
 }

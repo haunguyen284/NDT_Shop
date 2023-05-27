@@ -1,5 +1,6 @@
 package view.main;
 
+import comon.constant.nhanvien.TrangThaiNhanVien;
 import dto.nhanvien.TaiKhoanDTO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -158,13 +159,18 @@ public class Login extends javax.swing.JFrame {
             protected void done() {
                 try {
                     TaiKhoanDTO dTO = taiKhoanService.login(user, pass);
-                    if (!Objects.isNull(dTO)) {
+                    if (!Objects.isNull(dTO) && dTO.getNhanVien().getTrangThaiNhanVien() == TrangThaiNhanVien.DANG_LAM) {
                         // Ẩn panelLoading và hiển thị giao diện chính
                         SwingUtilities.invokeLater(() -> {
                             loading.setVisible(false);
                             main = new Main(user, dTO.getRole().toString());
                             dispose();
                             main.setVisible(true);
+                        });
+                    } else {
+                        SwingUtilities.invokeLater(() -> {
+                            loading.setVisible(false);
+                            showMessage(Message.MessageType.ERROR, "Tài khoản không còn đi làm");
                         });
                     }
                 } catch (Exception e) {
@@ -177,7 +183,7 @@ public class Login extends javax.swing.JFrame {
                 }
             }
         };
-
+        
         // Thực hiện đăng nhập trong luồng mới
         worker.execute();
     }
